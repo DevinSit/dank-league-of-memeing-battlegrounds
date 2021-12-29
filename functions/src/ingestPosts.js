@@ -3,7 +3,7 @@ const fs = require("fs");
 const imageHash = require("image-hash");
 const imagemagick = require("imagemagick");
 const {Storage} = require("@google-cloud/storage");
-const {BUCKET, IMAGE_FORMAT, IMAGE_SIZE} = require("config");
+const {BUCKET, IMAGE_FORMAT, IMAGE_SIZE} = require("./config");
 const {Post} = require("./models");
 
 const storage = new Storage();

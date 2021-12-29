@@ -113,3 +113,5 @@ manifests/generated/**/*.yaml
 
 # Ignore service account
 dank-meme-classifier-account.json
+
+.env

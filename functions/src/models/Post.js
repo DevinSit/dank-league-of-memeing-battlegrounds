@@ -1,5 +1,5 @@
 const Datastore = require("@google-cloud/datastore");
-const config = require("config");
+const config = require("../config");
 
 const datastore = new Datastore({projectId: config.PROJECT_ID});
 
