@@ -1,6 +1,6 @@
 const fetch = require("node-fetch");
 const Datastore = require("@google-cloud/datastore");
-const {PROJECT_ID} = require("../config");
+const {KERAS_PREDICTION_URL, PROJECT_ID} = require("../config");
 
 const datastore = new Datastore({projectId: PROJECT_ID});
 
@@ -29,7 +29,7 @@ class KerasPrediction {
     }
 
     static async getPredictions(posts) {
-        const response = await fetch(process.env.KERAS_PREDICTION_URL, {
+        const response = await fetch(KERAS_PREDICTION_URL, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({posts})

@@ -1,13 +1,17 @@
-const fetch = require("node-fetch");
-const runtimeConfig = require("gcf-runtime-config");
 const snoowrap = require("snoowrap");
 const {cleanPosts} = require("./utils");
-
-const CONFIG_NAME = "dank-meme-classifier-post-scraper-config";
+const {
+    CLIENT_ID,
+    CLIENT_SECRET,
+    USER_AGENT,
+    REDDIT_USERNAME,
+    REDDIT_PASSWORD
+} = require("../config");
 
 const getPosts = async (subreddit = "dankmemes", limit = 5, hot = false) => {
-    const {CLIENT_ID, CLIENT_SECRET, USER_AGENT, REDDIT_USERNAME, REDDIT_PASSWORD} =
-        await getConfig();
+    if (!CLIENT_ID || !CLIENT_SECRET || !USER_AGENT || !REDDIT_USERNAME || !REDDIT_USERNAME) {
+        throw new Error("Environment variables for Reddit are not configured correctly.");
+    }
 
     const redditClient = new snoowrap({
         clientId: CLIENT_ID,
@@ -17,14 +21,12 @@ const getPosts = async (subreddit = "dankmemes", limit = 5, hot = false) => {
         password: REDDIT_PASSWORD
     });
 
-    const method = hot ? "getNew" : "getNew";
+    const method = hot ? "getHot" : "getNew";
     const rawPosts = await redditClient[method](subreddit, {limit});
     const posts = normalizePostAttributes(rawPosts);
 
     return cleanPosts(posts);
 };
-
-const getConfig = async () => await runtimeConfig.getVariables(CONFIG_NAME);
 
 const normalizePostAttributes = (posts) =>
     posts.map((post) => ({
