@@ -26,7 +26,8 @@ const ingestPosts = async (data, context, callback) => {
 
         const fileIdPath = await downloadImage(image);
 
-        if (fileIdPath) {  // Image exists
+        if (fileIdPath) {
+            // Image exists
             const fileNamePath = await convertImage(fileIdPath);
             const hash = await uploadImage(fileNamePath);
 
@@ -54,11 +55,13 @@ const ingestPostsTest = async (req, res) => {
 
     // Background pub/sub functions are passed messages in a
     // json object {data: "message", ...}, where "message" is a base64 encoded string
-    ingestPosts({data: Buffer.from(JSON.stringify(posts))}, {}, () => res.send("Finished processing."));
+    ingestPosts({data: Buffer.from(JSON.stringify(posts))}, {}, () =>
+        res.send("Finished processing.")
+    );
 };
 
 const downloadImage = async (imageUrl) => {
-    const fileId = `${(new Date).getTime().toString()}`;
+    const fileId = `${new Date().getTime().toString()}`;
     const fileIdPath = `/tmp/${fileId}`;
 
     const res = await fetch(imageUrl);
@@ -80,17 +83,20 @@ const downloadImage = async (imageUrl) => {
 };
 
 const convertImage = (fileIdPath) => {
-    const fileNamePath = `${fileIdPath}.${IMAGE_FORMAT}`;  // Image will be converted to jpg
+    const fileNamePath = `${fileIdPath}.${IMAGE_FORMAT}`; // Image will be converted to jpg
 
     return new Promise((resolve, reject) => {
-        imagemagick.convert([fileIdPath, "-resize", `${IMAGE_SIZE}x${IMAGE_SIZE}!`, fileNamePath], (err, stdout) => {
-            if (err) {
-                console.error(err);
-                reject(err);
-            } else {
-                resolve(fileNamePath);
+        imagemagick.convert(
+            [fileIdPath, "-resize", `${IMAGE_SIZE}x${IMAGE_SIZE}!`, fileNamePath],
+            (err, stdout) => {
+                if (err) {
+                    console.error(err);
+                    reject(err);
+                } else {
+                    resolve(fileNamePath);
+                }
             }
-        });
+        );
     });
 };
 
@@ -99,14 +105,18 @@ const uploadImage = async (fileNamePath) => {
     const hash = await hashImage(fileNamePath);
 
     return new Promise((resolve, reject) => {
-        bucket.upload(fileNamePath, {destination: `${hash}.${IMAGE_FORMAT}`}, (err, file, apiResponse) => {
-            if (err) {
-                console.error(err);
-                reject(err);
-            } else {
-                resolve(hash);
+        bucket.upload(
+            fileNamePath,
+            {destination: `${hash}.${IMAGE_FORMAT}`},
+            (err, file, apiResponse) => {
+                if (err) {
+                    console.error(err);
+                    reject(err);
+                } else {
+                    resolve(hash);
+                }
             }
-        });
+        );
     });
 };
 
@@ -119,13 +129,14 @@ const hashImage = (fileNamePath) => {
             } else {
                 resolve(hash);
             }
-        })
+        });
     });
 };
 
 const deleteFile = (path) => {
     return new Promise((resolve, reject) => {
-        fs.stat(path, (err, stats) => {  // Make sure file exists
+        fs.stat(path, (err, stats) => {
+            // Make sure file exists
             if (err) {
                 console.error(err);
                 reject(err);
@@ -137,7 +148,7 @@ const deleteFile = (path) => {
                     } else {
                         resolve();
                     }
-                })
+                });
             }
         });
     });

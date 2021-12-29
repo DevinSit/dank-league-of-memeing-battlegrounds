@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 const Datastore = require("@google-cloud/datastore");
 const {PROJECT_ID} = require("../config");
 
-const datastore = new Datastore({projectId: PROJECT_ID}) ;
+const datastore = new Datastore({projectId: PROJECT_ID});
 
 class KerasPrediction {
     constructor({imageHash = "", prediction = 0}) {
@@ -21,7 +21,7 @@ class KerasPrediction {
                 prediction: this.prediction
             },
             excludeFromIndexes: ["prediction"]
-        }
+        };
     }
 
     save() {
@@ -37,12 +37,13 @@ class KerasPrediction {
 
         const predictions = (await response.json())["predictions"];
 
-        return posts.map((post, index) => (
-            new KerasPrediction({
-                imageHash: post.imageHash,
-                prediction: predictions[index]
-            })
-        ));
+        return posts.map(
+            (post, index) =>
+                new KerasPrediction({
+                    imageHash: post.imageHash,
+                    prediction: predictions[index]
+                })
+        );
     }
 }
 

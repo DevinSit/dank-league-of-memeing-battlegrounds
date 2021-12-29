@@ -17,16 +17,20 @@ const scrapePosts = async (req, res) => {
         const posts = await Reddit.getPosts(subreddit, limit, hot);
 
         res.send({posts, status: "success"});
-    } catch (err) {
-        console.log(err);
-        res.status(500).send({message: "Error when trying to get image URLs. See logs for more details.", status: "error"});
+    } catch (e) {
+        console.log(e);
+
+        res.status(500).send({
+            message: "Error when trying to get image URLs. See logs for more details.",
+            status: "error"
+        });
     }
 };
 
 const parseQueryParams = (params) => {
     const {subreddit = "dankmemes"} = params;
     const limit = parseInt(params.limit) || 5;
-    const hot = (params.hot == undefined) ? false : (params.hot == "true");  // Convert hot to a boolean
+    const hot = params.hot == undefined ? false : params.hot == "true"; // Convert hot to a boolean
 
     return {
         subreddit,

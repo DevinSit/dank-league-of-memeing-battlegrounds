@@ -4,7 +4,9 @@
     "description": "All of the Cloud Functions for the Easy Dank Meme Classifier.",
     "main": "src/index.js",
     "scripts": {
-        "start": "nodemon src/testServer.js"
+        "start": "nodemon src/testServer.js",
+        "prettier": "prettier --write src",
+        "prettier:check": "prettier --check src"
     },
     "author": "Devin Sit",
     "dependencies": {
@@ -20,6 +22,7 @@
     "devDependencies": {
         "body-parser": "1.18.3",
         "express": "4.16.4",
-        "nodemon": "1.18.4"
+        "nodemon": "1.18.4",
+        "prettier": "^2.5.1"
     }
 }

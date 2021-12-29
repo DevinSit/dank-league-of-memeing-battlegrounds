@@ -1,10 +1,19 @@
 const Datastore = require("@google-cloud/datastore");
 const config = require("config");
 
-const datastore = new Datastore({projectId: config.PROJECT_ID}) ;
+const datastore = new Datastore({projectId: config.PROJECT_ID});
 
 class Post {
-    constructor({id = "", url = "", createdUtc = 0, author = "", subreddit = "", title = "", permalink = "", imageHash = ""}) {
+    constructor({
+        id = "",
+        url = "",
+        createdUtc = 0,
+        author = "",
+        subreddit = "",
+        title = "",
+        permalink = "",
+        imageHash = ""
+    }) {
         this.id = id;
         this.url = url;
         this.createdUtc = createdUtc;
@@ -29,10 +38,10 @@ class Post {
                 subreddit: this.subreddit,
                 title: this.title,
                 permalink: this.permalink,
-                imageHash: this.imageHash,
+                imageHash: this.imageHash
             },
             excludeFromIndexes: ["url", "author", "title", "permalink"]
-        }
+        };
     }
 
     save() {
@@ -40,4 +49,4 @@ class Post {
     }
 }
 
-module.exports = Post
+module.exports = Post;
