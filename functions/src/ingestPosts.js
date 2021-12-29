@@ -2,18 +2,14 @@ const fetch = require("node-fetch");
 const fs = require("fs");
 const imageHash = require("image-hash");
 const imagemagick = require("imagemagick");
-const PubSub = require("@google-cloud/pubsub");
 const {Storage} = require("@google-cloud/storage");
-const {BUCKET, DANK_PREDICTIONS_TOPIC, IMAGE_FORMAT, IMAGE_SIZE} = require("config");
+const {BUCKET, IMAGE_FORMAT, IMAGE_SIZE} = require("config");
 const {Post} = require("./models");
 
-const pubsub = new PubSub();
 const storage = new Storage();
 
-const publisher = pubsub.topic(DANK_PREDICTIONS_TOPIC).publisher();
-
-const ingestPosts = async (data, context, callback) => {
-    const postsData = data.data ? JSON.parse(Buffer.from(data.data, "base64").toString()) : [];
+const ingestPosts = async (req, res) => {
+    const {posts: postsData} = req.body;
     const posts = postsData.map((postData) => new Post(postData));
 
     console.log(posts, "posts");
@@ -39,25 +35,12 @@ const ingestPosts = async (data, context, callback) => {
             await deleteFile(fileIdPath);
             await deleteFile(fileNamePath);
         } else {
-            console.log(`[WARNING] ${image} does not exist.`);
+            console.warn(`[WARNING] ${image} does not exist.`);
         }
     }
 
-    // Start the processing of the posts for predictions
-    await publishToPredictionsTopic(posts);
-
     console.log("Finished processing posts.");
-    callback();
-};
-
-const ingestPostsTest = async (req, res) => {
-    const {posts} = req.body;
-
-    // Background pub/sub functions are passed messages in a
-    // json object {data: "message", ...}, where "message" is a base64 encoded string
-    ingestPosts({data: Buffer.from(JSON.stringify(posts))}, {}, () =>
-        res.send("Finished processing.")
-    );
+    res.send({posts, status: "success"});
 };
 
 const downloadImage = async (imageUrl) => {
@@ -105,18 +88,14 @@ const uploadImage = async (fileNamePath) => {
     const hash = await hashImage(fileNamePath);
 
     return new Promise((resolve, reject) => {
-        bucket.upload(
-            fileNamePath,
-            {destination: `${hash}.${IMAGE_FORMAT}`},
-            (err, file, apiResponse) => {
-                if (err) {
-                    console.error(err);
-                    reject(err);
-                } else {
-                    resolve(hash);
-                }
+        bucket.upload(fileNamePath, {destination: `${hash}.${IMAGE_FORMAT}`}, (err) => {
+            if (err) {
+                console.error(err);
+                reject(err);
+            } else {
+                resolve(hash);
             }
-        );
+        });
     });
 };
 
@@ -135,7 +114,7 @@ const hashImage = (fileNamePath) => {
 
 const deleteFile = (path) => {
     return new Promise((resolve, reject) => {
-        fs.stat(path, (err, stats) => {
+        fs.stat(path, (err) => {
             // Make sure file exists
             if (err) {
                 console.error(err);
@@ -154,12 +133,6 @@ const deleteFile = (path) => {
     });
 };
 
-const publishToPredictionsTopic = async (posts) => {
-    const message = Buffer.from(JSON.stringify(posts));
-    await publisher.publish(message);
-};
-
 module.exports = {
-    ingestPosts,
-    ingestPostsTest
+    ingestPosts
 };

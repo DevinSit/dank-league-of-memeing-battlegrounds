@@ -1,14 +1,12 @@
 const express = require("express");
 
-const {ingestPostsTest} = require("./ingestPosts");
-const {predictTest} = require("./predict");
-const {scrapePosts} = require("./scrapePosts");
+const {ingestPosts, predict, scrapePosts} = require("./index");
 
 const PORT = 8080;
 const app = express();
 
-app.get("/ingestion", ingestPostsTest);
-app.get("/predict", predictTest);
+app.get("/ingestPosts", ingestPosts);
+app.get("/predict", predict);
 app.get("/scrapePosts", scrapePosts);
 
 app.listen(PORT, () => {

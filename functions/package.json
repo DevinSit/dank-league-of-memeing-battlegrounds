@@ -11,7 +11,6 @@
     "author": "Devin Sit",
     "dependencies": {
         "@google-cloud/datastore": "2.0.0",
-        "@google-cloud/pubsub": "0.20.1",
         "@google-cloud/storage": "2.1.0",
         "gcf-runtime-config": "0.0.7",
         "image-hash": "2.0.0",
