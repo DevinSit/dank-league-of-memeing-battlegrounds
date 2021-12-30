@@ -11,6 +11,15 @@ gcloud functions deploy scrapePosts \
     --timeout 300s \
     --memory 1024MB
 
+gcloud functions deploy ingestImages \
+    --entry-point ingestImages \
+    --allow-unauthenticated \
+    --trigger-http \
+    --runtime nodejs14 \
+    --set-env-vars "$ENV_VARS" \
+    --timeout 300s \
+    --memory 1024MB
+
 gcloud functions deploy ingestPosts \
     --entry-point ingestPosts \
     --allow-unauthenticated \
