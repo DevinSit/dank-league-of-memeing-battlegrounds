@@ -24,23 +24,23 @@ class KerasPrediction {
         };
     }
 
-    save() {
-        datastore.upsert(this.entity());
+    async save() {
+        await datastore.upsert(this.entity());
     }
 
-    static async getPredictions(posts) {
+    static async getPredictions(imageHashes) {
         const response = await fetch(KERAS_PREDICTION_URL, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({posts})
+            body: JSON.stringify({imageHashes})
         });
 
         const predictions = (await response.json())["predictions"];
 
-        return posts.map(
-            (post, index) =>
+        return imageHashes.map(
+            (imageHash, index) =>
                 new KerasPrediction({
-                    imageHash: post.imageHash,
+                    imageHash,
                     prediction: predictions[index]
                 })
         );

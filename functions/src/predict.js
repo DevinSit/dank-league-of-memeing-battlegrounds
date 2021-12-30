@@ -1,16 +1,17 @@
 const {KerasPrediction} = require("./models");
 
 const predict = async (req, res) => {
-    const posts = req.body;
-    console.log(posts, "posts");
+    const {imageHashes} = req.body;
+    console.log(imageHashes, "imageHashes");
 
-    const postsWithImageHashes = posts.filter((post) => post.imageHash != "");
-    const predictions = await KerasPrediction.getPredictions(postsWithImageHashes);
+    const predictions = await KerasPrediction.getPredictions(imageHashes);
     console.log(predictions, "predictions");
 
-    predictions.forEach((prediction) => prediction.save());
+    for (const prediction of predictions) {
+        await prediction.save();
+    }
 
-    res.send({status: "success"});
+    res.send({predictions, status: "success"});
 };
 
 module.exports = {

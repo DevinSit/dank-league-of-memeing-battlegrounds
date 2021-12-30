@@ -1,8 +1,8 @@
-const fetch = require("node-fetch");
+const {Storage} = require("@google-cloud/storage");
 const fs = require("fs");
 const imageHash = require("image-hash");
 const imagemagick = require("imagemagick");
-const {Storage} = require("@google-cloud/storage");
+const fetch = require("node-fetch");
 const {BUCKET, IMAGE_FORMAT, IMAGE_SIZE} = require("./config");
 const {Post} = require("./models");
 
@@ -39,8 +39,10 @@ const ingestPosts = async (req, res) => {
         }
     }
 
+    const imageHashes = posts.filter(({imageHash}) => imageHash).map(({imageHash}) => imageHash);
+
     console.log("Finished processing posts.");
-    res.send({posts, status: "success"});
+    res.send({imageHashes, status: "success"});
 };
 
 const downloadImage = async (imageUrl) => {
