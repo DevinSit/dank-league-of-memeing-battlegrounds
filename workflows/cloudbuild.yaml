@@ -4,6 +4,7 @@ steps:
       args: 
         - "workflows"
         - "deploy"
+        - "scheduled-scraping"
         - "--source=scheduledScraping.yaml"
         - "--location=us-central1"
       dir: "workflows"
