@@ -1,15 +1,16 @@
 steps:
     - name: "gcr.io/cloud-builders/gcloud"
-      entrypoint: sh
-      args: 
-        - "-c"
-        - "sh ./scripts/deploy.sh"
-        - "${_CLIENT_ID}"
-        - "${_CLIENT_SECRET}"
-        - "${_USER_AGENT}"
-        - "${_REDDIT_USERNAME}"
-        - "${_REDDIT_PASSWORD}"
-        - "${_KERAS_PREDICTION_URL}"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          bash ./scripts/deploy.sh \
+            "${_CLIENT_ID}" \
+            "${_CLIENT_SECRET}" \
+            "${_USER_AGENT}" \
+            "${_REDDIT_USERNAME}" \
+            "${_REDDIT_PASSWORD}" \
+            "${_KERAS_PREDICTION_URL}"
       dir: "functions"
 
 substitutions:
