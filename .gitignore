@@ -112,4 +112,4 @@ terraform-account.json
 manifests/generated/**/*.yaml
 
 # Ignore service account
-dank-meme-classifier-account.json
+easy-dank-meme-classifier-account.json

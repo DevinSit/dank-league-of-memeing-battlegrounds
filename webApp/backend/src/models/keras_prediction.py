@@ -20,9 +20,8 @@ GRAPH = None  # type: tf.Graph
 
 class KerasPrediction:
     def __init__(self):
-        # Disabled for demo purposes
-        # self.storage_client = storage.Client()
-        # self.bucket = self.storage_client.get_bucket(IMAGES_STORAGE_BUCKET)
+        self.storage_client = storage.Client()
+        self.bucket = self.storage_client.get_bucket(IMAGES_STORAGE_BUCKET)
         pass
 
     @staticmethod

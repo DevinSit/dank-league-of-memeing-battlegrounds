@@ -23,7 +23,7 @@ services:
             - ./models/:/var/model-storage
             - ./:/gcp
         environment:
-            - GOOGLE_APPLICATION_CREDENTIALS=/gcp/dank-meme-classifier-account.json
+            - GOOGLE_APPLICATION_CREDENTIALS=/gcp/easy-dank-meme-classifier-account.json
             - FLASK_ENV=development
 
 volumes:
