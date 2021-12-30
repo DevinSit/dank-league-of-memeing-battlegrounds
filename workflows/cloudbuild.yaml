@@ -8,15 +8,3 @@ steps:
         - "--source=scheduledScraping.yaml"
         - "--location=us-central1"
       dir: "workflows"
-
-    - id: "Enable scheduled invocation of the Scheduled Scraping workflow"
-      name: "gcr.io/cloud-builders/gcloud"
-      entrypoint: "bash"
-      args:
-        - "-c"
-        - |
-          gcloud scheduler jobs create http execute-scheduled-scraping \
-            --schedule="0 4 * * * " \
-            --location="us-east1" \
-            --uri="https://workflowexecutions.googleapis.com/v1/projects/serverless-hackathon-devin/locations/us-central1/workflows/scheduled-scraping/executions" \
-            --time-zone="America/Toronto" || exit 0
