@@ -18,10 +18,10 @@ const scrapePosts = async (req, res) => {
 
         res.send({posts, status: "success"});
     } catch (e) {
-        console.log(e);
+        console.error(e);
 
         res.status(500).send({
-            message: "Error when trying to get image URLs. See logs for more details.",
+            message: "Error when trying to scrape posts. See logs for more details.",
             status: "error"
         });
     }
