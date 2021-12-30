@@ -1,17 +1,89 @@
 steps:
-    - name: "gcr.io/cloud-builders/gcloud"
+    - id: "Store env vars string"
+      name: "gcr.io/cloud-builders/gcloud"
       entrypoint: bash
       args:
         - -c
         - |
-          bash ./scripts/deploy.sh \
-            "${_CLIENT_ID}" \
-            "${_CLIENT_SECRET}" \
-            "${_USER_AGENT}" \
-            "${_REDDIT_USERNAME}" \
-            "${_REDDIT_PASSWORD}" \
-            "${_KERAS_PREDICTION_URL}"
+          _ENV_VARS="CLIENT_ID=${_CLIENT_ID},CLIENT_SECRET=${_CLIENT_SECRET},USER_AGENT=${_USER_AGENT},REDDIT_USERNAME=${_REDDIT_USERNAME},REDDIT_PASSWORD=${_REDDIT_PASSWORD},KERAS_PREDICTION_URL=${_KERAS_PREDICTION_URL}"
+
+          echo ${_ENV_VARS} > /workspace/env_vars
+
+    - id: "Deploy scrapePosts function"
+      name: "gcr.io/cloud-builders/gcloud"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          _ENV_VARS=$(cat /workspace/env_vars)
+
+          gcloud functions deploy scrapePosts \
+              --entry-point scrapePosts \
+              --allow-unauthenticated \
+              --trigger-http \
+              --runtime nodejs14 \
+              --set-env-vars "${_ENV_VARS}" \
+              --timeout 300s \
+              --memory 1024MB
       dir: "functions"
+      waitFor: ["Store env vars string"]
+
+    - id: "Deploy ingestImages function"
+      name: "gcr.io/cloud-builders/gcloud"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          _ENV_VARS=$(cat /workspace/env_vars)
+
+          gcloud functions deploy ingestImages \
+              --entry-point ingestImages \
+              --allow-unauthenticated \
+              --trigger-http \
+              --runtime nodejs14 \
+              --set-env-vars "${_ENV_VARS}" \
+              --timeout 300s \
+              --memory 1024MB
+      dir: "functions"
+      waitFor: ["Store env vars string"]
+
+    - id: "Deploy ingestPosts function"
+      name: "gcr.io/cloud-builders/gcloud"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          _ENV_VARS=$(cat /workspace/env_vars)
+
+          gcloud functions deploy ingestPosts \
+              --entry-point ingestPosts \
+              --allow-unauthenticated \
+              --trigger-http \
+              --runtime nodejs14 \
+              --set-env-vars "${_ENV_VARS}" \
+              --timeout 300s \
+              --memory 1024MB
+      dir: "functions"
+      waitFor: ["Store env vars string"]
+
+    - id: "Deploy predict function"
+      name: "gcr.io/cloud-builders/gcloud"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          _ENV_VARS=$(cat /workspace/env_vars)
+
+          gcloud functions deploy predict \
+              --entry-point predict \
+              --allow-unauthenticated \
+              --trigger-http \
+              --runtime nodejs14 \
+              --set-env-vars "${_ENV_VARS}" \
+              --timeout 300s \
+              --memory 1024MB
+      dir: "functions"
+      waitFor: ["Store env vars string"]
 
 substitutions:
   _CLIENT_ID: ""
