@@ -33,3 +33,11 @@ gcloud functions deploy predict \
     --set-env-vars $ENV_VARS \
     --timeout 300s \
     --memory 1024MB
+
+# Enable public access.
+
+gcloud alpha functions add-iam-policy-binding scrapePosts --member=allUsers --role=roles/cloudfunctions.invoker
+
+gcloud alpha functions add-iam-policy-binding ingestPosts --member=allUsers --role=roles/cloudfunctions.invoker
+
+gcloud alpha functions add-iam-policy-binding predict --member=allUsers --role=roles/cloudfunctions.invoker
