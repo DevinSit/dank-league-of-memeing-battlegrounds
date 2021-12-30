@@ -15,12 +15,11 @@ main:
           - loopPosts:
               for:
                   value: post
-                  index: i
                   in: ${postsResult.body.posts}
                   steps:
                     - extractImageUrl:
                         assign:
-                          - imageUrls[i]: ${post.url}
+                          - imageUrls: ${list.concat(imageUrls, post.url)}
 
     - ingestImages:
         call: http.post
