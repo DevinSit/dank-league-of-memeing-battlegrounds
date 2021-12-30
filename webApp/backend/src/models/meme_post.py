@@ -2,10 +2,10 @@ import json
 import os
 import logging
 from cachetools import cached, TTLCache
-from google.cloud import datastore, pubsub_v1, storage
+from google.cloud import datastore, storage
 from typing import BinaryIO, List, Tuple
 from werkzeug.utils import secure_filename
-from config import IMAGE_SIZE, IMAGES_STORAGE_BUCKET, PREDICTIONS_TOPIC
+from config import IMAGE_SIZE, IMAGES_STORAGE_BUCKET
 from utils.blockhash import hash_image
 
 
@@ -16,16 +16,13 @@ predictions_cache = TTLCache(maxsize=200, ttl=3600)
 
 POST_KIND = "RedditPost"
 KERAS_PREDICTION_KIND = "DankKerasPrediction"
-AUTOML_PREDICTION_KIND = "DankAutoMLPrediction"
 POST_SCORE_KIND = "RedditPostScore"
 
 
 class MemePost:
     def __init__(self):
-        # Disabled for demo purposes
-        # self.datastore_client = datastore.Client()
-        # self.publisher_client = pubsub_v1.PublisherClient()
-        # self.storage_client = storage.Client()
+        self.datastore_client = datastore.Client()
+        self.storage_client = storage.Client()
         pass
 
     def get_latest_posts(self, number_of_posts=10):
@@ -67,7 +64,8 @@ class MemePost:
         os.remove(hash_source)
 
         message = json.dumps([{"imageHash": image_hash}]).encode("utf-8")
-        self.publisher_client.publish(PREDICTIONS_TOPIC, message)
+
+        # TODO: Notify `predict` function
 
         return image_hash
 
@@ -76,13 +74,10 @@ class MemePost:
             return predictions_cache[image_hash]
 
         keras_key = self.datastore_client.key(KERAS_PREDICTION_KIND, image_hash)
-        automl_key = self.datastore_client.key(AUTOML_PREDICTION_KIND, image_hash)
-
         keras_prediction = self.datastore_client.get(keras_key)
-        automl_prediction = self.datastore_client.get(automl_key)
 
-        if keras_prediction and automl_prediction:
-            predictions = (keras_prediction["prediction"], automl_prediction["prediction"])
+        if keras_prediction:
+            predictions = (keras_prediction["prediction"])
             predictions_cache[image_hash] = predictions
 
             return predictions
@@ -108,18 +103,15 @@ class MemePost:
         posts = self._sort_by_image_hash(list(query.fetch(limit=number_of_posts)))
 
         keras_keys = [self.datastore_client.key(KERAS_PREDICTION_KIND, post["imageHash"]) for post in posts]
-        automl_keys = [self.datastore_client.key(AUTOML_PREDICTION_KIND, post["imageHash"]) for post in posts]
 
         # Because datastore_client.get_multi() doesn't return Entities in the same order as the given keys,
         # we have to sort everything by image hash. This way also fixes an issue with using a dict indexed
         # by image hash where only one post of multiple with the same hash (e.g. the "Image not found" hash)
         # would get predictions.
         keras_predictions = self._sort_by_image_hash(self.datastore_client.get_multi(keras_keys))
-        automl_predictions = self._sort_by_image_hash(self.datastore_client.get_multi(automl_keys))
 
-        for post, keras_prediction, automl_prediction in zip(posts, keras_predictions, automl_predictions):
+        for post, keras_prediction in zip(posts, keras_predictions):
             post["kerasPrediction"] = keras_prediction["prediction"]
-            post["autoMLPrediction"] = automl_prediction["prediction"]
 
         return sorted(posts, key=lambda post: post["createdUtc"], reverse=True)
 

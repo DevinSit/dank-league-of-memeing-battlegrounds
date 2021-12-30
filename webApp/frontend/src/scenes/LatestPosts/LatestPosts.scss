@@ -141,6 +141,7 @@ $post-card-selected-border-width: 5px;
 .score-bubble {
     align-items: center;
     background-color: $color-primary;
+    border: none;
     border-radius: 50px;
     box-shadow: 0 4px 6px 0 rgba(250, 85, 96, 0.2);
     color: $color-light;

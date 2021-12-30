@@ -44,7 +44,6 @@ const LatestPostsLayout = ({
                                     permalink={selectedPost.permalink}
                                     imageUrl={selectedPost.url}
                                     kerasPrediction={selectedPost.kerasPrediction}
-                                    autoMLPrediction={selectedPost.autoMLPrediction}
                                     alreadyScored={alreadyScoredSelectedPost}
                                     onScoreClick={onScoreClick(selectedPost.id)}
                                 />
@@ -85,7 +84,6 @@ const PostDetails = ({
     permalink = "",
     imageUrl = "",
     kerasPrediction = 0,
-    autoMLPrediction = 0,
     alreadyScored = false,
     onScoreClick
 }) => (
@@ -98,8 +96,7 @@ const PostDetails = ({
         </div>
 
         <div className="post-details__predictions">
-            <ImagePrediction prediction={kerasPrediction} predictionType="Keras" />
-            <ImagePrediction prediction={autoMLPrediction} predictionType="AutoML" />
+            <ImagePrediction prediction={kerasPrediction} />
         </div>
 
         <div className="post-details__dank-upvote">

@@ -11,4 +11,3 @@ MODELS_LOCATION = os.environ.get(
 MODEL_FILE = os.path.join(MODELS_LOCATION, "vgg16_complex_small_images_40_dense_checkpoint.h5")
 
 PROJECT_ID = "serverless-hackathon-devin"
-PREDICTIONS_TOPIC = "projects/{}/topics/dank-meme-classifier-dank-predictions-topic".format(PROJECT_ID)
