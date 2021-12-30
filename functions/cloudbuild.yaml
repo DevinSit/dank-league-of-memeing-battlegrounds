@@ -3,3 +3,11 @@ steps:
       entrypoint: sh
       args: ["-c", "sh ./scripts/deploy.sh"]
       dir: "functions"
+
+substitutions:
+  _CLIENT_ID: ""
+  _CLIENT_SECRET: ""
+  _USER_AGENT: ""
+  _REDDIT_USERNAME: ""
+  _REDDIT_PASSWORD: ""
+  _KERAS_PREDICTION_URL: ""
