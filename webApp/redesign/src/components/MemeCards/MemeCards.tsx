@@ -1,9 +1,8 @@
-import type {NextPage} from "next";
 import {useState} from "react";
 import {useSprings, animated, to as interpolate} from "@react-spring/web";
 import {useDrag} from "react-use-gesture";
 
-import styles from "styles/test.module.scss";
+import styles from "./MemeCards.module.scss";
 
 const cards = [
     "https://upload.wikimedia.org/wikipedia/en/f/f5/RWS_Tarot_08_Strength.jpg",
@@ -27,7 +26,7 @@ const from = (_i: number) => ({x: 0, scale: 1.5, y: -1000});
 // This is being used down there in the view, it interpolates scale into a css transform
 const trans = (s: number) => `scale(${s})`;
 
-const Deck = () => {
+const MemeCards = () => {
     const [gone] = useState(() => new Set()); // The set flags all the cards that are flicked out
     const [props, api] = useSprings(cards.length, (i) => ({...to(i), from: from(i)})); // Create a bunch of springs using the helpers above
 
@@ -82,12 +81,4 @@ const Deck = () => {
     );
 };
 
-const Test: NextPage = () => {
-    return (
-        <div>
-            <Deck />
-        </div>
-    );
-};
-
-export default Test;
+export default MemeCards;
