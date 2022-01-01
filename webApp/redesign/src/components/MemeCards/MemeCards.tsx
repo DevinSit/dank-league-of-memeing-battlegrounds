@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import {useState} from "react";
 import {useSprings, animated, to as interpolate} from "@react-spring/web";
 import {useDrag} from "react-use-gesture";
@@ -13,20 +14,11 @@ const cards = [
     "https://upload.wikimedia.org/wikipedia/en/d/de/RWS_Tarot_01_Magician.jpg"
 ];
 
-// These two are just helpers, they curate spring data, values that are later being interpolated into css
-const to = (i: number) => ({
-    x: i * 8,
-    y: 0,
-    scale: 1,
-    delay: i * 100
-});
+interface MemeCardsProps {
+    className?: string;
+}
 
-const from = (_i: number) => ({x: 0, scale: 1.5, y: -1000});
-
-// This is being used down there in the view, it interpolates scale into a css transform
-const trans = (s: number) => `scale(${s})`;
-
-const MemeCards = () => {
+const MemeCards = ({className}: MemeCardsProps) => {
     const [gone] = useState(() => new Set()); // The set flags all the cards that are flicked out
     const [props, api] = useSprings(cards.length, (i) => ({...to(i), from: from(i)})); // Create a bunch of springs using the helpers above
 
@@ -64,12 +56,17 @@ const MemeCards = () => {
 
     // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
     return (
-        <>
+        <div className={className}>
             {props.map(({x, y, scale}, i) => (
-                <animated.div className={styles.deck} key={i} style={{x, y}}>
+                <animated.div
+                    className={classNames(styles.MemeCardContainer)}
+                    key={i}
+                    style={{x, y}}
+                >
                     {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which) */}
                     <animated.div
                         {...bind(i)}
+                        className={styles.MemeCard}
                         style={{
                             transform: interpolate([scale], trans),
                             backgroundImage: `url(${cards[i]})`
@@ -77,8 +74,23 @@ const MemeCards = () => {
                     />
                 </animated.div>
             ))}
-        </>
+        </div>
     );
 };
 
 export default MemeCards;
+
+/* Helper Stuff */
+
+// These two are just helpers, they curate spring data, values that are later being interpolated into css
+const to = (i: number) => ({
+    x: i * 8,
+    y: 0,
+    scale: 1,
+    delay: i * 100
+});
+
+const from = (_i: number) => ({x: 0, scale: 1.5, y: -1000});
+
+// This is being used down there in the view, it interpolates scale into a css transform
+const trans = (s: number) => `scale(${s})`;

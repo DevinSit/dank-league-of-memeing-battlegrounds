@@ -1,31 +1,29 @@
-.container {
-    background: lightblue;
-    cursor: url("https://uploads.codesandbox.io/uploads/user/b3e56831-8b98-4fee-b941-0e27f39883ab/Ad1_-cursor.png")
-            39 39,
-        auto;
-}
-
-.deck {
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-    will-change: transform;
-    display: flex;
+.MemeCardContainer {
     align-items: center;
+    display: flex;
     justify-content: center;
+    position: absolute;
     touch-action: none;
-}
-
-.deck > div {
-    background-color: white;
-    background-size: auto 85%;
-    background-repeat: no-repeat;
-    background-position: center center;
-    width: 45vh;
-    max-width: 300px;
-    height: 85vh;
-    max-height: 570px;
     will-change: transform;
-    border-radius: 10px;
-    box-shadow: 0 12.5px 40px -10px rgba(50, 50, 73, 0.4), 0 10px 10px -10px rgba(50, 50, 73, 0.3);
+
+    // The height and width of the container determines the card's absolute positioning
+    // within the viewport. Here, these values are adjusted so that the cards land
+    // center (horizontally) and evenly spaced in the center of the app's title and nav.
+    height: 70vh;
+    width: 92vw;
+
+    .MemeCard {
+        background-color: white;
+        background-size: auto 85%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        box-shadow: 0 12.5px 40px -10px rgba(50, 50, 73, 0.4),
+            0 10px 10px -10px rgba(50, 50, 73, 0.3);
+        border-radius: 10px;
+        height: 50vh;
+        max-width: 600px;
+        max-height: 400px;
+        width: 80vh;
+        will-change: transform;
+    }
 }
