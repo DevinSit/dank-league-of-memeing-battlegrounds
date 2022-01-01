@@ -1,5 +1,6 @@
 import type {NextPage} from "next";
 import Head from "next/head";
+import {AppNavigation} from "components/";
 import {Rules} from "scenes/";
 
 const Home: NextPage = () => {
@@ -12,6 +13,8 @@ const Home: NextPage = () => {
             </Head>
 
             <Rules />
+
+            <AppNavigation />
         </>
     );
 };

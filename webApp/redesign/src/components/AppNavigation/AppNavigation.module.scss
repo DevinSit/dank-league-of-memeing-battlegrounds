@@ -1,0 +1,44 @@
+@import "styles/_shared.scss";
+
+$icon-size-small: 24px;
+$icon-size-large: 32px;
+
+.AppNavigation {
+    background-color: $color-white;
+    bottom: $size-600;
+    border-radius: $border-radius-rounded;
+    box-shadow: 0px 0px 4px 4px transparentize($color-primary-dark, 0.25);
+    display: grid;
+    gap: $size-600;
+    grid-template-columns: repeat(4, $icon-size-small);
+    left: 50%;
+    padding: $size-200 $size-500;
+    position: fixed;
+    transform: translateX(-50%);
+
+    @include media-query-medium {
+        gap: $size-700;
+        grid-template-columns: repeat(4, $icon-size-large);
+        padding: $size-300 ($size-500 + $size-100);
+    }
+
+    .AppNavigationIcon {
+        @include svg-icon-color($color-primary-light);
+
+        height: $icon-size-small;
+        width: $icon-size-small;
+
+        @include media-query-medium {
+            height: $icon-size-large;
+            width: $icon-size-large;
+        }
+
+        &.AppNavigationIcon_active {
+            @include svg-icon-color($color-primary);
+        }
+    }
+}
+
+.IconButton {
+    background-color: transparent;
+}

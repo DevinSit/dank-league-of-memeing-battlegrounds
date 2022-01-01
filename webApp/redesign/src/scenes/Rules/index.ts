@@ -1,1 +1,1 @@
-export {default} from "./Rules.tsx";
+export {default} from "./Rules";
