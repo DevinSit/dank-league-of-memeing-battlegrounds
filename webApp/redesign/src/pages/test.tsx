@@ -3,7 +3,7 @@ import {useState} from "react";
 import {useSprings, animated, to as interpolate} from "@react-spring/web";
 import {useDrag} from "react-use-gesture";
 
-import styles from "../styles/test.module.scss";
+import styles from "styles/test.module.scss";
 
 const cards = [
     "https://upload.wikimedia.org/wikipedia/en/f/f5/RWS_Tarot_08_Strength.jpg",
