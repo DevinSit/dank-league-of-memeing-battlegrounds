@@ -1,0 +1,13 @@
+@import "styles/_shared.scss";
+
+.AppTitle {
+    color: $color-text-primary-light;
+    font-size: $font-size-600;
+    font-weight: $font-weight-bold;
+    padding: $size-400 0;
+    text-align: center;
+
+    @include media-query-medium {
+        font-size: $font-size-800;
+    }
+}

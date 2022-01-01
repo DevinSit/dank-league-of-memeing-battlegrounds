@@ -2,8 +2,6 @@ import styles from "./Rules.module.scss";
 
 const Rules = () => (
     <div className={styles.Rules}>
-        <h1 className={styles.DankMemerTitle}>Are you a Dank Memer?</h1>
-
         <div className={styles.RulesCard}>
             <h2 className={styles.RulesCardHeader}>Rules</h2>
 

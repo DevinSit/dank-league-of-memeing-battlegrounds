@@ -1,9 +1,9 @@
 import type {NextPage} from "next";
 import Head from "next/head";
 import {AppNavigation, AppTitle} from "components/";
-import {Rules} from "scenes/";
+import {Game} from "scenes/";
 
-const Home: NextPage = () => {
+const GamePage: NextPage = () => {
     return (
         <>
             <Head>
@@ -14,11 +14,11 @@ const Home: NextPage = () => {
 
             <AppTitle />
 
-            <Rules />
+            <Game />
 
             <AppNavigation />
         </>
     );
 };
 
-export default Home;
+export default GamePage;
