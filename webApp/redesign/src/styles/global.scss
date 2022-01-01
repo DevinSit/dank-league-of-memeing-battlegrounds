@@ -1,9 +1,8 @@
 // This file is all of the global styles that wouldn't be apart of the reset,
 // but are specific to this app.
 
-@import "styles/_colors.module.scss";
-@import "styles/_fonts.module.scss";
 @import "styles/_reset.scss";
+@import "styles/_shared.scss";
 
 body {
     color: $color-text-primary;
@@ -12,8 +11,13 @@ body {
 html,
 body,
 #root {
+    background-color: $color-primary;
     height: 100%;
     width: 100%;
+}
+
+body {
+    padding: $size-400;
 }
 
 button {

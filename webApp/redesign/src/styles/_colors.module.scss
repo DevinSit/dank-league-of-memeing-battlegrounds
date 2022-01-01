@@ -90,7 +90,7 @@ $color-white: hsl(0, 0%, 100%);
 /** Semantic Colors **/
 
 $color-primary: $color-future-500;
-$color-primary-dark: $color-future-800;
+$color-primary-dark: $color-future-600;
 $color-primary-light: $color-future-100;
 $color-primary-hover: $color-future-700;
 $color-primary-disabled: $color-future-300;
@@ -102,6 +102,10 @@ $color-text-primary: $color-neutral-700;
 $color-text-secondary: $color-neutral-600;
 $color-text-tertiary: $color-neutral-500;
 $color-text-disabled: $color-neutral-500;
+
+$color-text-primary-light: $color-future-100;
+$color-text-secondary-light: $color-future-200;
+$color-text-tertiary-light: $color-future-300;
 
 $color-background-neutral: $color-neutral-200;
 $color-background-dark: $color-primary-900;

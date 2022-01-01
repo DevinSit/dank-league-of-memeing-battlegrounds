@@ -1,0 +1,71 @@
+@import "styles/_shared.scss";
+
+.DankMemerTitle {
+    color: $color-text-primary-light;
+    font-size: $font-size-600;
+    font-weight: $font-weight-bold;
+    padding: $size-400 0;
+    text-align: center;
+
+    @include media-query-medium {
+        font-size: $font-size-800;
+    }
+}
+
+.Rules {
+    .RulesCard {
+        background-color: $color-white;
+        border-radius: $border-radius-large;
+        box-shadow: 0px 2px 10px 1px rgba(0, 0, 0, 0.16);
+        margin: 0 auto;
+        margin-top: 10vh;
+        max-width: 450px;
+        padding: $size-400;
+
+        @include media-query-medium {
+            padding: $size-500;
+        }
+
+        .RulesCardHeader {
+            font-weight: $font-weight-bold;
+            margin-bottom: $size-400;
+
+            @include media-query-medium {
+                margin-bottom: $size-500;
+            }
+        }
+
+        .RulesCardList {
+            list-style: number;
+            padding-left: $size-400 + $size-100;
+
+            @include media-query-medium {
+                padding-left: $size-500 - $size-100;
+            }
+
+            li {
+                font-size: $font-size-300;
+                line-height: $font-line-height-400;
+
+                @include media-query-medium {
+                    font-size: $font-size-400;
+                }
+            }
+        }
+
+        .RulesCardButtonContainer {
+            display: flex;
+            justify-content: center;
+            margin-top: $size-400;
+
+            .RulesCardButton {
+                border-radius: $border-radius-rounded;
+                background-color: $color-primary;
+                box-shadow: 0px 0px 4px 1px transparentize($color-primary-dark, 0.5);
+                color: $color-white;
+                font-size: $font-size-500;
+                padding: $size-200 $size-700;
+            }
+        }
+    }
+}
