@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import {useState} from "react";
 import {useSprings, animated, to as interpolate} from "@react-spring/web";
 import {useDrag} from "react-use-gesture";
@@ -18,11 +17,7 @@ const cards = [
     "https://upload.wikimedia.org/wikipedia/en/d/de/RWS_Tarot_01_Magician.jpg"
 ];
 
-interface MemeCardsProps {
-    className?: string;
-}
-
-const MemeCards = ({className}: MemeCardsProps) => {
+const MemeCards = () => {
     // The set flags all the cards that are flicked out
     const [gone] = useState(() => new Set());
 
@@ -92,25 +87,27 @@ const MemeCards = ({className}: MemeCardsProps) => {
     );
 
     return (
-        <div className={className}>
-            {props.map(({x, y, scale}, i) => (
-                <animated.div
-                    className={classNames(styles.MemeCardContainer)}
-                    key={i}
-                    style={{x, y}}
-                >
-                    {/* This is the card itself, we're binding our gesture to it (and
-                        inject its index so we know which is which) */}
-                    <animated.div
-                        {...bind(i)}
-                        className={styles.MemeCard}
-                        style={{
-                            transform: interpolate([scale], trans),
-                            backgroundImage: `url(${cards[i]})`
-                        }}
-                    />
-                </animated.div>
-            ))}
+        <div className={styles.MemeCards}>
+            <button className={styles.GameButtonDank}>Dank</button>
+
+            <div className={styles.MemeCardsStack}>
+                {props.map(({x, y, scale}, i) => (
+                    <animated.div className={styles.MemeCardContainer} key={i} style={{x, y}}>
+                        {/* This is the card itself, we're binding our gesture to it (and
+                            inject its index so we know which is which). */}
+                        <animated.div
+                            {...bind(i)}
+                            className={styles.MemeCard}
+                            style={{
+                                transform: interpolate([scale], trans),
+                                backgroundImage: `url(${cards[i]})`
+                            }}
+                        />
+                    </animated.div>
+                ))}
+            </div>
+
+            <button className={styles.GameButtonNotDank}>Not Dank</button>
         </div>
     );
 };

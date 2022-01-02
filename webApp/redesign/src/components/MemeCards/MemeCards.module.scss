@@ -1,53 +1,96 @@
 @import "styles/_shared.scss";
 
-.MemeCardContainer {
+@mixin card-height() {
+    height: 50vh;
+    max-height: 200px;
+
+    @include media-query-medium {
+        max-height: 300px;
+    }
+
+    @include media-query-large {
+        max-height: 400px;
+    }
+}
+
+@mixin card-width() {
+    max-width: 300px;
+    width: 100vw;
+
+    @include media-query-medium {
+        max-width: 450px;
+    }
+
+    @include media-query-large {
+        max-width: 600px;
+    }
+}
+
+.MemeCards {
     align-items: center;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     position: absolute;
-    touch-action: none;
-    will-change: transform;
+    top: 15vh;
+    width: 100%;
+}
 
-    // The height and width of the container determines the card's absolute positioning
-    // within the viewport. Here, these values are adjusted so that the cards land
-    // center (horizontally) and evenly spaced in the center of the app's title and nav.
-    height: 70vh;
+.MemeCardsStack {
+    @include card-height();
+
     width: 100%;
 
-    z-index: 1;
+    .MemeCardContainer {
+        @include card-height();
 
-    &:first-child {
-        // The last card (which is at the bottom of stack with index = 0 and that is
-        // the "first" child) looks better when it has a more defined shadow than the other
-        // cards.
-        .MemeCard {
-            box-shadow: 0 12.5px 40px -10px rgba(50, 50, 73, 0.8),
-                0 10px 10px -10px rgba(50, 50, 73, 0.7);
-        }
-    }
-
-    .MemeCard {
-        background-color: white;
-        background-size: auto 85%;
-        background-repeat: no-repeat;
-        background-position: center center;
-        box-shadow: 0 12.5px 40px -10px rgba(50, 50, 73, 0.3),
-            0 10px 10px -10px rgba(50, 50, 73, 0.2);
-        border-radius: 10px;
-        height: 50vh;
-        max-height: 200px;
-        max-width: 300px;
-        width: 100vw;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        position: absolute;
+        touch-action: none;
         will-change: transform;
+        width: 100%;
+        z-index: 1;
 
-        @include media-query-medium {
-            max-height: 300px;
-            max-width: 450px;
+        &:first-child {
+            // The last card (which is at the bottom of stack with index = 0 and that is
+            // the "first" child) looks better when it has a more defined shadow than the
+            // other cards.
+            .MemeCard {
+                box-shadow: 0 12.5px 40px -10px rgba(50, 50, 73, 0.8),
+                    0 10px 10px -10px rgba(50, 50, 73, 0.7);
+            }
         }
 
-        @include media-query-large {
-            max-height: 400px;
-            max-width: 600px;
+        .MemeCard {
+            @include card-height();
+            @include card-width();
+
+            background-color: white;
+            background-size: auto 85%;
+            background-repeat: no-repeat;
+            background-position: center center;
+            box-shadow: 0 12.5px 40px -10px rgba(50, 50, 73, 0.3),
+                0 10px 10px -10px rgba(50, 50, 73, 0.2);
+            border-radius: 10px;
+            will-change: transform;
         }
     }
+}
+
+.GameButtonDank,
+.GameButtonNotDank {
+    background-color: transparent;
+    color: $color-text-secondary-light;
+    font-size: $font-size-500;
+    font-style: italic;
+}
+
+.GameButtonDank {
+    margin-bottom: $size-700;
+}
+
+.GameButtonNotDank {
+    margin-top: $size-800;
 }
