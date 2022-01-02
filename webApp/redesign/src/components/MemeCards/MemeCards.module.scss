@@ -1,3 +1,5 @@
+@import "styles/_shared.scss";
+
 .MemeCardContainer {
     align-items: center;
     display: flex;
@@ -10,9 +12,9 @@
     // within the viewport. Here, these values are adjusted so that the cards land
     // center (horizontally) and evenly spaced in the center of the app's title and nav.
     height: 70vh;
-    width: 76vw;
+    width: 100%;
 
-    z-index: 100000;
+    z-index: 1;
 
     .MemeCard {
         background-color: white;
@@ -23,9 +25,19 @@
             0 10px 10px -10px rgba(50, 50, 73, 0.3);
         border-radius: 10px;
         height: 50vh;
-        max-width: 600px;
-        max-height: 400px;
-        width: 80vh;
+        max-height: 250px;
+        max-width: 375px;
+        width: 100vw;
         will-change: transform;
+
+        @include media-query-medium {
+            max-height: 300px;
+            max-width: 450px;
+        }
+
+        @include media-query-large {
+            max-height: 400px;
+            max-width: 600px;
+        }
     }
 }

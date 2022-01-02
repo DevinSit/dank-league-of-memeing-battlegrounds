@@ -5,8 +5,7 @@
 $breakpoint-extra-small: 350px;
 $breakpoint-small: 400px;
 $breakpoint-medium: 500px;
-
-$breakpoint-navigation-change: 800px;
+$breakpoint-large: 800px;
 
 $breakpoint-small-vertical: 700px;
 $breakpoint-small-medium-vertical: 1000px;
@@ -39,6 +38,12 @@ $media-query-property-vertical: min-height;
     }
 }
 
+@mixin media-query-large {
+    @media (#{$media-query-property}: #{$breakpoint-large}) {
+        @content;
+    }
+}
+
 @mixin media-query-small-vertical {
     @media (#{$media-query-property-vertical}: #{$breakpoint-small-vertical}) {
         @content;
@@ -47,12 +52,6 @@ $media-query-property-vertical: min-height;
 
 @mixin media-query-medium-vertical {
     @media (#{$media-query-property-vertical}: #{$breakpoint-medium-vertical}) {
-        @content;
-    }
-}
-
-@mixin media-query-navigation-change {
-    @media (#{$media-query-property}: #{$breakpoint-navigation-change}) {
         @content;
     }
 }
@@ -75,7 +74,7 @@ $media-query-property-vertical: min-height;
     /* stylelint-disable */
     breakpointSmall: $breakpoint-small;
     breakpointMedium: $breakpoint-medium;
-    breakpointNavigationChange: $breakpoint-navigation-change;
+    breakpointLarge: $breakpoint-large;
     breakpointAccountDetailsDoubleColumn: $breakpoint-account-details-double-column;
 
     mediaQueryProperty: $media-query-property;

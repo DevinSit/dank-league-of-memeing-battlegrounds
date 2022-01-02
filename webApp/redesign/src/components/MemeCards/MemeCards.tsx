@@ -135,6 +135,7 @@ const trans = (s: number) => `scale(${s})`;
 // In order to get that "layered perspective" look, we need to scale each further
 // card down. Here, 0.03 is the scaling factor.
 const calcScale = (i: number) => 1 - (cards.length - 1 - i) * 0.03;
+// const calcScale = (i: number) => 1;
 
 // Another part of the "layered perspective" look, cards get shifted a bit to the left.
-const calcShift = (i: number) => i * 16;
+const calcShift = (i: number) => (cards.length - 1 - i) * -16;
