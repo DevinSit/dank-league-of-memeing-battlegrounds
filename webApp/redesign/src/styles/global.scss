@@ -4,20 +4,22 @@
 @import "styles/_reset.scss";
 @import "styles/_shared.scss";
 
-body {
-    color: $color-text-primary;
-}
-
 html,
 body,
-#root {
+#root,
+#__next {
     background-color: $color-primary;
     height: 100%;
     width: 100%;
 }
 
 body {
+    color: $color-text-primary;
     padding: $size-400 0;
+
+    &.game-mode {
+        overflow: hidden;
+    }
 }
 
 button {
