@@ -16,17 +16,27 @@
 
     z-index: 1;
 
+    &:first-child {
+        // The last card (which is at the bottom of stack with index = 0 and that is
+        // the "first" child) looks better when it has a more defined shadow than the other
+        // cards.
+        .MemeCard {
+            box-shadow: 0 12.5px 40px -10px rgba(50, 50, 73, 0.8),
+                0 10px 10px -10px rgba(50, 50, 73, 0.7);
+        }
+    }
+
     .MemeCard {
         background-color: white;
         background-size: auto 85%;
         background-repeat: no-repeat;
         background-position: center center;
-        box-shadow: 0 12.5px 40px -10px rgba(50, 50, 73, 0.4),
-            0 10px 10px -10px rgba(50, 50, 73, 0.3);
+        box-shadow: 0 12.5px 40px -10px rgba(50, 50, 73, 0.3),
+            0 10px 10px -10px rgba(50, 50, 73, 0.2);
         border-radius: 10px;
         height: 50vh;
-        max-height: 250px;
-        max-width: 375px;
+        max-height: 200px;
+        max-width: 300px;
         width: 100vw;
         will-change: transform;
 

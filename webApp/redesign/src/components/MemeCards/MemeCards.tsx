@@ -127,15 +127,14 @@ const to = (i: number) => ({
     delay: i * 100
 });
 
-const from = (_i: number) => ({x: 0, scale: 1.5, y: -1000});
+// Note: We're using `vw` for the `x` (shift) values so that they scale responsively.
+const from = (_i: number) => ({x: "0vw", scale: 1.5, y: -1000});
 
 // This is being used down there in the view, it interpolates scale into a css transform
 const trans = (s: number) => `scale(${s})`;
 
-// In order to get that "layered perspective" look, we need to scale each further
-// card down. Here, 0.03 is the scaling factor.
-const calcScale = (i: number) => 1 - (cards.length - 1 - i) * 0.03;
-// const calcScale = (i: number) => 1;
+// In order to get that "layered perspective" look, we need to scale each further card down.
+const calcScale = (i: number) => 1 - (cards.length - 1 - i) * 0.035;
 
 // Another part of the "layered perspective" look, cards get shifted a bit to the left.
-const calcShift = (i: number) => (cards.length - 1 - i) * -16;
+const calcShift = (i: number) => `${(cards.length - 1 - i) * -1.8}vw`;
