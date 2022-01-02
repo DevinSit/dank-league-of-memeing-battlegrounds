@@ -10,7 +10,9 @@
     // within the viewport. Here, these values are adjusted so that the cards land
     // center (horizontally) and evenly spaced in the center of the app's title and nav.
     height: 70vh;
-    width: 92vw;
+    width: 76vw;
+
+    z-index: 100000;
 
     .MemeCard {
         background-color: white;
