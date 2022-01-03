@@ -1,4 +1,75 @@
 @import "styles/_shared.scss";
 
+$leaderboard-item-size: 300px;
+
 .Leaderboard {
+    display: grid;
+    gap: $size-700;
+    grid-template-rows: auto auto;
+    padding-top: $size-500;
+    width: 100%;
+
+    @include media-query-large {
+        justify-content: center;
+        gap: $size-900;
+        grid-template-columns: $leaderboard-item-size $leaderboard-item-size;
+        padding-top: $size-800;
+    }
+
+    .LeaderboardSection {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        h1 {
+            color: $color-white;
+            font-weight: $font-weight-bold;
+            margin-bottom: $size-400;
+            max-width: $leaderboard-item-size;
+            width: 100%;
+
+            @include media-query-large {
+                margin-bottom: $size-600;
+            }
+        }
+
+        .LeaderboardList {
+            display: grid;
+            gap: $size-400;
+            grid-auto-flow: row;
+            max-width: $leaderboard-item-size;
+            width: 100%;
+        }
+    }
+}
+
+.LeaderboardItem {
+    @include list-item-shadow();
+
+    align-items: center;
+    background-color: $color-white;
+    border-radius: $border-radius-large;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    max-width: $leaderboard-item-size;
+    padding: $size-300 $size-300;
+    width: 100%;
+
+    .LeaderboardItemRank {
+        color: $color-primary;
+        font-size: $font-size-500;
+        font-weight: $font-weight-bold;
+    }
+
+    .LeaderboardItemUsername {
+        font-size: $font-size-400;
+    }
+
+    .LeaderboardItemScore {
+        color: $color-neutral-900;
+        font-size: $font-size-400;
+        font-weight: $font-weight-bold;
+        text-align: right;
+    }
 }

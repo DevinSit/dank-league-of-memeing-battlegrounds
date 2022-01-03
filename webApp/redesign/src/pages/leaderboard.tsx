@@ -12,8 +12,6 @@ const LeaderboardPage: NextPage = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <AppTitle />
-
             <Leaderboard />
 
             <AppNavigation />

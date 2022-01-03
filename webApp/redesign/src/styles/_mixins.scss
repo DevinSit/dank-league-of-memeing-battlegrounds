@@ -187,9 +187,8 @@
         0 4px 10px transparentize($color: $color-primary, $amount: 0.7);
 }
 
-@mixin list-item-shadow($transparency: 0.9) {
-    // Just a small, subtle shadow to give the list item a tiny bit of depth.
-    box-shadow: 0 1px 2px transparentize($color: $color-neutral-700, $amount: $transparency);
+@mixin list-item-shadow() {
+    box-shadow: 0px 0px 4px 4px transparentize($color-primary-dark, 0.25);
 }
 
 // This is the 'double' shadow that is used by e.g. the `ShadowButton`.

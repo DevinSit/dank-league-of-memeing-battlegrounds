@@ -4,10 +4,11 @@ $icon-size-small: 24px;
 $icon-size-large: 32px;
 
 .AppNavigation {
+    @include list-item-shadow();
+
     background-color: $color-white;
     bottom: $size-600;
     border-radius: $border-radius-rounded;
-    box-shadow: 0px 0px 4px 4px transparentize($color-primary-dark, 0.25);
     display: grid;
     gap: $size-600;
     grid-template-columns: repeat(4, $icon-size-small);

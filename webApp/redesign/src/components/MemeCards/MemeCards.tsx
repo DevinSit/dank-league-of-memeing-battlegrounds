@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {useSpring, useSprings, animated} from "@react-spring/web";
 import {useDrag} from "react-use-gesture";
-
+import {ValueFormatting} from "services/";
 import styles from "./MemeCards.module.scss";
 
 const cards = [
@@ -141,9 +141,7 @@ const MemeCards = () => {
                 </div>
 
                 <animated.p className={styles.GameScore}>
-                    {animatedScore.to((n: number) =>
-                        n.toLocaleString("en", {minimumFractionDigits: 0, maximumFractionDigits: 0})
-                    )}
+                    {animatedScore.to(ValueFormatting.formatScore)}
                 </animated.p>
             </div>
         </div>
