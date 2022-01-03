@@ -46,14 +46,21 @@
             justify-content: center;
             margin-top: $size-400;
 
-            .RulesCardButton {
+            .RulesCardPlayLink {
+                @include micro-transition(background-color);
+
                 border-radius: $border-radius-rounded;
                 background-color: $color-primary;
                 box-shadow: 0px 0px 4px 1px transparentize($color-primary-dark, 0.5);
                 color: $color-white;
                 font-size: $font-size-500;
                 font-weight: $font-weight-bold;
-                padding: $size-200 $size-700;
+                padding: $size-300 $size-800;
+
+                &:hover,
+                &:focus {
+                    background-color: $color-primary-dark;
+                }
             }
         }
     }

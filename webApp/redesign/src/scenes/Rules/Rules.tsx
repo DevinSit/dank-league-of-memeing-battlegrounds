@@ -1,3 +1,5 @@
+import Link from "next/link";
+import {ScreenUrls} from "values/screenUrls";
 import styles from "./Rules.module.scss";
 
 const Rules = () => (
@@ -15,7 +17,9 @@ const Rules = () => (
             </ol>
 
             <div className={styles.RulesCardButtonContainer}>
-                <button className={styles.RulesCardButton}>Play</button>
+                <Link href={ScreenUrls.GAME}>
+                    <a className={styles.RulesCardPlayLink}>Play</a>
+                </Link>
             </div>
         </div>
     </div>
