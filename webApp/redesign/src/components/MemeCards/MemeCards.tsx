@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {useSpring, useSprings, animated, to as interpolate} from "@react-spring/web";
+import {useSpring, useSprings, animated} from "@react-spring/web";
 import {useDrag} from "react-use-gesture";
 
 import styles from "./MemeCards.module.scss";
@@ -100,9 +100,16 @@ const useTimerAnimation = () => {
     return {timerStyles};
 };
 
+const useScoreAnimation = (score: number = 1230000) => {
+    const {animatedScore} = useSpring({from: {animatedScore: 0}, to: {animatedScore: score}});
+
+    return {animatedScore};
+};
+
 const MemeCards = () => {
     const {bind, cardSprings} = useCardStackAnimation();
     const {timerStyles} = useTimerAnimation();
+    const {animatedScore} = useScoreAnimation();
 
     return (
         <div className={styles.MemeCards}>
@@ -117,7 +124,7 @@ const MemeCards = () => {
                             {...bind(i)}
                             className={styles.MemeCard}
                             style={{
-                                transform: interpolate([scale], trans),
+                                transform: scale.to(trans),
                                 backgroundImage: `url(${cards[i]})`
                             }}
                         />
@@ -133,7 +140,11 @@ const MemeCards = () => {
                     <div className={styles.GameTimerBackground} />
                 </div>
 
-                <p className={styles.GameScore}>1,230,000</p>
+                <animated.p className={styles.GameScore}>
+                    {animatedScore.to((n: number) =>
+                        n.toLocaleString("en", {minimumFractionDigits: 0, maximumFractionDigits: 0})
+                    )}
+                </animated.p>
             </div>
         </div>
     );
