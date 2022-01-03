@@ -1,4 +1,122 @@
 @import "styles/_shared.scss";
 
+$meme-height: 300px;
+$meme-width: 400px;
+
 .Classify {
+    height: 100%;
+    padding-top: $size-500;
+    width: 100%;
+
+    .MobileSpacer {
+        height: 200px;
+
+        @include media-query-large {
+            height: 0;
+        }
+    }
+
+    @include media-query-large {
+        padding-top: $size-800;
+    }
+
+    .ClassifyHeader {
+        color: $color-white;
+        font-weight: $font-weight-bold;
+        text-align: center;
+        width: 100%;
+    }
+
+    .ClassifyContent {
+        display: grid;
+        gap: $size-600;
+        grid-template-rows: auto auto;
+        margin-top: $size-600;
+        width: 100%;
+
+        @include media-query-large {
+            gap: $size-900;
+            grid-template-columns: $meme-width $meme-width;
+            justify-content: center;
+            margin-top: $size-800;
+        }
+
+        .ClassifyDropzone {
+            justify-self: center;
+            border: $border-width-thick dashed $color-text-primary-light;
+            border-radius: $border-radius-large;
+            cursor: pointer;
+            height: 150px;
+            max-width: 225px;
+            width: 100%;
+
+            @include media-query-large {
+                height: $meme-height;
+                max-width: $meme-width;
+                width: 100%;
+            }
+
+            .ClassifyDropzoneText {
+                color: $color-white;
+                font-size: $font-size-600;
+                position: absolute;
+                text-align: center;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 100%;
+            }
+        }
+
+        .ClassifyMemeContainer {
+            display: grid;
+            grid-template-rows: auto auto;
+            justify-items: center;
+            height: 100%;
+            gap: $size-600;
+            padding: 0 $size-400;
+
+            @include media-query-large {
+                padding: 0;
+            }
+
+            .ClassifyMeme {
+                @include card-shadow();
+
+                background-color: $color-neutral-400;
+                border-radius: $border-radius-large;
+                height: 200px;
+                max-width: $meme-width;
+                width: 100%;
+
+                @include media-query-large {
+                    height: $meme-height;
+                }
+            }
+
+            .ClassifyPredictionContainer {
+                @include card-shadow();
+
+                background-color: $color-white;
+                border-radius: $border-radius-large;
+                display: grid;
+                height: 100%;
+                gap: $size-400;
+                justify-items: center;
+                max-width: $meme-width;
+                padding: $size-500;
+                width: 100%;
+
+                .ClassifyPredictionHeader {
+                    align-self: flex-end;
+                    font-size: $font-size-500;
+                }
+
+                .ClassifyPrediction {
+                    color: $color-neutral-900;
+                    font-size: $font-size-700;
+                    font-weight: $font-weight-bold;
+                }
+            }
+        }
+    }
 }

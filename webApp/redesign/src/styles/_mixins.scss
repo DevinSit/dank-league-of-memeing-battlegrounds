@@ -172,7 +172,7 @@
 }
 
 @mixin card-shadow() {
-    box-shadow: 0 2px 6px transparentize($color: $color-primary-600, $amount: 0.9);
+    box-shadow: 0px 4px 10px 2px rgba(0, 0, 0, 0.2);
 }
 
 @mixin option-card-shadow() {
