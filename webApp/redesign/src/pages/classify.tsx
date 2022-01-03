@@ -1,9 +1,9 @@
 import type {NextPage} from "next";
 import Head from "next/head";
 import {AppNavigation} from "components/";
-import {Leaderboard} from "scenes/";
+import {Classify} from "scenes/";
 
-const LeaderboardPage: NextPage = () => {
+const ClassifyPage: NextPage = () => {
     return (
         <>
             <Head>
@@ -12,11 +12,11 @@ const LeaderboardPage: NextPage = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Leaderboard />
+            <Classify />
 
             <AppNavigation />
         </>
     );
 };
 
-export default LeaderboardPage;
+export default ClassifyPage;
