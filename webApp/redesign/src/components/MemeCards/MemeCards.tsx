@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {useSprings, animated, to as interpolate} from "@react-spring/web";
+import {useSpring, useSprings, animated, to as interpolate} from "@react-spring/web";
 import {useDrag} from "react-use-gesture";
 
 import styles from "./MemeCards.module.scss";
@@ -17,12 +17,12 @@ const cards = [
     "https://upload.wikimedia.org/wikipedia/en/d/de/RWS_Tarot_01_Magician.jpg"
 ];
 
-const MemeCards = () => {
+const useCardStackAnimation = () => {
     // The set flags all the cards that are flicked out
     const [gone] = useState(() => new Set());
 
     // Create a bunch of springs using the helpers above
-    const [props, api] = useSprings(cards.length, (i) => ({...to(i), from: from(i)}));
+    const [cardSprings, api] = useSprings(cards.length, (i) => ({...to(i), from: from(i)}));
 
     // Create a gesture, we're interested in down-state,
     // delta(current - pos - click - pos), direction and velocity.
@@ -86,12 +86,30 @@ const MemeCards = () => {
         }
     );
 
+    return {bind, cardSprings};
+};
+
+const useTimerAnimation = () => {
+    const timerStyles = useSpring({
+        from: {scaleX: 1},
+        to: {scaleX: 0},
+        loop: true,
+        config: {duration: 5000}
+    });
+
+    return {timerStyles};
+};
+
+const MemeCards = () => {
+    const {bind, cardSprings} = useCardStackAnimation();
+    const {timerStyles} = useTimerAnimation();
+
     return (
         <div className={styles.MemeCards}>
             <button className={styles.GameButtonDank}>Dank</button>
 
             <div className={styles.MemeCardsStack}>
-                {props.map(({x, y, scale}, i) => (
+                {cardSprings.map(({x, y, scale}, i) => (
                     <animated.div className={styles.MemeCardContainer} key={i} style={{x, y}}>
                         {/* This is the card itself, we're binding our gesture to it (and
                             inject its index so we know which is which). */}
@@ -108,6 +126,15 @@ const MemeCards = () => {
             </div>
 
             <button className={styles.GameButtonNotDank}>Not Dank</button>
+
+            <div className={styles.GameScoreContainer}>
+                <div className={styles.GameTimerContainer}>
+                    <animated.div className={styles.GameTimerTicker} style={timerStyles} />
+                    <div className={styles.GameTimerBackground} />
+                </div>
+
+                <p className={styles.GameScore}>1,230,000</p>
+            </div>
         </div>
     );
 };
