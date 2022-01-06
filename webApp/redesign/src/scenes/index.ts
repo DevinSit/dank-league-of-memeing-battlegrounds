@@ -1,3 +1,4 @@
+export {default as Browse} from "./Browse";
 export {default as Classify} from "./Classify";
 export {default as Game} from "./Game";
 export {default as GameResults} from "./GameResults";
