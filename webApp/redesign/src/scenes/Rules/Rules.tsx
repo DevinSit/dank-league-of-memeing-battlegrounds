@@ -1,4 +1,4 @@
-import Link from "next/link";
+import {LinkButton} from "components/";
 import {ScreenUrls} from "values/screenUrls";
 import styles from "./Rules.module.scss";
 
@@ -17,9 +17,7 @@ const Rules = () => (
             </ol>
 
             <div className={styles.RulesCardButtonContainer}>
-                <Link href={ScreenUrls.GAME}>
-                    <a className={styles.RulesCardPlayLink}>Play</a>
-                </Link>
+                <LinkButton href={ScreenUrls.GAME}>Play</LinkButton>
             </div>
         </div>
     </div>

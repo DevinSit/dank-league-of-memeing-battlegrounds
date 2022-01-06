@@ -1,6 +1,9 @@
 export {default as ArrowLeftIcon} from "./arrow-left.svg";
+export {default as CheckIcon} from "./check.svg";
+export {default as CloseIcon} from "./x.svg";
 export {default as ControllerIcon} from "./controller.svg";
 export {default as EditIcon} from "./edit.svg";
+export {default as ExternalLinkIcon} from "./external-link.svg";
 export {default as ListIcon} from "./list.svg";
 export {default as TrophyIcon} from "./trophy.svg";
 export {default as UploadIcon} from "./upload.svg";
