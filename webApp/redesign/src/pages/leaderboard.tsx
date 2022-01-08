@@ -6,7 +6,7 @@ const LeaderboardPage: NextPage = () => {
     return (
         <>
             <Head>
-                <title>Scores | Are you a Dank Memer?</title>
+                <title>Leaderboard | Are you a Dank Memer?</title>
             </Head>
 
             <Leaderboard />

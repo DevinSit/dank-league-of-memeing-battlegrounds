@@ -1,4 +1,8 @@
 export const ScreenUrls = {
     BROWSE: "/browse",
-    GAME: "/game"
+    CLASSIFY: "/classify",
+    GAME: "/game",
+    RULES: "/",
+    LEADERBOARD: "/leaderboard",
+    RESULTS: "/results"
 };

@@ -1,6 +1,7 @@
 import type {AppProps} from "next/app";
 import {useRouter} from "next/router";
 import {useEffect} from "react";
+import {AppNavigation} from "components/";
 import {ScreenUrls} from "values/screenUrls";
 import "styles/global.scss";
 
@@ -26,7 +27,12 @@ const useGameMode = () => {
 function MyApp({Component, pageProps}: AppProps) {
     useGameMode();
 
-    return <Component {...pageProps} />;
+    return (
+        <>
+            <Component {...pageProps} />;
+            <AppNavigation />
+        </>
+    );
 }
 
 export default MyApp;

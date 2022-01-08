@@ -1,5 +1,4 @@
 import Document, {Html, Head, Main, NextScript} from "next/document";
-import {AppNavigation} from "components/";
 
 class MyDocument extends Document {
     render() {
@@ -13,7 +12,6 @@ class MyDocument extends Document {
 
                 <body>
                     <Main />
-                    <AppNavigation />
                     <NextScript />
                 </body>
             </Html>
