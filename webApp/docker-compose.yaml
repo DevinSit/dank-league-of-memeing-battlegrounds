@@ -35,8 +35,8 @@ services:
             - ./:/gcp
         environment:
             - GOOGLE_APPLICATION_CREDENTIALS=/gcp/easy-dank-meme-classifier-account.json
-            - DATASTORE_EMULATOR_HOST=datastore:8081
-            - DATASTORE_PROJECT_ID=serverless-hackathon-devin
+            # - DATASTORE_EMULATOR_HOST=datastore:8081
+            # - DATASTORE_PROJECT_ID=serverless-hackathon-devin
             - FLASK_ENV=development
     datastore:
         image: singularities/datastore-emulator
