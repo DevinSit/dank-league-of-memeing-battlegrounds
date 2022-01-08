@@ -11,8 +11,12 @@ const Browse = () => (
                 <Post />
             </div>
 
+            <MobilePosts />
+
             <PostDetails />
         </main>
+
+        <div className={styles.MobileSpacer} />
     </div>
 );
 
@@ -37,6 +41,18 @@ const Post = ({author = "me", timestamp = new Date(), title = "Post title"}: Pos
         </div>
     </div>
 );
+
+const MobilePosts = () => {
+    const count = 8;
+
+    return (
+        <div className={styles.MobilePosts}>
+            {new Array(count).fill(0).map((_, index) => (
+                <div key={index} className={styles.MobilePost} />
+            ))}
+        </div>
+    );
+};
 
 interface PostDetailsProps {
     author?: string;

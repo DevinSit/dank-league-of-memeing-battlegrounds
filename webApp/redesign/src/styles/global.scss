@@ -20,6 +20,10 @@ body {
     &.game-mode {
         overflow: hidden;
     }
+
+    &.browse-mode {
+        overflow-x: hidden;
+    }
 }
 
 button {

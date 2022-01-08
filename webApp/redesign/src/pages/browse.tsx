@@ -9,6 +9,7 @@ const BrowsePage: NextPage = () => {
             <Head>
                 <title>Are you a Dank Memer?</title>
                 <meta name="description" content="Built by Devin Sit" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 

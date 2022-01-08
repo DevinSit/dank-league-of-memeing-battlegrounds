@@ -12,8 +12,13 @@ const useGameMode = () => {
     useEffect(() => {
         if (router.pathname === ScreenUrls.GAME) {
             document.body.classList.add("game-mode");
+            document.body.classList.remove("browse-mode");
+        } else if (router.pathname === ScreenUrls.BROWSE) {
+            document.body.classList.add("browse-mode");
+            document.body.classList.remove("game-mode");
         } else {
             document.body.classList.remove("game-mode");
+            document.body.classList.remove("browse-mode");
         }
     }, [router.pathname]);
 };

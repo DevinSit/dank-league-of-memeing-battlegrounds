@@ -3,6 +3,14 @@
 $col-width: 400px;
 $post-height: 150px;
 
+.MobileSpacer {
+    height: 200px;
+
+    @include media-query-large {
+        height: 0;
+    }
+}
+
 .Browse {
     height: 100%;
     padding-top: $size-500;
@@ -14,22 +22,37 @@ $post-height: 150px;
 
     .BrowseHeader {
         color: $color-white;
+        font-size: $font-size-600;
         font-weight: $font-weight-bold;
         text-align: center;
         width: 100%;
+
+        @include media-query-large {
+            font-size: $font-size-700;
+        }
     }
 
     .BrowseContent {
         display: grid;
-        gap: $size-900;
-        grid-template-columns: $col-width $col-width;
-        grid-auto-rows: $post-height;
+        gap: $size-600;
         justify-content: center;
-        margin-top: $size-700;
+        margin-top: $size-500;
+        padding: 0 $size-400;
+
+        @include media-query-large {
+            gap: $size-900;
+            grid-template-columns: $col-width $col-width;
+            margin-top: $size-700;
+            padding: 0;
+        }
 
         .BrowsePosts {
-            display: grid;
-            gap: $size-500;
+            display: none;
+
+            @include media-query-large {
+                display: grid;
+                gap: $size-500;
+            }
         }
     }
 }
@@ -74,7 +97,31 @@ $post-height: 150px;
     }
 }
 
+.MobilePosts {
+    display: grid;
+    gap: $size-300;
+    grid-auto-columns: $post-height;
+    grid-auto-flow: column;
+    margin: 0 (-($size-400));
+    padding: 0 $size-400;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+
+    @include media-query-large {
+        display: none;
+    }
+
+    .MobilePost {
+        background-color: $color-neutral-400;
+        border-radius: $border-radius-normal;
+        height: $post-height;
+        width: $post-height;
+    }
+}
+
 .PostDetails {
+    justify-self: center;
     max-width: $col-width;
     width: 100%;
 
