@@ -1,4 +1,139 @@
 @import "styles/_shared.scss";
 
+$col-width: 400px;
+$post-height: 150px;
+
 .Browse {
+    height: 100%;
+    padding-top: $size-500;
+    width: 100%;
+
+    @include media-query-large {
+        padding-top: $size-800;
+    }
+
+    .BrowseHeader {
+        color: $color-white;
+        font-weight: $font-weight-bold;
+        text-align: center;
+        width: 100%;
+    }
+
+    .BrowseContent {
+        display: grid;
+        gap: $size-900;
+        grid-template-columns: $col-width $col-width;
+        grid-auto-rows: $post-height;
+        justify-content: center;
+        margin-top: $size-700;
+
+        .BrowsePosts {
+            display: grid;
+            gap: $size-500;
+        }
+    }
+}
+
+.Post {
+    @include card-shadow();
+
+    background-color: $color-white;
+    border-radius: $border-radius-large;
+    display: grid;
+    height: $post-height;
+    grid-template-columns: $post-height 1fr;
+    max-width: $col-width;
+    width: 100%;
+
+    .PostImage {
+        background-color: $color-neutral-400;
+        border-bottom-left-radius: $border-radius-large;
+        border-top-left-radius: $border-radius-large;
+        height: 100%;
+        width: 100%;
+    }
+
+    .PostContent {
+        gap: $size-200;
+        padding: $size-400;
+
+        .PostTitle {
+            font-size: $font-size-500;
+            font-weight: $font-weight-bold;
+        }
+
+        .PostAuthor {
+            color: $color-text-secondary;
+            margin: $size-200 0;
+        }
+
+        .PostTimestamp {
+            color: $color-text-secondary;
+            font-style: italic;
+        }
+    }
+}
+
+.PostDetails {
+    max-width: $col-width;
+    width: 100%;
+
+    .PostDetailsImage {
+        @include card-shadow();
+
+        background-color: $color-neutral-400;
+        border-radius: $border-radius-large;
+        height: 300px;
+        width: 100%;
+    }
+
+    .PostDetailsContent {
+        @include card-shadow();
+
+        background-color: $color-white;
+        border-radius: $border-radius-large;
+        display: grid;
+        height: 200px;
+        grid-template-rows: auto auto 1fr;
+        margin-top: $size-600;
+        padding: $size-400;
+        width: 100%;
+
+        .PostDetailsTitle {
+            color: $color-primary;
+            font-size: $font-size-600;
+            font-weight: $font-weight-bold;
+            text-decoration: underline;
+        }
+
+        .PostDetailsMetadata {
+            color: $color-text-secondary;
+            display: flex;
+            justify-content: space-between;
+            margin-top: $size-300;
+
+            .PostDetailsTimestamp {
+                font-style: italic;
+            }
+        }
+
+        .PostDetailsPredictionContainer {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            .PostDetailsPredictionHeading {
+                color: $color-neutral-800;
+                font-size: $font-size-500;
+            }
+
+            .PostDetailsPrediction {
+                color: $color-neutral-900;
+                font-size: $font-size-800;
+                font-weight: $font-weight-bold;
+                margin-top: $size-400;
+            }
+        }
+    }
 }
