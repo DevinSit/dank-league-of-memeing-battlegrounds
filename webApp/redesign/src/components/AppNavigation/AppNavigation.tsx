@@ -1,15 +1,25 @@
 import classNames from "classnames";
 import Link from "next/link";
 import {useRouter} from "next/router";
+import {animated, to as interpolate} from "react-spring";
 import {ControllerIcon, ListIcon, TrophyIcon, UploadIcon} from "assets/icons";
+import {useHideOnScroll} from "hooks/";
 import {ScreenUrls} from "values/screenUrls";
 import styles from "./AppNavigation.module.scss";
 
 const AppNavigation = () => {
     const {pathname} = useRouter();
+    const translateY = useHideOnScroll({translateAmount: 120});
 
     return (
-        <nav className={styles.AppNavigation}>
+        <animated.nav
+            className={styles.AppNavigation}
+            style={{
+                // Need the translateX since the nav uses the absolute positioned
+                // centering trick.
+                transform: interpolate([translateY], (y) => `translateX(-50%) translateY(${y}px)`)
+            }}
+        >
             <IconButton
                 href={ScreenUrls.RULES}
                 active={
@@ -37,7 +47,7 @@ const AppNavigation = () => {
                 active={pathname === ScreenUrls.BROWSE}
                 Icon={ListIcon}
             />
-        </nav>
+        </animated.nav>
     );
 };
 
