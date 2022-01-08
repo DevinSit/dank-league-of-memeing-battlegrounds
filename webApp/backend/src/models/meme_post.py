@@ -1,6 +1,7 @@
 import json
 import os
 import logging
+import random
 from cachetools import cached, TTLCache
 from google.cloud import datastore, storage
 from typing import BinaryIO, List, Tuple
@@ -11,6 +12,7 @@ from utils.blockhash import hash_image
 
 logger = logging.getLogger(__name__)
 post_cache = TTLCache(maxsize=10, ttl=1800)
+all_posts_cache = TTLCache(maxsize=10, ttl=1800)
 score_cache = TTLCache(maxsize=100, ttl=1800)
 predictions_cache = TTLCache(maxsize=200, ttl=3600)
 
@@ -27,6 +29,15 @@ class MemePost:
 
     def get_latest_posts(self, number_of_posts=10):
         posts = self._fetch_latest_posts(number_of_posts)
+
+        for post in posts:
+            score_entity = self._get_score(post["id"])
+            post["score"] = score_entity["score"]
+
+        return posts
+
+    def get_random_posts(self, number_of_posts=10):
+        posts = self._fetch_random_posts(number_of_posts)
 
         for post in posts:
             score_entity = self._get_score(post["id"])
@@ -100,8 +111,26 @@ class MemePost:
     @cached(post_cache)
     def _fetch_latest_posts(self, number_of_posts=10) -> List[datastore.Entity]:
         query = self.datastore_client.query(kind=POST_KIND, order=["-createdUtc"])
-        posts = self._sort_by_image_hash(list(query.fetch(limit=number_of_posts)))
 
+        posts = self._sort_by_image_hash(list(query.fetch(limit=number_of_posts)))
+        posts = self._enrich_posts_with_scores(posts)
+
+        return sorted(posts, key=lambda post: post["createdUtc"], reverse=True)
+
+    def _fetch_random_posts(self, number_of_posts=10) -> List[datastore.Entity]:
+        if number_of_posts in all_posts_cache:
+            posts = all_posts_cache[number_of_posts]
+        else:
+            query = self.datastore_client.query(kind=POST_KIND)
+            posts = list(query.fetch())
+            all_posts_cache[number_of_posts] = posts
+
+        posts = random.sample(posts, min(len(posts), number_of_posts))
+        posts = self._enrich_posts_with_scores(posts)
+
+        return posts
+
+    def _enrich_posts_with_scores(self, posts):
         keras_keys = [self.datastore_client.key(KERAS_PREDICTION_KIND, post["imageHash"]) for post in posts]
 
         # Because datastore_client.get_multi() doesn't return Entities in the same order as the given keys,
@@ -113,7 +142,7 @@ class MemePost:
         for post, keras_prediction in zip(posts, keras_predictions):
             post["kerasPrediction"] = keras_prediction["prediction"]
 
-        return sorted(posts, key=lambda post: post["createdUtc"], reverse=True)
+        return posts
 
     def _sort_by_image_hash(self, object_list):
         return sorted(object_list, key=lambda x: x["imageHash"])

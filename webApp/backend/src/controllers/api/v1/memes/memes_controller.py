@@ -15,9 +15,20 @@ meme_post_service = MemePost()
 
 
 @memes_controller.route("/", methods=["GET"])
-@LoggingUtils.log_execution_time("Prediction processing finished")
+@LoggingUtils.log_execution_time("Latest posts fetch finished")
 def get_latest_posts() -> Response:
     posts = meme_post_service.get_latest_posts()
+
+    return jsonify({
+        "status": "success",
+        "posts": posts
+    })
+
+
+@memes_controller.route("/random", methods=["GET"])
+@LoggingUtils.log_execution_time("Random posts fetch finished")
+def get_random_posts() -> Response:
+    posts = meme_post_service.get_random_posts()
 
     return jsonify({
         "status": "success",
