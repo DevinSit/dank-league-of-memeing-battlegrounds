@@ -1,0 +1,9 @@
+@import "styles/_shared.scss";
+
+.MobileSpacer {
+    height: 200px;
+
+    @include media-query-large {
+        height: 0;
+    }
+}

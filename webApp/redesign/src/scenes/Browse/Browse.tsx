@@ -1,3 +1,4 @@
+import {MobileSpacer} from "components/";
 import styles from "./Browse.module.scss";
 
 const Browse = () => (
@@ -16,7 +17,7 @@ const Browse = () => (
             <PostDetails />
         </main>
 
-        <div className={styles.MobileSpacer} />
+        <MobileSpacer />
     </div>
 );
 

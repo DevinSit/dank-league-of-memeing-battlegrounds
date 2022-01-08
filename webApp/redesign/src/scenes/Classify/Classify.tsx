@@ -1,4 +1,5 @@
 import ReactDropzone from "react-dropzone";
+import {MobileSpacer} from "components/";
 import styles from "./Classify.module.scss";
 
 const Classify = () => (
@@ -20,7 +21,7 @@ const Classify = () => (
             </div>
         </div>
 
-        <div className={styles.MobileSpacer} />
+        <MobileSpacer />
     </div>
 );
 

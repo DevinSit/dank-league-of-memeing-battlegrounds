@@ -8,14 +8,6 @@ $meme-width: 400px;
     padding-top: $size-500;
     width: 100%;
 
-    .MobileSpacer {
-        height: 200px;
-
-        @include media-query-large {
-            height: 0;
-        }
-    }
-
     @include media-query-large {
         padding-top: $size-800;
     }
