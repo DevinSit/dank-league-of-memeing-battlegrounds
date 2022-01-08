@@ -38,13 +38,13 @@ services:
             # - DATASTORE_EMULATOR_HOST=datastore:8081
             # - DATASTORE_PROJECT_ID=serverless-hackathon-devin
             - FLASK_ENV=development
-    datastore:
-        image: singularities/datastore-emulator
-        environment:
-            - DATASTORE_PROJECT_ID=serverless-hackathon-devin
-            - DATASTORE_LISTEN_ADDRESS=0.0.0.0:8081
-        ports:
-            - "8081:8081"
+    # datastore:
+    #     image: singularities/datastore-emulator
+    #     environment:
+    #         - DATASTORE_PROJECT_ID=serverless-hackathon-devin
+    #         - DATASTORE_LISTEN_ADDRESS=0.0.0.0:8081
+    #     ports:
+    #         - "8081:8081"
 
 volumes:
     frontend-deps:
