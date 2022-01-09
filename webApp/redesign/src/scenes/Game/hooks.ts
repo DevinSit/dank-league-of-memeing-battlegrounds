@@ -2,7 +2,25 @@ import {useState} from "react";
 import {useSpring, useSprings} from "@react-spring/web";
 import {useDrag} from "react-use-gesture";
 
-export const useCardStackAnimation = (images: Array<string>) => {
+export const useScore = () => {
+    const [score, setScore] = useState(0);
+
+    const onCorrectGuess = () => {
+        setScore((oldScore) => oldScore + 10000);
+    };
+
+    const onWrongGuess = () => {
+        setScore((oldScore) => Math.max(0, oldScore - 10000));
+    };
+
+    return {score, onCorrectGuess, onWrongGuess};
+};
+
+export const useCardStackAnimation = (
+    images: Array<string>,
+    onCorrectGuess: () => void,
+    onWrongGuess: () => void
+) => {
     const numberOfImages = images.length;
 
     // The set flags all the cards that are flicked out
@@ -29,6 +47,12 @@ export const useCardStackAnimation = (images: Array<string>) => {
                 // If button/finger's up and trigger velocity is reached,
                 // we flag the card ready to fly out.
                 gone.add(index);
+
+                if (dir === -1) {
+                    onCorrectGuess();
+                } else if (dir === 1) {
+                    onWrongGuess();
+                }
             }
 
             api.start((i) => {
@@ -92,7 +116,7 @@ export const useTimerAnimation = () => {
     return {timerStyles};
 };
 
-export const useScoreAnimation = (score: number = 1230000) => {
+export const useScoreAnimation = (score: number) => {
     const {animatedScore} = useSpring({from: {animatedScore: 0}, to: {animatedScore: score}});
 
     return {animatedScore};

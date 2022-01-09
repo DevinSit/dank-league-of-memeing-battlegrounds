@@ -2,7 +2,7 @@ import {animated} from "@react-spring/web";
 import {useSWR} from "hooks/";
 import {ValueFormatting} from "services/";
 import {api} from "values/api";
-import {useCardStackAnimation, useScoreAnimation, useTimerAnimation} from "./hooks";
+import {useScore, useCardStackAnimation, useScoreAnimation, useTimerAnimation} from "./hooks";
 import styles from "./Game.module.scss";
 
 interface Post {
@@ -33,9 +33,10 @@ const useMemeImages = (): Array<string> => {
 const Game = () => {
     const images = useMemeImages();
 
-    const {bind, cardSprings} = useCardStackAnimation(images);
+    const {score, onCorrectGuess, onWrongGuess} = useScore();
+    const {bind, cardSprings} = useCardStackAnimation(images, onCorrectGuess, onWrongGuess);
     const {timerStyles} = useTimerAnimation();
-    const {animatedScore} = useScoreAnimation();
+    const {animatedScore} = useScoreAnimation(score);
 
     return (
         <div className={styles.Game}>
