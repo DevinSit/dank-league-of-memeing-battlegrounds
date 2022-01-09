@@ -1,4 +1,5 @@
 import {animated} from "@react-spring/web";
+import {useCallback, useMemo, useState} from "react";
 import {useSWR} from "hooks/";
 import {ValueFormatting} from "services/";
 import {api} from "values/api";
@@ -27,18 +28,24 @@ const useMemeImages = () => {
         refreshInterval: 0
     });
 
-    const images = data?.posts?.map(({url}) => url) || [];
-    const predictions = data?.posts?.map(({kerasPrediction}) => kerasPrediction >= 0.5) || [];
+    const images = useMemo(() => data?.posts?.map(({url}) => url), [data]) || [];
+
+    const predictions =
+        useMemo(() => data?.posts?.map(({kerasPrediction}) => kerasPrediction >= 0.5), [data]) ||
+        [];
 
     return {images, predictions};
 };
 
 const Game = () => {
+    const [resetTimer, setResetTimer] = useState(false);
     const {images, predictions} = useMemeImages();
 
-    const {score, onGuess} = useScore(predictions);
-    const {bind, cardSprings} = useCardStackAnimation(images, onGuess);
-    const {timerStyles} = useTimerAnimation();
+    const onResetTimer = useCallback(() => setResetTimer(true), []);
+
+    const {score, onGuess, onStartTimer} = useScore(predictions, onResetTimer);
+    const {cardSprings, bind, removeTopImage} = useCardStackAnimation(images, onGuess);
+    const {timerStyles} = useTimerAnimation(resetTimer, onStartTimer, removeTopImage);
     const {animatedScore} = useScoreAnimation(score);
 
     return (
