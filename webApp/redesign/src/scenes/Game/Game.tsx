@@ -18,7 +18,7 @@ interface Post {
     url: string;
 }
 
-const useMemeImages = (): Array<string> => {
+const useMemeImages = () => {
     const {data} = useSWR<{posts: Array<Post>}>(api.RANDOM_MEMES, {
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
@@ -27,14 +27,17 @@ const useMemeImages = (): Array<string> => {
         refreshInterval: 0
     });
 
-    return data?.posts?.map(({url}) => url) || [];
+    const images = data?.posts?.map(({url}) => url) || [];
+    const predictions = data?.posts?.map(({kerasPrediction}) => kerasPrediction >= 0.5) || [];
+
+    return {images, predictions};
 };
 
 const Game = () => {
-    const images = useMemeImages();
+    const {images, predictions} = useMemeImages();
 
-    const {score, onCorrectGuess, onWrongGuess} = useScore();
-    const {bind, cardSprings} = useCardStackAnimation(images, onCorrectGuess, onWrongGuess);
+    const {score, onGuess} = useScore(predictions);
+    const {bind, cardSprings} = useCardStackAnimation(images, onGuess);
     const {timerStyles} = useTimerAnimation();
     const {animatedScore} = useScoreAnimation(score);
 

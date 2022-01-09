@@ -2,24 +2,23 @@ import {useState} from "react";
 import {useSpring, useSprings} from "@react-spring/web";
 import {useDrag} from "react-use-gesture";
 
-export const useScore = () => {
+export const useScore = (predictions: Array<boolean>) => {
     const [score, setScore] = useState(0);
 
-    const onCorrectGuess = () => {
-        setScore((oldScore) => oldScore + 10000);
+    const onGuess = (index: number, isDankGuess: boolean) => {
+        if (predictions[index] === isDankGuess) {
+            setScore((oldScore) => oldScore + 10000);
+        } else {
+            setScore((oldScore) => Math.max(0, oldScore - 10000));
+        }
     };
 
-    const onWrongGuess = () => {
-        setScore((oldScore) => Math.max(0, oldScore - 10000));
-    };
-
-    return {score, onCorrectGuess, onWrongGuess};
+    return {score, onGuess};
 };
 
 export const useCardStackAnimation = (
     images: Array<string>,
-    onCorrectGuess: () => void,
-    onWrongGuess: () => void
+    onGuess: (index: number, guess: boolean) => void
 ) => {
     const numberOfImages = images.length;
 
@@ -48,11 +47,7 @@ export const useCardStackAnimation = (
                 // we flag the card ready to fly out.
                 gone.add(index);
 
-                if (dir === -1) {
-                    onCorrectGuess();
-                } else if (dir === 1) {
-                    onWrongGuess();
-                }
+                onGuess(index, dir === -1);
             }
 
             api.start((i) => {
