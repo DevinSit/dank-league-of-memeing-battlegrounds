@@ -1,13 +1,14 @@
 import {CheckIcon, CloseIcon, EditIcon, ExternalLinkIcon} from "assets/icons";
-import {LinkButton} from "components/";
-import {ScreenUrls} from "values/screenUrls";
+import {Button} from "components/";
+import {GamePage} from "values/gamePages";
 import styles from "./GameResults.module.scss";
 
 interface GameResultsProps {
     images: Array<string>;
+    setPage: (page: GamePage) => void;
 }
 
-const GameResults = ({images}: GameResultsProps) => (
+const GameResults = ({images, setPage}: GameResultsProps) => (
     <div className={styles.GameResults}>
         <div className={styles.GameResultsSummary}>
             <div className={styles.GameResultsUsernameContainer}>
@@ -22,7 +23,7 @@ const GameResults = ({images}: GameResultsProps) => (
             <p className={styles.GameResultsRank}>Rank #1</p>
 
             <div className={styles.GameResultsButtonContainer}>
-                <LinkButton href={ScreenUrls.GAME}>Play Again</LinkButton>
+                <Button onClick={() => setPage(GamePage.GAME)}>Play Again</Button>
             </div>
         </div>
 
@@ -59,6 +60,7 @@ const MemeResultCard = ({
     <div
         className={styles.MemeResultCard}
         style={{
+            // Use a gradient over the image to make the info section easier to read/see.
             backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent), url(${image})`
         }}
     >
