@@ -3,9 +3,11 @@ import {LinkButton} from "components/";
 import {ScreenUrls} from "values/screenUrls";
 import styles from "./GameResults.module.scss";
 
-const MEMES = new Array(10).fill(0);
+interface GameResultsProps {
+    images: Array<string>;
+}
 
-const GameResults = () => (
+const GameResults = ({images}: GameResultsProps) => (
     <div className={styles.GameResults}>
         <div className={styles.GameResultsSummary}>
             <div className={styles.GameResultsUsernameContainer}>
@@ -25,8 +27,8 @@ const GameResults = () => (
         </div>
 
         <div className={styles.GameResultsMemes}>
-            {MEMES.map((_, index) => (
-                <MemeResultCard key={index} wasCorrect={!!(index % 3)} />
+            {images.map((image, index) => (
+                <MemeResultCard key={image} image={image} wasCorrect={!!(index % 3)} />
             ))}
         </div>
 
@@ -39,6 +41,8 @@ export default GameResults;
 /* Other Components */
 
 interface MemeResultCardProps {
+    image: string;
+
     link?: string;
 
     username?: string;
@@ -47,11 +51,17 @@ interface MemeResultCardProps {
 }
 
 const MemeResultCard = ({
+    image,
     link = "",
     username = "username",
     wasCorrect = true
 }: MemeResultCardProps) => (
-    <div className={styles.MemeResultCard}>
+    <div
+        className={styles.MemeResultCard}
+        style={{
+            backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent), url(${image})`
+        }}
+    >
         <div className={styles.MemeResultsCardInfoContainer}>
             {wasCorrect ? (
                 <CheckIcon className={styles.MemeResultCardCorrectIcon} />

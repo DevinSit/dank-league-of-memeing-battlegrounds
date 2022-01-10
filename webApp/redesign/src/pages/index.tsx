@@ -69,7 +69,7 @@ const Home: NextPage = () => {
             case GamePage.GAME:
                 return <Game images={images} predictions={predictions} setPage={setPage} />;
             case GamePage.RESULTS:
-                return <GameResults />;
+                return <GameResults images={images} />;
         }
     })();
 
