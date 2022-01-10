@@ -1,50 +1,24 @@
 import {animated} from "@react-spring/web";
-import {useCallback, useMemo, useState} from "react";
-import {useSWR} from "hooks/";
+import {useCallback, useState} from "react";
 import {ValueFormatting} from "services/";
-import {api} from "values/api";
+import {GamePage} from "values/gamePages";
 import {useScore, useCardStackAnimation, useScoreAnimation, useTimerAnimation} from "./hooks";
 import styles from "./Game.module.scss";
 
-interface Post {
-    author: string;
-    createdUTC: number;
-    id: string;
-    imageHash: string;
-    kerasPrediction: number;
-    permalink: string;
-    score: number;
-    subreddit: string;
-    title: string;
-    url: string;
+interface GameProps {
+    images: Array<string>;
+    predictions: Array<boolean>;
+    setPage: (page: GamePage) => void;
 }
 
-const useMemeImages = () => {
-    const {data} = useSWR<{posts: Array<Post>}>(api.RANDOM_MEMES, {
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false,
-        refreshWhenOffline: false,
-        refreshWhenHidden: false,
-        refreshInterval: 0
-    });
-
-    const images = useMemo(() => data?.posts?.map(({url}) => url), [data]) || [];
-
-    const predictions =
-        useMemo(() => data?.posts?.map(({kerasPrediction}) => kerasPrediction >= 0.5), [data]) ||
-        [];
-
-    return {images, predictions};
-};
-
-const Game = () => {
+const Game = ({images, predictions, setPage}: GameProps) => {
     const [resetTimer, setResetTimer] = useState(false);
-    const {images, predictions} = useMemeImages();
 
     const onResetTimer = useCallback(() => setResetTimer(true), []);
+    const onGameOver = useCallback(() => setPage(GamePage.RESULTS), [setPage]);
 
     const {score, onGuess, onStartTimer} = useScore(predictions, onResetTimer);
-    const {cardSprings, bind, removeTopImage} = useCardStackAnimation(images, onGuess);
+    const {cardSprings, bind, removeTopImage} = useCardStackAnimation(images, onGuess, onGameOver);
     const {timerStyles} = useTimerAnimation(resetTimer, onStartTimer, removeTopImage);
     const {animatedScore} = useScoreAnimation(score);
 

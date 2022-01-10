@@ -47,7 +47,8 @@ export const useScore = (predictions: Array<boolean>, onResetTimer: () => void) 
 
 export const useCardStackAnimation = (
     images: Array<string>,
-    onGuess: (index: number, guess: boolean) => void
+    onGuess: (index: number, guess: boolean) => void,
+    onGameOver: () => void
 ) => {
     // The set flags all the images that have been flicked out.
     const [removedImages] = useState(() => new Array<number>());
@@ -98,12 +99,11 @@ export const useCardStackAnimation = (
 
             if (removedImages.length === numberOfImages) {
                 setTimeout(() => {
-                    removedImages.length = 0;
-                    api.start((i) => to(i, numberOfImages));
-                }, 600);
+                    onGameOver();
+                }, 1000);
             }
         },
-        [api, numberOfImages, removedImages]
+        [api, numberOfImages, removedImages, onGameOver]
     );
 
     const removeTopImage = useCallback(() => {

@@ -1,8 +1,12 @@
-import {LinkButton} from "components/";
-import {ScreenUrls} from "values/screenUrls";
+import {Button} from "components/";
+import {GamePage} from "values/gamePages";
 import styles from "./Rules.module.scss";
 
-const Rules = () => (
+interface RulesProps {
+    setPage: (page: GamePage) => void;
+}
+
+const Rules = ({setPage}: RulesProps) => (
     <div className={styles.Rules}>
         <div className={styles.RulesCard}>
             <h2 className={styles.RulesCardHeader}>Rules</h2>
@@ -17,7 +21,7 @@ const Rules = () => (
             </ol>
 
             <div className={styles.RulesCardButtonContainer}>
-                <LinkButton href={ScreenUrls.GAME}>Play</LinkButton>
+                <Button onClick={() => setPage(GamePage.GAME)}>Play</Button>
             </div>
         </div>
     </div>
