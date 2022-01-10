@@ -1,6 +1,9 @@
-import {useCallback, useMemo, useRef, useState} from "react";
+import {useCallback, useRef, useState} from "react";
 import {useSpring, useSprings} from "@react-spring/web";
 import {useDrag} from "react-use-gesture";
+
+const TIMER_DURATION = 5 * 1000; // 5 seconds
+const BASE_SCORE = 10000;
 
 export const useScore = (predictions: Array<boolean>, onResetTimer: () => void) => {
     const timerRef = useRef<number>(Date.now());
@@ -8,15 +11,29 @@ export const useScore = (predictions: Array<boolean>, onResetTimer: () => void) 
 
     const onGuess = useCallback(
         (index: number, isDankGuess: boolean) => {
-            const difference = Date.now() - timerRef.current;
+            // Take the amount of time the user took to swipe, turn it into seconds,
+            // round it to the first decimal place...
+            const difference = Math.round(((Date.now() - timerRef.current) / 1000) * 10) / 10;
+
+            // Then convert it into a multiplier using log base 1/4 (difference) + 1.1.
+            //
+            // The "1.1" moves the function up enough that, over the range of 0 to 5 (i.e. timer length),
+            // we don't end up with (practically) any negative numbers.
+            //
+            // And why use log base 1/4? Because it rewards very fast guesses and punishes slow ones.
+            const multiplier = Math.log(difference) / Math.log(1 / 4) + 1.1;
+
+            // Then calculate the final adjustment.
+            const adjustment = BASE_SCORE * multiplier;
 
             if (predictions[index] === isDankGuess) {
-                setScore((oldScore) => oldScore + 10000);
+                setScore((oldScore) => oldScore + adjustment);
             } else {
-                setScore((oldScore) => Math.max(0, oldScore - 10000));
+                setScore((oldScore) => Math.max(0, oldScore - adjustment));
             }
 
             onResetTimer();
+            timerRef.current = Date.now();
         },
         [predictions, onResetTimer]
     );
@@ -90,7 +107,7 @@ export const useCardStackAnimation = (
     );
 
     const removeTopImage = useCallback(() => {
-        const top = calcTop(removedImages, numberOfImages);
+        const top = calcTopImage(removedImages, numberOfImages);
 
         removedImages.push(top);
         onGuess(top, false);
@@ -98,24 +115,22 @@ export const useCardStackAnimation = (
         animateCards(top, true, {dir: 1});
     }, [numberOfImages, removedImages, animateCards, onGuess]);
 
-    // Create a gesture, we're interested in down-state,
-    // delta(current - pos - click - pos), direction and velocity.
     const bind = useDrag(
         ({args: [index], down, movement: [_, my], direction: [__, yDir], velocity}) => {
-            if (index !== calcTop(removedImages, numberOfImages)) {
+            if (index !== calcTopImage(removedImages, numberOfImages)) {
                 return;
             }
 
-            // If you flick hard enough or move the card far enough up/down,
+            // If you flick hard enough or move the image far enough up/down,
             // it should trigger the card to fly out.
             const trigger = velocity > 0.2 || Math.abs(my) > 150;
 
-            // Direction should either point up or down.
+            // Direction should either be up or down.
             const dir = yDir < 0 ? -1 : 1;
 
             if (!down && trigger) {
                 // If button/finger's up and trigger velocity is reached,
-                // we flag the card ready to fly out.
+                // we flag the image ready to fly out.
                 removedImages.push(index);
 
                 onGuess(index, dir === -1);
@@ -134,7 +149,7 @@ export const useTimerAnimation = (resetTimer: boolean, onStart: () => void, onEn
         from: {scaleX: 1},
         to: {scaleX: 0},
         loop: true,
-        config: {duration: 5000},
+        config: {duration: TIMER_DURATION},
         reset: resetTimer,
         onStart: onStart,
         onRest: onEnd
@@ -144,9 +159,7 @@ export const useTimerAnimation = (resetTimer: boolean, onStart: () => void, onEn
 };
 
 export const useScoreAnimation = (score: number) => {
-    const {animatedScore} = useSpring({from: {animatedScore: 0}, to: {animatedScore: score}});
-
-    return {animatedScore};
+    return useSpring({from: {animatedScore: 0}, to: {animatedScore: score}});
 };
 
 /* Helper Stuff */
@@ -163,12 +176,15 @@ const to = (i: number, total: number) => ({
 const from = (_i: number) => ({x: "0vw", scale: 1.5, y: -1000});
 
 // In order to get that "layered perspective" look, we need to scale each further card down.
+//
+// 0.035 is the multiplier that gives us just enough shift at the low end (small screens) but not so much
+// at the high end (large screens). Yes, determined by trial and error.
 const calcScale = (i: number, total: number) => 1 - (total - 1 - i) * 0.035;
 
 // Another part of the "layered perspective" look, cards get shifted a bit to the left.
 const calcShift = (i: number, total: number) => `${(total - 1 - i) * -1.8}vw`;
 
-const calcTop = (removedImages: Array<number>, numberOfImages: number) => {
+const calcTopImage = (removedImages: Array<number>, numberOfImages: number) => {
     return removedImages.length === 0
         ? numberOfImages - 1
         : Math.max(removedImages[removedImages.length - 1] - 1, 0);
