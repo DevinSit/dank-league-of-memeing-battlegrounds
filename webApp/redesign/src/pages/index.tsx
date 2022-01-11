@@ -20,6 +20,14 @@ interface Post {
     url: string;
 }
 
+interface ParsedData {
+    images: Array<string>;
+    predictions: Array<boolean>;
+    urls: Array<string>;
+}
+
+const createDefaultParsedData = (): ParsedData => ({images: [], predictions: [], urls: []});
+
 const usePreloadImages = (images: Array<string>) => {
     const imagesRef = useRef<Array<HTMLImageElement>>([]);
 
@@ -37,7 +45,7 @@ const usePreloadImages = (images: Array<string>) => {
     }, [images]);
 };
 
-const useMemeImages = () => {
+const useMemeImages = (): ParsedData => {
     const {data} = useSWR<{posts: Array<Post>}>(api.RANDOM_MEMES, {
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
@@ -46,21 +54,27 @@ const useMemeImages = () => {
         refreshInterval: 0
     });
 
-    const images = useMemo(() => data?.posts?.map(({url}) => url), [data]) || [];
+    const parsedData = useMemo(
+        () =>
+            data?.posts?.reduce((acc, post) => {
+                acc.images.push(post.url);
+                acc.predictions.push(post.kerasPrediction >= 0.5);
+                acc.urls.push(`https://www.reddit.com${post.permalink}`);
 
-    const predictions =
-        useMemo(() => data?.posts?.map(({kerasPrediction}) => kerasPrediction >= 0.5), [data]) ||
-        [];
+                return acc;
+            }, createDefaultParsedData()) || createDefaultParsedData(),
+        [data]
+    );
 
-    usePreloadImages(images);
+    usePreloadImages(parsedData.images);
 
-    return {images, predictions};
+    return parsedData;
 };
 
 const Home: NextPage = () => {
     const [page, setPage] = useState<GamePage>(GamePage.RULES);
 
-    const {images, predictions} = useMemeImages();
+    const {images, predictions, urls} = useMemeImages();
 
     const currentPage = (() => {
         switch (page) {
@@ -69,7 +83,7 @@ const Home: NextPage = () => {
             case GamePage.GAME:
                 return <Game images={images} predictions={predictions} setPage={setPage} />;
             case GamePage.RESULTS:
-                return <GameResults images={images} setPage={setPage} />;
+                return <GameResults images={images} urls={urls} setPage={setPage} />;
         }
     })();
 

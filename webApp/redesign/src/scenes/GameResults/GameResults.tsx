@@ -5,10 +5,11 @@ import styles from "./GameResults.module.scss";
 
 interface GameResultsProps {
     images: Array<string>;
+    urls: Array<string>;
     setPage: (page: GamePage) => void;
 }
 
-const GameResults = ({images, setPage}: GameResultsProps) => (
+const GameResults = ({images, urls, setPage}: GameResultsProps) => (
     <div className={styles.GameResults}>
         <div className={styles.GameResultsSummary}>
             <div className={styles.GameResultsUsernameContainer}>
@@ -29,7 +30,12 @@ const GameResults = ({images, setPage}: GameResultsProps) => (
 
         <div className={styles.GameResultsMemes}>
             {images.map((image, index) => (
-                <MemeResultCard key={image} image={image} wasCorrect={!!(index % 3)} />
+                <MemeResultCard
+                    key={image}
+                    image={image}
+                    url={urls[index]}
+                    wasCorrect={!!(index % 3)}
+                />
             ))}
         </div>
 
@@ -44,7 +50,7 @@ export default GameResults;
 interface MemeResultCardProps {
     image: string;
 
-    link?: string;
+    url: string;
 
     username?: string;
 
@@ -53,7 +59,7 @@ interface MemeResultCardProps {
 
 const MemeResultCard = ({
     image,
-    link = "",
+    url,
     username = "username",
     wasCorrect = true
 }: MemeResultCardProps) => (
@@ -73,7 +79,7 @@ const MemeResultCard = ({
 
             <p className={styles.MemeResultCardUsername}>By {username}</p>
 
-            <a href={link} target="_blank" rel="noreferrer">
+            <a href={url} target="_blank" rel="noreferrer">
                 <ExternalLinkIcon className={styles.MemeResultCardLinkIcon} />
             </a>
         </div>
