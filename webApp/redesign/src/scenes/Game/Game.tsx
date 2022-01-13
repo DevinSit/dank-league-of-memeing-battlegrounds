@@ -1,5 +1,5 @@
 import {animated} from "@react-spring/web";
-import {useCallback, useState} from "react";
+import {useCallback, useState, Dispatch, SetStateAction} from "react";
 import {ValueFormatting} from "services/";
 import {GamePage} from "values/gamePages";
 import {useScore, useCardStackAnimation, useScoreAnimation, useTimerAnimation} from "./hooks";
@@ -8,16 +8,17 @@ import styles from "./Game.module.scss";
 interface GameProps {
     images: Array<string>;
     predictions: Array<boolean>;
+    setGuesses: Dispatch<SetStateAction<Array<boolean>>>;
     setPage: (page: GamePage) => void;
 }
 
-const Game = ({images, predictions, setPage}: GameProps) => {
+const Game = ({images, predictions, setGuesses, setPage}: GameProps) => {
     const [resetTimer, setResetTimer] = useState(false);
 
     const onResetTimer = useCallback(() => setResetTimer(true), []);
     const onGameOver = useCallback(() => setPage(GamePage.RESULTS), [setPage]);
 
-    const {score, onGuess, onStartTimer} = useScore(predictions, onResetTimer);
+    const {score, onGuess, onStartTimer} = useScore(predictions, onResetTimer, setGuesses);
     const {cardSprings, bind, removeTopImage} = useCardStackAnimation(images, onGuess, onGameOver);
     const {timerStyles} = useTimerAnimation(resetTimer, onStartTimer, removeTopImage);
     const {animatedScore} = useScoreAnimation(score);

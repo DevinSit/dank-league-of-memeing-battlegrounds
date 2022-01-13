@@ -1,4 +1,4 @@
-import {useMemo, useRef, useState} from "react";
+import {useCallback, useMemo, useRef, useState} from "react";
 import type {NextPage} from "next";
 import Head from "next/head";
 import {AppTitle} from "components/";
@@ -73,17 +73,41 @@ const useMemeImages = (): ParsedData => {
 
 const Home: NextPage = () => {
     const [page, setPage] = useState<GamePage>(GamePage.RULES);
+    const [guesses, setGuesses] = useState<Array<boolean>>([]);
 
     const {images, predictions, urls} = useMemeImages();
+
+    const customSetPage = useCallback((page: GamePage) => {
+        // Reset the guesses when going into the Game.
+        if (page === GamePage.GAME) {
+            setGuesses(() => []);
+        }
+
+        setPage(page);
+    }, []);
 
     const currentPage = (() => {
         switch (page) {
             case GamePage.RULES:
-                return <Rules setPage={setPage} />;
+                return <Rules setPage={customSetPage} />;
             case GamePage.GAME:
-                return <Game images={images} predictions={predictions} setPage={setPage} />;
+                return (
+                    <Game
+                        images={images}
+                        predictions={predictions}
+                        setPage={customSetPage}
+                        setGuesses={setGuesses}
+                    />
+                );
             case GamePage.RESULTS:
-                return <GameResults images={images} urls={urls} setPage={setPage} />;
+                return (
+                    <GameResults
+                        guesses={guesses}
+                        images={images}
+                        urls={urls}
+                        setPage={customSetPage}
+                    />
+                );
         }
     })();
 

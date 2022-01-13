@@ -4,12 +4,13 @@ import {GamePage} from "values/gamePages";
 import styles from "./GameResults.module.scss";
 
 interface GameResultsProps {
+    guesses: Array<boolean>;
     images: Array<string>;
     urls: Array<string>;
     setPage: (page: GamePage) => void;
 }
 
-const GameResults = ({images, urls, setPage}: GameResultsProps) => (
+const GameResults = ({guesses, images, urls, setPage}: GameResultsProps) => (
     <div className={styles.GameResults}>
         <div className={styles.GameResultsSummary}>
             <div className={styles.GameResultsUsernameContainer}>
@@ -34,7 +35,7 @@ const GameResults = ({images, urls, setPage}: GameResultsProps) => (
                     key={image}
                     image={image}
                     url={urls[index]}
-                    wasCorrect={!!(index % 3)}
+                    wasCorrect={guesses[index]}
                 />
             ))}
         </div>

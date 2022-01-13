@@ -1,11 +1,15 @@
-import {useCallback, useRef, useState} from "react";
+import {useCallback, useRef, useState, Dispatch, SetStateAction} from "react";
 import {useSpring, useSprings} from "@react-spring/web";
 import {useDrag} from "react-use-gesture";
 
 const TIMER_DURATION = 5 * 1000; // 5 seconds
 const BASE_SCORE = 10000;
 
-export const useScore = (predictions: Array<boolean>, onResetTimer: () => void) => {
+export const useScore = (
+    predictions: Array<boolean>,
+    onResetTimer: () => void,
+    setGuesses: Dispatch<SetStateAction<Array<boolean>>>
+) => {
     const timerRef = useRef<number>(Date.now());
     const [score, setScore] = useState(0);
 
@@ -26,16 +30,20 @@ export const useScore = (predictions: Array<boolean>, onResetTimer: () => void) 
             // Then calculate the final adjustment.
             const adjustment = BASE_SCORE * multiplier;
 
-            if (predictions[index] === isDankGuess) {
+            const isCorrect = predictions[index] === isDankGuess;
+
+            if (isCorrect) {
                 setScore((oldScore) => oldScore + adjustment);
             } else {
                 setScore((oldScore) => Math.max(0, oldScore - adjustment));
             }
 
+            setGuesses((guesses) => [...guesses, isCorrect]);
+
             onResetTimer();
             timerRef.current = Date.now();
         },
-        [predictions, onResetTimer]
+        [predictions, onResetTimer, setGuesses]
     );
 
     const onStartTimer = useCallback(() => {
