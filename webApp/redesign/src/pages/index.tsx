@@ -1,6 +1,7 @@
 import {useCallback, useMemo, useRef, useState} from "react";
 import type {NextPage} from "next";
 import Head from "next/head";
+import {useSWRConfig} from "swr";
 import {AppTitle} from "components/";
 import {useSWR} from "hooks/";
 import {Game, GameResults, Rules} from "scenes/";
@@ -45,7 +46,9 @@ const usePreloadImages = (images: Array<string>) => {
     }, [images]);
 };
 
-const useMemeImages = (): ParsedData => {
+const useMemeImages = () => {
+    const {mutate} = useSWRConfig();
+
     const {data} = useSWR<{posts: Array<Post>}>(api.RANDOM_MEMES, {
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
@@ -66,9 +69,11 @@ const useMemeImages = (): ParsedData => {
         [data]
     );
 
+    const fetchNewImages = useCallback(() => mutate(api.RANDOM_MEMES), [mutate]);
+
     usePreloadImages(parsedData.images);
 
-    return parsedData;
+    return {data: parsedData, fetchNewImages};
 };
 
 const Home: NextPage = () => {
@@ -77,17 +82,30 @@ const Home: NextPage = () => {
     const [score, setScore] = useState(0);
     const [guesses, setGuesses] = useState<Array<boolean>>([]);
 
-    const {images, predictions, urls} = useMemeImages();
+    const {
+        data: {images, predictions, urls},
+        fetchNewImages
+    } = useMemeImages();
 
-    const customSetPage = useCallback((page: GamePage) => {
-        // Reset the guesses/score state when going into the Game.
-        if (page === GamePage.GAME) {
-            setScore(() => 0);
-            setGuesses(() => []);
-        }
+    const customSetPage = useCallback(
+        (page: GamePage) => {
+            setPage((oldPage) => {
+                // Fetch new images when coming into the game from the results;
+                if (oldPage === GamePage.RESULTS) {
+                    fetchNewImages();
+                }
 
-        setPage(page);
-    }, []);
+                // Reset the guesses/score state when going into the Game.
+                if (page === GamePage.GAME) {
+                    setScore(() => 0);
+                    setGuesses(() => []);
+                }
+
+                return page;
+            });
+        },
+        [fetchNewImages]
+    );
 
     const currentPage = (() => {
         switch (page) {
