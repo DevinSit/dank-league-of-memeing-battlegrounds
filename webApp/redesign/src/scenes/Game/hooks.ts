@@ -2,7 +2,8 @@ import {useCallback, useRef, useState, Dispatch, SetStateAction} from "react";
 import {useSpring, useSprings} from "@react-spring/web";
 import {useDrag} from "react-use-gesture";
 
-const TIMER_DURATION = 5 * 1000; // 5 seconds
+const TIMER_SECONDS = 5;
+const TIMER_DURATION = TIMER_SECONDS * 1000;
 const BASE_SCORE = 10000;
 
 export const useScore = (
@@ -19,16 +20,22 @@ export const useScore = (
             // round it to the first decimal place...
             const difference = Math.round(((Date.now() - timerRef.current) / 1000) * 10) / 10;
 
-            // Then convert it into a multiplier using log base 1/4 (difference) + 1.1.
-            //
-            // The "1.1" moves the function up enough that, over the range of 0 to 5 (i.e. timer length),
-            // we don't end up with (practically) any negative numbers.
-            //
-            // And why use log base 1/4? Because it rewards very fast guesses and punishes slow ones.
-            const multiplier = Math.log(difference) / Math.log(1 / 4) + 1.1;
+            // This default multiplier is for when the timer has run out.
+            let multiplier = 1;
 
-            // Then calculate the final adjustment.
-            const adjustment = BASE_SCORE * multiplier;
+            // If the timer (effectively) hasn't run out, then we can use our custom scoring multiplier.
+            if (difference < TIMER_SECONDS - 0.05) {
+                // Then convert it into a multiplier using log base 1/4 (difference) + 1.2.
+                //
+                // The "1.2" moves the function up enough that, over the range of 0 to 5 (i.e. timer length),
+                // we don't end up with (practically) any negative numbers.
+                //
+                // And why use log base 1/4? Because it rewards very fast guesses and punishes slow ones.
+                multiplier = Math.abs(Math.log(difference) / Math.log(1 / 4) + 1.1);
+            }
+
+            // Then calculate the final adjustment. Don't want it to go negative because of the multiplier.
+            const adjustment = Math.max(BASE_SCORE * multiplier, 0);
 
             const isCorrect = predictions[index] === isDankGuess;
 
@@ -55,6 +62,7 @@ export const useScore = (
 
 export const useCardStackAnimation = (
     images: Array<string>,
+    predictions: Array<boolean>,
     onGuess: (index: number, guess: boolean) => void,
     onGameOver: () => void
 ) => {
@@ -115,15 +123,19 @@ export const useCardStackAnimation = (
     );
 
     const guessTopImage = useCallback(
-        (isDankGuess: boolean = false) => {
+        (isDankGuess?: boolean) => {
             const top = calcTopImage(removedImages, numberOfImages);
+
+            if (isDankGuess === undefined) {
+                isDankGuess = !predictions[top];
+            }
 
             removedImages.push(top);
             onGuess(top, isDankGuess);
 
             animateCards(top, true, {dir: isDankGuess ? -1 : 1});
         },
-        [numberOfImages, removedImages, animateCards, onGuess]
+        [numberOfImages, predictions, removedImages, animateCards, onGuess]
     );
 
     const bind = useDrag(
@@ -156,14 +168,17 @@ export const useCardStackAnimation = (
 };
 
 export const useTimerAnimation = (resetTimer: boolean, onStart: () => void, onEnd: () => void) => {
+    const noParamsOnStart = useCallback(() => onStart(), [onStart]);
+    const noParamsOnEnd = useCallback(() => onEnd(), [onEnd]);
+
     const timerStyles = useSpring({
         from: {scaleX: 1},
         to: {scaleX: 0},
         loop: true,
         config: {duration: TIMER_DURATION},
         reset: resetTimer,
-        onStart: onStart,
-        onRest: onEnd
+        onStart: noParamsOnStart,
+        onRest: noParamsOnEnd
     });
 
     return {timerStyles};

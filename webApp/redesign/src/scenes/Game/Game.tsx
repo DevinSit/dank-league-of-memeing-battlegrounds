@@ -21,7 +21,14 @@ const Game = ({images, predictions, score, setGuesses, setPage, setScore}: GameP
     const onGameOver = useCallback(() => setPage(GamePage.RESULTS), [setPage]);
 
     const {onGuess, onStartTimer} = useScore(predictions, onResetTimer, setGuesses, setScore);
-    const {cardSprings, bind, guessTopImage} = useCardStackAnimation(images, onGuess, onGameOver);
+
+    const {cardSprings, bind, guessTopImage} = useCardStackAnimation(
+        images,
+        predictions,
+        onGuess,
+        onGameOver
+    );
+
     const {timerStyles} = useTimerAnimation(resetTimer, onStartTimer, guessTopImage);
     const {animatedScore} = useScoreAnimation(score);
 
