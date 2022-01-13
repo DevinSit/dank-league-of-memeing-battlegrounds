@@ -8,17 +8,19 @@ import styles from "./Game.module.scss";
 interface GameProps {
     images: Array<string>;
     predictions: Array<boolean>;
+    score: number;
     setGuesses: Dispatch<SetStateAction<Array<boolean>>>;
     setPage: (page: GamePage) => void;
+    setScore: Dispatch<SetStateAction<number>>;
 }
 
-const Game = ({images, predictions, setGuesses, setPage}: GameProps) => {
+const Game = ({images, predictions, score, setGuesses, setPage, setScore}: GameProps) => {
     const [resetTimer, setResetTimer] = useState(false);
 
     const onResetTimer = useCallback(() => setResetTimer(true), []);
     const onGameOver = useCallback(() => setPage(GamePage.RESULTS), [setPage]);
 
-    const {score, onGuess, onStartTimer} = useScore(predictions, onResetTimer, setGuesses);
+    const {onGuess, onStartTimer} = useScore(predictions, onResetTimer, setGuesses, setScore);
     const {cardSprings, bind, removeTopImage} = useCardStackAnimation(images, onGuess, onGameOver);
     const {timerStyles} = useTimerAnimation(resetTimer, onStartTimer, removeTopImage);
     const {animatedScore} = useScoreAnimation(score);

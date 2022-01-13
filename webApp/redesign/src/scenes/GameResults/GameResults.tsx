@@ -1,16 +1,18 @@
 import {CheckIcon, CloseIcon, EditIcon, ExternalLinkIcon} from "assets/icons";
 import {Button} from "components/";
+import {ValueFormatting} from "services/";
 import {GamePage} from "values/gamePages";
 import styles from "./GameResults.module.scss";
 
 interface GameResultsProps {
     guesses: Array<boolean>;
     images: Array<string>;
+    score: number;
     urls: Array<string>;
     setPage: (page: GamePage) => void;
 }
 
-const GameResults = ({guesses, images, urls, setPage}: GameResultsProps) => (
+const GameResults = ({guesses, images, score, urls, setPage}: GameResultsProps) => (
     <div className={styles.GameResults}>
         <div className={styles.GameResultsSummary}>
             <div className={styles.GameResultsUsernameContainer}>
@@ -21,7 +23,7 @@ const GameResults = ({guesses, images, urls, setPage}: GameResultsProps) => (
                 </button>
             </div>
 
-            <p className={styles.GameResultsScore}>1,230,000</p>
+            <p className={styles.GameResultsScore}>{ValueFormatting.formatScore(score)}</p>
             <p className={styles.GameResultsRank}>Rank #1</p>
 
             <div className={styles.GameResultsButtonContainer}>

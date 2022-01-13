@@ -8,10 +8,10 @@ const BASE_SCORE = 10000;
 export const useScore = (
     predictions: Array<boolean>,
     onResetTimer: () => void,
-    setGuesses: Dispatch<SetStateAction<Array<boolean>>>
+    setGuesses: Dispatch<SetStateAction<Array<boolean>>>,
+    setScore: Dispatch<SetStateAction<number>>
 ) => {
     const timerRef = useRef<number>(Date.now());
-    const [score, setScore] = useState(0);
 
     const onGuess = useCallback(
         (index: number, isDankGuess: boolean) => {
@@ -43,14 +43,14 @@ export const useScore = (
             onResetTimer();
             timerRef.current = Date.now();
         },
-        [predictions, onResetTimer, setGuesses]
+        [predictions, onResetTimer, setGuesses, setScore]
     );
 
     const onStartTimer = useCallback(() => {
         timerRef.current = Date.now();
     }, []);
 
-    return {score, onGuess, onStartTimer};
+    return {onGuess, onStartTimer};
 };
 
 export const useCardStackAnimation = (

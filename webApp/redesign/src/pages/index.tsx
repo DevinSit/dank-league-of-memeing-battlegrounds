@@ -73,13 +73,16 @@ const useMemeImages = (): ParsedData => {
 
 const Home: NextPage = () => {
     const [page, setPage] = useState<GamePage>(GamePage.RULES);
+
+    const [score, setScore] = useState(0);
     const [guesses, setGuesses] = useState<Array<boolean>>([]);
 
     const {images, predictions, urls} = useMemeImages();
 
     const customSetPage = useCallback((page: GamePage) => {
-        // Reset the guesses when going into the Game.
+        // Reset the guesses/score state when going into the Game.
         if (page === GamePage.GAME) {
+            setScore(() => 0);
             setGuesses(() => []);
         }
 
@@ -95,8 +98,10 @@ const Home: NextPage = () => {
                     <Game
                         images={images}
                         predictions={predictions}
-                        setPage={customSetPage}
+                        score={score}
                         setGuesses={setGuesses}
+                        setPage={customSetPage}
+                        setScore={setScore}
                     />
                 );
             case GamePage.RESULTS:
@@ -104,6 +109,7 @@ const Home: NextPage = () => {
                     <GameResults
                         guesses={guesses}
                         images={images}
+                        score={score}
                         urls={urls}
                         setPage={customSetPage}
                     />
