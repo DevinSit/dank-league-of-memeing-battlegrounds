@@ -114,14 +114,17 @@ export const useCardStackAnimation = (
         [api, numberOfImages, removedImages, onGameOver]
     );
 
-    const removeTopImage = useCallback(() => {
-        const top = calcTopImage(removedImages, numberOfImages);
+    const guessTopImage = useCallback(
+        (isDankGuess: boolean = false) => {
+            const top = calcTopImage(removedImages, numberOfImages);
 
-        removedImages.push(top);
-        onGuess(top, false);
+            removedImages.push(top);
+            onGuess(top, isDankGuess);
 
-        animateCards(top, true, {dir: 1});
-    }, [numberOfImages, removedImages, animateCards, onGuess]);
+            animateCards(top, true, {dir: isDankGuess ? -1 : 1});
+        },
+        [numberOfImages, removedImages, animateCards, onGuess]
+    );
 
     const bind = useDrag(
         ({args: [index], down, movement: [_, my], direction: [__, yDir], velocity}) => {
@@ -149,7 +152,7 @@ export const useCardStackAnimation = (
         }
     );
 
-    return {cardSprings, bind, removeTopImage};
+    return {cardSprings, bind, guessTopImage};
 };
 
 export const useTimerAnimation = (resetTimer: boolean, onStart: () => void, onEnd: () => void) => {

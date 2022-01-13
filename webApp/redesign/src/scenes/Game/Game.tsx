@@ -21,14 +21,16 @@ const Game = ({images, predictions, score, setGuesses, setPage, setScore}: GameP
     const onGameOver = useCallback(() => setPage(GamePage.RESULTS), [setPage]);
 
     const {onGuess, onStartTimer} = useScore(predictions, onResetTimer, setGuesses, setScore);
-    const {cardSprings, bind, removeTopImage} = useCardStackAnimation(images, onGuess, onGameOver);
-    const {timerStyles} = useTimerAnimation(resetTimer, onStartTimer, removeTopImage);
+    const {cardSprings, bind, guessTopImage} = useCardStackAnimation(images, onGuess, onGameOver);
+    const {timerStyles} = useTimerAnimation(resetTimer, onStartTimer, guessTopImage);
     const {animatedScore} = useScoreAnimation(score);
 
     return (
         <div className={styles.Game}>
             <div className={styles.GameWrapper}>
-                <button className={styles.GameButtonDank}>Dank</button>
+                <button className={styles.GameButtonDank} onClick={() => guessTopImage(true)}>
+                    Dank
+                </button>
 
                 <div className={styles.MemeCardsStack}>
                     {cardSprings.map(({x, y, scale}, i) => (
@@ -47,7 +49,9 @@ const Game = ({images, predictions, score, setGuesses, setPage, setScore}: GameP
                     ))}
                 </div>
 
-                <button className={styles.GameButtonNotDank}>Not Dank</button>
+                <button className={styles.GameButtonNotDank} onClick={() => guessTopImage(false)}>
+                    Not Dank
+                </button>
 
                 <div className={styles.GameScoreContainer}>
                     <div className={styles.GameTimerContainer}>
