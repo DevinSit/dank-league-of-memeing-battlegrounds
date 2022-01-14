@@ -3,13 +3,15 @@ import Link from "next/link";
 import {useRouter} from "next/router";
 import {animated, to as interpolate} from "react-spring";
 import {ControllerIcon, ListIcon, TrophyIcon, UploadIcon} from "assets/icons";
-import {useHideOnScroll} from "hooks/";
+import {useHideOnScroll, useGame} from "hooks/";
+import {GamePage} from "values/gamePages";
 import {ScreenUrls} from "values/screenUrls";
 import styles from "./AppNavigation.module.scss";
 
 const AppNavigation = () => {
     const {pathname} = useRouter();
     const translateY = useHideOnScroll({translateAmount: 120});
+    const [{dispatch}, actions] = useGame();
 
     return (
         <animated.nav
@@ -21,12 +23,11 @@ const AppNavigation = () => {
             }}
         >
             <IconButton
-                href={ScreenUrls.RULES}
-                active={
-                    pathname === ScreenUrls.RULES ||
-                    pathname === ScreenUrls.GAME ||
-                    pathname === ScreenUrls.RULES
-                }
+                href={ScreenUrls.GAME}
+                // If the user clicks on this button while in a game,
+                // they should be returned to the Rules page.
+                onClick={() => dispatch(actions.setPage(GamePage.RULES))}
+                active={pathname === ScreenUrls.GAME}
                 Icon={ControllerIcon}
             />
 
