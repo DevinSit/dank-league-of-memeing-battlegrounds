@@ -3,7 +3,7 @@ import type {NextPage} from "next";
 import Head from "next/head";
 import {useSWRConfig} from "swr";
 import {AppTitle} from "components/";
-import {useSWR} from "hooks/";
+import {useGame, useSWR} from "hooks/";
 import {Game, GameResults, Rules} from "scenes/";
 import {api} from "values/api";
 import {GamePage} from "values/gamePages";
@@ -77,61 +77,33 @@ const useMemeImages = () => {
 };
 
 const Home: NextPage = () => {
-    const [page, setPage] = useState<GamePage>(GamePage.RULES);
-
-    const [score, setScore] = useState(0);
-    const [guesses, setGuesses] = useState<Array<boolean>>([]);
+    const [{state, dispatch}, actions] = useGame();
 
     const {
         data: {images, predictions, urls},
         fetchNewImages
     } = useMemeImages();
 
-    const customSetPage = useCallback(
+    const setPage = useCallback(
         (page: GamePage) => {
-            setPage((oldPage) => {
-                // Fetch new images when coming into the game from the results;
-                if (oldPage === GamePage.RESULTS) {
-                    fetchNewImages();
-                }
+            // Fetch new images when coming into the game from the results;
+            if (state.page === GamePage.RESULTS) {
+                fetchNewImages();
+            }
 
-                // Reset the guesses/score state when going into the Game.
-                if (page === GamePage.GAME) {
-                    setScore(() => 0);
-                    setGuesses(() => []);
-                }
-
-                return page;
-            });
+            dispatch(actions.setPage(page));
         },
-        [fetchNewImages]
+        [state.page, actions, dispatch, fetchNewImages]
     );
 
     const currentPage = (() => {
-        switch (page) {
+        switch (state.page) {
             case GamePage.RULES:
-                return <Rules setPage={customSetPage} />;
+                return <Rules setPage={setPage} />;
             case GamePage.GAME:
-                return (
-                    <Game
-                        images={images}
-                        predictions={predictions}
-                        score={score}
-                        setGuesses={setGuesses}
-                        setPage={customSetPage}
-                        setScore={setScore}
-                    />
-                );
+                return <Game images={images} predictions={predictions} setPage={setPage} />;
             case GamePage.RESULTS:
-                return (
-                    <GameResults
-                        guesses={guesses}
-                        images={images}
-                        score={score}
-                        urls={urls}
-                        setPage={customSetPage}
-                    />
-                );
+                return <GameResults images={images} urls={urls} setPage={setPage} />;
         }
     })();
 

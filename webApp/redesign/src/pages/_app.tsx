@@ -3,6 +3,7 @@ import Head from "next/head";
 import {useRouter} from "next/router";
 import {useEffect} from "react";
 import {AppNavigation} from "components/";
+import {GameProvider} from "hooks/";
 import {ScreenUrls} from "values/screenUrls";
 import "styles/global.scss";
 
@@ -35,8 +36,11 @@ function MyApp({Component, pageProps}: AppProps) {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Component {...pageProps} />
-            <AppNavigation />
+
+            <GameProvider>
+                <Component {...pageProps} />
+                <AppNavigation />
+            </GameProvider>
         </>
     );
 }

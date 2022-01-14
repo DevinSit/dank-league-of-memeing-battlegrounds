@@ -1,17 +1,14 @@
-import {useCallback, useRef, useState, Dispatch, SetStateAction} from "react";
+import {useCallback, useRef, useState} from "react";
 import {useSpring, useSprings} from "@react-spring/web";
 import {useDrag} from "react-use-gesture";
+import {useGame} from "hooks/";
 
 const TIMER_SECONDS = 5;
 const TIMER_DURATION = TIMER_SECONDS * 1000;
 const BASE_SCORE = 10000;
 
-export const useScore = (
-    predictions: Array<boolean>,
-    onResetTimer: () => void,
-    setGuesses: Dispatch<SetStateAction<Array<boolean>>>,
-    setScore: Dispatch<SetStateAction<number>>
-) => {
+export const useScore = (predictions: Array<boolean>, onResetTimer: () => void) => {
+    const [{dispatch}, actions] = useGame();
     const timerRef = useRef<number>(Date.now());
 
     const onGuess = useCallback(
@@ -40,17 +37,17 @@ export const useScore = (
             const isCorrect = predictions[index] === isDankGuess;
 
             if (isCorrect) {
-                setScore((oldScore) => oldScore + adjustment);
+                dispatch(actions.addScore(adjustment));
             } else {
-                setScore((oldScore) => Math.max(0, oldScore - adjustment));
+                dispatch(actions.subtractScore(adjustment));
             }
 
-            setGuesses((guesses) => [...guesses, isCorrect]);
+            dispatch(actions.addGuess(isCorrect));
 
             onResetTimer();
             timerRef.current = Date.now();
         },
-        [predictions, onResetTimer, setGuesses, setScore]
+        [predictions, actions, dispatch, onResetTimer]
     );
 
     const onStartTimer = useCallback(() => {
@@ -184,8 +181,10 @@ export const useTimerAnimation = (resetTimer: boolean, onStart: () => void, onEn
     return {timerStyles};
 };
 
-export const useScoreAnimation = (score: number) => {
-    return useSpring({from: {animatedScore: 0}, to: {animatedScore: score}});
+export const useScoreAnimation = () => {
+    const [{state}] = useGame();
+
+    return useSpring({from: {animatedScore: 0}, to: {animatedScore: state.score}});
 };
 
 /* Helper Stuff */
