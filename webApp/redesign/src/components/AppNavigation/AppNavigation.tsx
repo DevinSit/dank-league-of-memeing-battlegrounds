@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import {useEffect} from "react";
 import Link from "next/link";
 import {useRouter} from "next/router";
 import {animated, to as interpolate} from "react-spring";
@@ -8,10 +9,39 @@ import {GamePage} from "values/gamePages";
 import {ScreenUrls} from "values/screenUrls";
 import styles from "./AppNavigation.module.scss";
 
+// "Game Mode" is just a fancy way of saying that we need to add a class to `body`
+// when playing the game so as to disable overflow.
+//
+// Also, while it would make more sense to have this in _app, it needs access to the game state,
+// so it goes here.
+const useGameMode = () => {
+    const router = useRouter();
+    const [
+        {
+            state: {page}
+        }
+    ] = useGame();
+
+    useEffect(() => {
+        if (router.pathname === ScreenUrls.GAME && page === GamePage.GAME) {
+            document.body.classList.add("game-mode");
+            document.body.classList.remove("browse-mode");
+        } else if (router.pathname === ScreenUrls.BROWSE) {
+            document.body.classList.add("browse-mode");
+            document.body.classList.remove("game-mode");
+        } else {
+            document.body.classList.remove("game-mode");
+            document.body.classList.remove("browse-mode");
+        }
+    }, [router.pathname, page]);
+};
+
 const AppNavigation = () => {
     const {pathname} = useRouter();
     const translateY = useHideOnScroll({translateAmount: 120});
     const [{dispatch}, actions] = useGame();
+
+    useGameMode();
 
     return (
         <animated.nav
