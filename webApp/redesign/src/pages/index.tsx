@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useRef, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import type {NextPage} from "next";
 import Head from "next/head";
 import {useSWRConfig} from "swr";
@@ -29,21 +29,37 @@ interface ParsedData {
 
 const createDefaultParsedData = (): ParsedData => ({images: [], predictions: [], urls: []});
 
-const usePreloadImages = (images: Array<string>) => {
+const usePreloadImages = (urls: Array<string>): Array<string> => {
+    const [images, setImages] = useState<Array<string>>([]);
     const imagesRef = useRef<Array<HTMLImageElement>>([]);
 
-    useMemo(() => {
+    useEffect(() => {
+        const newImages: Array<string> = [];
         imagesRef.current = [];
 
-        for (const url of images) {
+        for (let i = 0; i < urls.length; i++) {
+            const url = urls[i];
+
             // Trick for preloading images. Keep them in an array so that they don't unload.
             // https://stackoverflow.com/questions/3646036/preloading-images-with-javascript
             const image = new Image();
-            image.src = url;
 
-            imagesRef.current.push(image);
+            image.onload = () => {
+                if (newImages.length < 10 && !newImages.includes(url)) {
+                    newImages.push(url);
+                    imagesRef.current.push(image);
+                }
+
+                if (newImages.length === 10) {
+                    setImages(newImages);
+                }
+            };
+
+            image.src = url;
         }
-    }, [images]);
+    }, [urls]);
+
+    return images;
 };
 
 const useMemeImages = () => {
@@ -71,9 +87,10 @@ const useMemeImages = () => {
 
     const fetchNewImages = useCallback(() => mutate(api.RANDOM_MEMES), [mutate]);
 
-    usePreloadImages(parsedData.images);
+    const images = usePreloadImages(parsedData.images);
+    const finalParsedData = useMemo(() => ({...parsedData, images}), [parsedData, images]);
 
-    return {data: parsedData, fetchNewImages};
+    return {data: finalParsedData, fetchNewImages};
 };
 
 const Home: NextPage = () => {

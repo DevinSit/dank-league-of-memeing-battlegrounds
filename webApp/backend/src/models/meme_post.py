@@ -36,7 +36,7 @@ class MemePost:
 
         return posts
 
-    def get_random_posts(self, number_of_posts=10):
+    def get_random_posts(self, number_of_posts=20):
         posts = self._fetch_random_posts(number_of_posts)
 
         for post in posts:
@@ -117,7 +117,7 @@ class MemePost:
 
         return sorted(posts, key=lambda post: post["createdUtc"], reverse=True)
 
-    def _fetch_random_posts(self, number_of_posts=10) -> List[datastore.Entity]:
+    def _fetch_random_posts(self, number_of_posts=20) -> List[datastore.Entity]:
         if number_of_posts in all_posts_cache:
             posts = all_posts_cache[number_of_posts]
         else:
