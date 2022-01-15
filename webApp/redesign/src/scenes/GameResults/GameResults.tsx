@@ -14,7 +14,7 @@ interface GameResultsProps {
 const GameResults = ({images, urls, setPage}: GameResultsProps) => {
     const [
         {
-            state: {guesses, score}
+            state: {guesses, score, username}
         }
     ] = useGame();
 
@@ -22,7 +22,7 @@ const GameResults = ({images, urls, setPage}: GameResultsProps) => {
         <div className={styles.GameResults}>
             <div className={styles.GameResultsSummary}>
                 <div className={styles.GameResultsUsernameContainer}>
-                    <p className={styles.GameResultsUsername}>Username</p>
+                    <p className={styles.GameResultsUsername}>{username}</p>
 
                     <button className={styles.GameResultsEditButton}>
                         <EditIcon className={styles.GameResultsEditIcon} />

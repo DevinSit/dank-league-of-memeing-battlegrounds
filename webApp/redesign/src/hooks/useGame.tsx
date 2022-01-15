@@ -1,17 +1,24 @@
 import {AnyAction, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {createContext, Dispatch, useContext, useMemo, useReducer} from "react";
+import {createContext, Dispatch, useContext, useEffect, useMemo, useReducer} from "react";
+import randomUsernameGenerator from "random-username-generator";
 import {GamePage} from "values/gamePages";
+
+const USERNAME_KEY = "username";
 
 interface GameState {
     guesses: Array<boolean>;
     page: GamePage;
     score: number;
+    username: string;
 }
 
 const initialState: GameState = {
     guesses: [],
     page: GamePage.RULES,
-    score: 0
+    score: 0,
+    username:
+        (typeof window !== "undefined" && localStorage.getItem(USERNAME_KEY)) ||
+        randomUsernameGenerator.generate()
 };
 
 const slice = createSlice({
@@ -48,6 +55,10 @@ export const GameProvider = ({children}: any) => {
     const [state, dispatch] = useReducer(slice.reducer, initialState);
 
     const value = useMemo(() => ({state, dispatch}), [state]);
+
+    useEffect(() => {
+        localStorage.setItem(USERNAME_KEY, state.username);
+    }, [state.username]);
 
     return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 };
