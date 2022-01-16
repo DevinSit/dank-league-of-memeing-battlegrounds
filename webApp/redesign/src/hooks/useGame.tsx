@@ -43,6 +43,9 @@ const slice = createSlice({
         },
         subtractScore: (state: GameState, action: PayloadAction<number>) => {
             state.score = Math.max(state.score - action.payload, 0);
+        },
+        setUsername: (state: GameState, action: PayloadAction<string>) => {
+            state.username = action.payload.substring(0, 20);
         }
     }
 });

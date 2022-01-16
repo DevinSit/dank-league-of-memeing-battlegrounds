@@ -9,64 +9,6 @@
         height: 200px;
     }
 
-    .GameResultsSummary {
-        background-color: $color-white;
-        border-radius: $border-radius-large;
-        box-shadow: 0px 2px 10px 2px rgba(0, 0, 0, 0.3);
-        display: grid;
-        flex-direction: column;
-        gap: $size-400;
-        justify-items: center;
-        margin: 0 auto;
-        max-width: 450px;
-        padding: $size-400;
-
-        @include media-query-medium {
-            padding: $size-500;
-        }
-
-        .GameResultsUsernameContainer {
-            align-items: center;
-            display: flex;
-            margin-bottom: $size-400;
-
-            .GameResultsUsername {
-                color: $color-text-secondary;
-                font-size: $font-size-600;
-            }
-
-            .GameResultsEditButton {
-                background-color: transparent;
-                padding: $size-100;
-
-                .GameResultsEditIcon {
-                    @include svg-icon-color($color-primary-outline);
-
-                    height: 20px;
-                    width: 20px;
-                }
-            }
-        }
-
-        .GameResultsScore {
-            color: $color-neutral-900;
-            font-size: $font-size-900;
-            font-weight: $font-weight-bold;
-        }
-
-        .GameResultsRank {
-            color: $color-primary;
-            font-size: $font-size-700;
-            font-weight: $font-weight-bold;
-        }
-
-        .GameResultsButtonContainer {
-            display: flex;
-            justify-content: center;
-            margin-top: $size-500;
-        }
-    }
-
     .GameResultsMemes {
         display: grid;
         gap: $size-400;
@@ -79,6 +21,78 @@
         @include media-query-large {
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
         }
+    }
+}
+
+.GameResultsSummary {
+    background-color: $color-white;
+    border-radius: $border-radius-large;
+    box-shadow: 0px 2px 10px 2px rgba(0, 0, 0, 0.3);
+    display: grid;
+    flex-direction: column;
+    gap: $size-400;
+    justify-items: center;
+    margin: 0 auto;
+    max-width: 450px;
+    padding: $size-400;
+
+    @include media-query-medium {
+        padding: $size-500;
+    }
+
+    .GameResultsUsernameContainer {
+        align-items: center;
+        display: flex;
+        margin-bottom: $size-400;
+
+        .GameResultsUsername {
+            color: $color-text-secondary;
+            font-size: $font-size-600;
+            margin-right: $size-200;
+        }
+
+        .GameResultsUsernameInput {
+            border: 1px solid $color-neutral-400;
+            border-radius: $border-radius-normal;
+            color: $color-text-primary;
+            font-size: $font-size-600;
+            margin-right: $size-200;
+            max-width: 250px;
+            padding: $size-100 $size-200;
+        }
+
+        .GameResultsButton {
+            align-items: center;
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            padding: $size-100;
+
+            .GameResultsEditIcon {
+                @include svg-icon-color($color-primary-outline);
+
+                height: 20px;
+                width: 20px;
+            }
+        }
+    }
+
+    .GameResultsScore {
+        color: $color-neutral-900;
+        font-size: $font-size-900;
+        font-weight: $font-weight-bold;
+    }
+
+    .GameResultsRank {
+        color: $color-primary;
+        font-size: $font-size-700;
+        font-weight: $font-weight-bold;
+    }
+
+    .GameResultsButtonContainer {
+        display: flex;
+        justify-content: center;
+        margin-top: $size-500;
     }
 }
 
@@ -110,14 +124,6 @@ $meme-card-info-height: 40px;
         height: $meme-card-info-height;
         padding: 0 $size-100;
 
-        .MemeResultCardCorrectIcon {
-            @include svg-icon-color($color-positive-500);
-        }
-
-        .MemeResultCardIncorrectIcon {
-            @include svg-icon-color($color-negative-500);
-        }
-
         .MemeResultCardUsername {
             color: $color-white;
             font-weight: $font-weight-bold;
@@ -127,4 +133,12 @@ $meme-card-info-height: 40px;
             @include svg-icon-color($color-primary);
         }
     }
+}
+
+.CorrectIcon {
+    @include svg-icon-color($color-positive-500);
+}
+
+.IncorrectIcon {
+    @include svg-icon-color($color-negative-500);
 }
