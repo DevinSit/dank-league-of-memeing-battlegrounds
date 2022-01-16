@@ -1,10 +1,13 @@
 import {useCallback, useState} from "react";
+import BadWordsFilter from "bad-words";
 import {CheckIcon, CloseIcon, EditIcon, ExternalLinkIcon} from "assets/icons";
 import {Button} from "components/";
 import {useGame} from "hooks/";
 import {ValueFormatting} from "services/";
 import {GamePage} from "values/gamePages";
 import styles from "./GameResults.module.scss";
+
+const badWordsFilter = new BadWordsFilter();
 
 interface GameResultsProps {
     images: Array<string>;
@@ -60,7 +63,9 @@ const GameResultsSummary = ({onPlayAgain}: GameResultsSummaryProps) => {
     const [editingUsername, setEditingUsername] = useState(username);
 
     const onSubmit = useCallback(() => {
-        dispatch(actions.setUsername(editingUsername));
+        let cleanedUsername = badWordsFilter.clean(editingUsername);
+
+        dispatch(actions.setUsername(cleanedUsername));
         setIsEditing(false);
     }, [actions, dispatch, editingUsername]);
 
