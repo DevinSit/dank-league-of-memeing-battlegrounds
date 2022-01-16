@@ -5,29 +5,17 @@ import {useSWRConfig} from "swr";
 import {AppTitle} from "components/";
 import {useGame, useSWR} from "hooks/";
 import {Game, GameResults, Rules} from "scenes/";
+import {Post} from "types";
 import {api} from "values/api";
 import {GamePage} from "values/gamePages";
 
-interface Post {
-    author: string;
-    createdUTC: number;
-    id: string;
-    imageHash: string;
-    kerasPrediction: number;
-    permalink: string;
-    score: number;
-    subreddit: string;
-    title: string;
-    url: string;
-}
-
 interface ParsedData {
     images: Array<string>;
+    posts: Record<string, Post>;
     predictions: Array<boolean>;
-    urls: Array<string>;
 }
 
-const createDefaultParsedData = (): ParsedData => ({images: [], predictions: [], urls: []});
+const createDefaultParsedData = (): ParsedData => ({images: [], posts: {}, predictions: []});
 
 const usePreloadImages = (urls: Array<string>): Array<string> => {
     const [images, setImages] = useState<Array<string>>([]);
@@ -78,7 +66,8 @@ const useMemeImages = () => {
             data?.posts?.reduce((acc, post) => {
                 acc.images.push(post.url);
                 acc.predictions.push(post.kerasPrediction >= 0.5);
-                acc.urls.push(`https://www.reddit.com${post.permalink}`);
+
+                acc.posts[post.url] = post;
 
                 return acc;
             }, createDefaultParsedData()) || createDefaultParsedData(),
@@ -88,7 +77,12 @@ const useMemeImages = () => {
     const fetchNewImages = useCallback(() => mutate(api.RANDOM_MEMES), [mutate]);
 
     const images = usePreloadImages(parsedData.images);
-    const finalParsedData = useMemo(() => ({...parsedData, images}), [parsedData, images]);
+
+    const finalParsedData = useMemo(() => {
+        const posts = images.map((image) => parsedData.posts[image]);
+
+        return {images, posts, predictions: parsedData.predictions};
+    }, [parsedData, images]);
 
     return {data: finalParsedData, fetchNewImages};
 };
@@ -97,7 +91,7 @@ const Home: NextPage = () => {
     const [{state, dispatch}, actions] = useGame();
 
     const {
-        data: {images, predictions, urls},
+        data: {images, predictions, posts},
         fetchNewImages
     } = useMemeImages();
 
@@ -120,7 +114,7 @@ const Home: NextPage = () => {
             case GamePage.GAME:
                 return <Game images={images} predictions={predictions} setPage={setPage} />;
             case GamePage.RESULTS:
-                return <GameResults images={images} urls={urls} setPage={setPage} />;
+                return <GameResults posts={posts} setPage={setPage} />;
         }
     })();
 

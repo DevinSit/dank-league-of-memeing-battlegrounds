@@ -4,18 +4,18 @@ import {CheckIcon, CloseIcon, EditIcon, ExternalLinkIcon} from "assets/icons";
 import {Button} from "components/";
 import {useGame} from "hooks/";
 import {ValueFormatting} from "services/";
+import {Post} from "types";
 import {GamePage} from "values/gamePages";
 import styles from "./GameResults.module.scss";
 
 const badWordsFilter = new BadWordsFilter();
 
 interface GameResultsProps {
-    images: Array<string>;
-    urls: Array<string>;
+    posts: Array<Post>;
     setPage: (page: GamePage) => void;
 }
 
-const GameResults = ({images, urls, setPage}: GameResultsProps) => {
+const GameResults = ({posts, setPage}: GameResultsProps) => {
     const [
         {
             state: {guesses, score, username}
@@ -27,11 +27,12 @@ const GameResults = ({images, urls, setPage}: GameResultsProps) => {
             <GameResultsSummary onPlayAgain={() => setPage(GamePage.RESULTS)} />
 
             <div className={styles.GameResultsMemes}>
-                {images.map((image, index) => (
+                {posts.map(({id, author, permalink, url}, index) => (
                     <MemeResultCard
-                        key={image}
-                        image={image}
-                        url={urls[index]}
+                        key={id}
+                        author={author}
+                        image={url}
+                        url={`https://www.reddit.com${permalink}`}
                         wasCorrect={guesses[index]}
                     />
                 ))}
@@ -130,21 +131,16 @@ const GameResultsSummary = ({onPlayAgain}: GameResultsSummaryProps) => {
 };
 
 interface MemeResultCardProps {
+    author: string;
+
     image: string;
 
     url: string;
 
-    username?: string;
-
     wasCorrect?: boolean;
 }
 
-const MemeResultCard = ({
-    image,
-    url,
-    username = "username",
-    wasCorrect = true
-}: MemeResultCardProps) => (
+const MemeResultCard = ({author, image, url, wasCorrect = true}: MemeResultCardProps) => (
     <div
         className={styles.MemeResultCard}
         style={{
@@ -159,7 +155,7 @@ const MemeResultCard = ({
                 <CloseIcon className={styles.IncorrectIcon} />
             )}
 
-            <p className={styles.MemeResultCardUsername}>By {username}</p>
+            <p className={styles.MemeResultCardAuthor}>By {author}</p>
 
             <a href={url} target="_blank" rel="noreferrer">
                 <ExternalLinkIcon className={styles.MemeResultCardLinkIcon} />
