@@ -19,17 +19,46 @@ class LeaderboardScore:
 
         return leaderboard_score_entity
 
-    def post_score(self, username: str, score: int) -> datastore.Entity:
-        leaderboard_score_entity = self.get_score_for_user(username)
+    def post_score(self, username: str, score: int, oldUsername: str = "") -> datastore.Entity:
+        if oldUsername:
+            old_leaderboard_score_entity = self.get_score(oldUsername)
 
-        if leaderboard_score_entity and leaderboard_score_entity["score"] < score:
-            leaderboard_score_entity["score"] = score
+            if old_leaderboard_score_entity:
+                self.delete_score(oldUsername)
+
+                key = self._generate_score_key(username)
+                leaderboard_score_entity = datastore.Entity(key=key)
+                leaderboard_score_entity["username"] = username
+                leaderboard_score_entity["score"] = old_leaderboard_score_entity["score"]
+
+                if old_leaderboard_score_entity["score"] < score:
+                    leaderboard_score_entity["score"] = score
+            else:
+                leaderboard_score_entity = self.get_score(username)
+
+                if leaderboard_score_entity and leaderboard_score_entity["score"] > score:
+                    return leaderboard_score_entity
+                elif leaderboard_score_entity and leaderboard_score_entity["score"] < score:
+                    leaderboard_score_entity["score"] = score
+                else:
+                    key = self._generate_score_key(username)
+                    leaderboard_score_entity = datastore.Entity(key=key)
+
+                    leaderboard_score_entity["username"] = username
+                    leaderboard_score_entity["score"] = score
         else:
-            key = self._generate_score_key(username)
-            leaderboard_score_entity = datastore.Entity(key=key)
+            leaderboard_score_entity = self.get_score(username)
 
-            leaderboard_score_entity["username"] = username
-            leaderboard_score_entity["score"] = score
+            if leaderboard_score_entity and leaderboard_score_entity["score"] > score:
+                return leaderboard_score_entity
+            elif leaderboard_score_entity and leaderboard_score_entity["score"] < score:
+                leaderboard_score_entity["score"] = score
+            else:
+                key = self._generate_score_key(username)
+                leaderboard_score_entity = datastore.Entity(key=key)
+
+                leaderboard_score_entity["username"] = username
+                leaderboard_score_entity["score"] = score
 
         self.datastore_client.put(leaderboard_score_entity)
 

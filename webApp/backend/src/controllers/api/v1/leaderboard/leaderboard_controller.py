@@ -33,7 +33,7 @@ def post_score() -> Response:
         logger.warning("Request payload is invalid")
         return jsonify(abort(400))
 
-    score = leaderboard_score_service.post_score(data["username"], data["score"])
+    score = leaderboard_score_service.post_score(data["username"], data["score"], data.get("oldUsername", ""))
 
     return jsonify({
         "status": "success",
@@ -56,11 +56,3 @@ def get_score(username: str) -> Response:
         "status": "success",
         "score": score
     })
-
-
-@leaderboard_controller.route("/score/<username>", methods=["DELETE"])
-@LoggingUtils.log_execution_time("Score delete finished")
-def delete_score(username: str) -> Response:
-    leaderboard_score_service.delete_score(username)
-
-    return jsonify({"status": "success"})

@@ -1,40 +1,43 @@
 import type {NextApiRequest, NextApiResponse} from "next";
 import BadWordsFilter from "bad-words";
+import {api} from "values/api";
 
 const badWordsFilter = new BadWordsFilter();
 
-const postScore = (req: NextApiRequest, res: NextApiResponse) => {
-    if (!req?.body?.username || !Number.isInteger(req?.body?.score)) {
+const postScore = async (req: NextApiRequest, res: NextApiResponse) => {
+    if (!req?.body?.username || !Number.isFinite(req?.body?.score)) {
         return res.status(400).json({message: "Missing data."});
     }
 
-    const {score, username} = req.body;
+    const {score, username, oldUsername = ""} = req.body;
 
     if (badWordsFilter.isProfane(username)) {
         return res.status(400).json({message: "Invalid username."});
     }
 
-    res.status(200).json({score, username});
-};
-
-const deleteScore = (req: NextApiRequest, res: NextApiResponse) => {
-    if (!req?.body?.username) {
-        return res.status(400).json({message: "Missing data."});
+    if (!Number.isInteger(score) || score < 0 || score > 450000) {
+        return res.status(400).json({message: "Invalid score"});
     }
 
-    const {username} = req.body;
+    try {
+        await fetch(api.SCORE, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({score, username, oldUsername})
+        });
 
-    res.status(200).json({username});
+        return res.status(200).json({score, username, oldUsername});
+    } catch {
+        return res.status(500).json({});
+    }
 };
 
-export default function scoreHandler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method !== "POST" && req.method !== "DELETE") {
+export default async function scoreHandler(req: NextApiRequest, res: NextApiResponse) {
+    if (req.method !== "POST") {
         return res.status(405).json({});
     }
 
-    if (req.method === "POST") {
-        return postScore(req, res);
-    } else if (req.method === "DELETE") {
-        return deleteScore(req, res);
-    }
+    return postScore(req, res);
 }

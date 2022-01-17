@@ -1,5 +1,5 @@
 import {animated} from "@react-spring/web";
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useGame} from "hooks/";
 import {ValueFormatting} from "services/";
 import {GamePage} from "values/gamePages";
@@ -14,36 +14,34 @@ interface GameProps {
 
 const Game = ({images, predictions, setPage}: GameProps) => {
     const [resetTimer, setResetTimer] = useState(false);
+
     const [
         {
-            state: {score, username}
+            state: {guesses, score, username}
         }
     ] = useGame();
 
+    // On Game Over
+    useEffect(() => {
+        if (guesses.length === predictions.length && predictions.length !== 0) {
+            fetch("/api/score", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({score, username})
+            }).then(() => {
+                setTimeout(() => {
+                    setPage(GamePage.RESULTS);
+                }, 1000);
+            });
+        }
+    }, [guesses, predictions, score, username, setPage]);
+
     const onResetTimer = useCallback(() => setResetTimer(true), []);
 
-    const onGameOver = useCallback(async () => {
-        const response = await fetch("/api/score", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({score, username})
-        });
-
-        console.log(response);
-
-        setPage(GamePage.RESULTS);
-    }, [score, username, setPage]);
-
     const {onGuess, onStartTimer} = useScore(predictions, onResetTimer);
-
-    const {cardSprings, bind, guessTopImage} = useCardStackAnimation(
-        images,
-        predictions,
-        onGuess,
-        onGameOver
-    );
+    const {cardSprings, bind, guessTopImage} = useCardStackAnimation(images, predictions, onGuess);
 
     const {timerStyles} = useTimerAnimation(resetTimer, onStartTimer, guessTopImage);
     const {animatedScore} = useScoreAnimation();

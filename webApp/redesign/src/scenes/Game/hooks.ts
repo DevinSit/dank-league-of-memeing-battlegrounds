@@ -32,7 +32,7 @@ export const useScore = (predictions: Array<boolean>, onResetTimer: () => void) 
             }
 
             // Then calculate the final adjustment. Don't want it to go negative because of the multiplier.
-            const adjustment = Math.max(BASE_SCORE * multiplier, 0);
+            const adjustment = Math.round(Math.max(BASE_SCORE * multiplier, 0));
 
             const isCorrect = predictions[index] === isDankGuess;
 
@@ -60,8 +60,7 @@ export const useScore = (predictions: Array<boolean>, onResetTimer: () => void) 
 export const useCardStackAnimation = (
     images: Array<string>,
     predictions: Array<boolean>,
-    onGuess: (index: number, guess: boolean) => void,
-    onGameOver: () => void
+    onGuess: (index: number, guess: boolean) => void
 ) => {
     // The set flags all the images that have been flicked out.
     const [removedImages] = useState(() => new Array<number>());
@@ -109,19 +108,20 @@ export const useCardStackAnimation = (
                     };
                 }
             });
-
-            if (removedImages.length === numberOfImages) {
-                setTimeout(() => {
-                    onGameOver();
-                }, 1000);
-            }
         },
-        [api, numberOfImages, removedImages, onGameOver]
+        [api, numberOfImages]
     );
 
     const guessTopImage = useCallback(
         (isDankGuess?: boolean) => {
             const top = calcTopImage(removedImages, numberOfImages);
+
+            // This is a contingency against the `onRest` (aka `guessTopImage`) of the timer
+            // spring being called after the game is over. For some reason, this just seems to happen
+            // when navigating to the results page.
+            if (removedImages.includes(top)) {
+                return;
+            }
 
             if (isDankGuess === undefined) {
                 isDankGuess = !predictions[top];

@@ -67,19 +67,11 @@ const GameResultsSummary = ({onPlayAgain}: GameResultsSummaryProps) => {
         let cleanedUsername = badWordsFilter.clean(editingUsername);
 
         await fetch("/api/score", {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({username})
-        });
-
-        await fetch("/api/score", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({score, username: cleanedUsername})
+            body: JSON.stringify({score, username: cleanedUsername, oldUsername: username})
         });
 
         dispatch(actions.setUsername(cleanedUsername));

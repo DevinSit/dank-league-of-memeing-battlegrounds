@@ -12,10 +12,9 @@ import {GamePage} from "values/gamePages";
 interface ParsedData {
     images: Array<string>;
     posts: Record<string, Post>;
-    predictions: Array<boolean>;
 }
 
-const createDefaultParsedData = (): ParsedData => ({images: [], posts: {}, predictions: []});
+const createDefaultParsedData = (): ParsedData => ({images: [], posts: {}});
 
 const usePreloadImages = (urls: Array<string>): Array<string> => {
     const [images, setImages] = useState<Array<string>>([]);
@@ -65,8 +64,6 @@ const useMemeImages = () => {
         () =>
             data?.posts?.reduce((acc, post) => {
                 acc.images.push(post.url);
-                acc.predictions.push(post.kerasPrediction >= 0.5);
-
                 acc.posts[post.url] = post;
 
                 return acc;
@@ -79,9 +76,13 @@ const useMemeImages = () => {
     const images = usePreloadImages(parsedData.images);
 
     const finalParsedData = useMemo(() => {
-        const posts = images.map((image) => parsedData.posts[image]);
+        const posts = images.map((image) => parsedData?.posts?.[image] || {});
 
-        return {images, posts, predictions: parsedData.predictions};
+        const predictions = images.map(
+            (image) => parsedData?.posts?.[image]?.kerasPrediction >= 0.5 || false
+        );
+
+        return {images, posts, predictions};
     }, [parsedData, images]);
 
     return {data: finalParsedData, fetchNewImages};
