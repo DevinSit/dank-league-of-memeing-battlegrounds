@@ -24,7 +24,7 @@ const GameResults = ({posts, setPage}: GameResultsProps) => {
 
     return (
         <div className={styles.GameResults}>
-            <GameResultsSummary onPlayAgain={() => setPage(GamePage.RESULTS)} />
+            <GameResultsSummary onPlayAgain={() => setPage(GamePage.GAME)} />
 
             <div className={styles.GameResultsMemes}>
                 {posts.map(({id, author, permalink, url}, index) => (
