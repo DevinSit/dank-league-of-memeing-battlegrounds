@@ -18,7 +18,7 @@ interface GameResultsProps {
 const GameResults = ({posts, setPage}: GameResultsProps) => {
     const [
         {
-            state: {guesses, score, username}
+            state: {guesses}
         }
     ] = useGame();
 
@@ -63,12 +63,28 @@ const GameResultsSummary = ({onPlayAgain}: GameResultsSummaryProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editingUsername, setEditingUsername] = useState(username);
 
-    const onSubmit = useCallback(() => {
+    const onSubmit = useCallback(async () => {
         let cleanedUsername = badWordsFilter.clean(editingUsername);
+
+        await fetch("/api/score", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({username})
+        });
+
+        await fetch("/api/score", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({score, username: cleanedUsername})
+        });
 
         dispatch(actions.setUsername(cleanedUsername));
         setIsEditing(false);
-    }, [actions, dispatch, editingUsername]);
+    }, [actions, editingUsername, score, username, dispatch]);
 
     const onCancel = useCallback(() => {
         setEditingUsername(username);

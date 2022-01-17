@@ -1,5 +1,6 @@
 import {animated} from "@react-spring/web";
-import {useCallback, useState, Dispatch, SetStateAction} from "react";
+import {useCallback, useState} from "react";
+import {useGame} from "hooks/";
 import {ValueFormatting} from "services/";
 import {GamePage} from "values/gamePages";
 import {useScore, useCardStackAnimation, useScoreAnimation, useTimerAnimation} from "./hooks";
@@ -13,9 +14,27 @@ interface GameProps {
 
 const Game = ({images, predictions, setPage}: GameProps) => {
     const [resetTimer, setResetTimer] = useState(false);
+    const [
+        {
+            state: {score, username}
+        }
+    ] = useGame();
 
     const onResetTimer = useCallback(() => setResetTimer(true), []);
-    const onGameOver = useCallback(() => setPage(GamePage.RESULTS), [setPage]);
+
+    const onGameOver = useCallback(async () => {
+        const response = await fetch("/api/score", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({score, username})
+        });
+
+        console.log(response);
+
+        setPage(GamePage.RESULTS);
+    }, [score, username, setPage]);
 
     const {onGuess, onStartTimer} = useScore(predictions, onResetTimer);
 
