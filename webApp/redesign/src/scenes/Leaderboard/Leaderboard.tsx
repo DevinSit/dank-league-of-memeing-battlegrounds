@@ -1,12 +1,13 @@
 import {ValueFormatting} from "services";
-import type {Leaderboard as LeaderboardType} from "types";
+import type {Leaderboard as LeaderboardType, UserRank} from "types";
 import styles from "./Leaderboard.module.scss";
 
 interface LeaderboardProps {
     leaderboard: LeaderboardType;
+    userRank: UserRank;
 }
 
-const Leaderboard = ({leaderboard}: LeaderboardProps) => (
+const Leaderboard = ({leaderboard, userRank}: LeaderboardProps) => (
     <div className={styles.Leaderboard}>
         <div className={styles.LeaderboardSection}>
             <h1>Leaderboard</h1>
@@ -27,7 +28,11 @@ const Leaderboard = ({leaderboard}: LeaderboardProps) => (
             <h1>Your Rank</h1>
 
             <div className={styles.LeaderboardList}>
-                <LeaderboardItem rank={1000} score={1230000} username="Archangl10" />
+                <LeaderboardItem
+                    rank={userRank.rank}
+                    score={userRank.score}
+                    username={userRank.username}
+                />
             </div>
         </div>
     </div>

@@ -17,3 +17,7 @@ export interface Score {
 }
 
 export type Leaderboard = Array<Score>;
+
+export interface UserRank extends Score {
+    rank: number;
+}

@@ -1,34 +1,33 @@
 import type {NextPage} from "next";
 import Head from "next/head";
+import {useGame, useSWR} from "hooks/";
 import {Leaderboard} from "scenes/";
-import type {Leaderboard as LeaderboardType} from "types";
+import type {Leaderboard as LeaderboardType, UserRank} from "types";
 import {api} from "values/api";
 
-interface LeaderboardPageProps {
-    leaderboard: LeaderboardType;
-}
+const LeaderboardPage: NextPage = () => {
+    const [
+        {
+            state: {username}
+        }
+    ] = useGame();
 
-const LeaderboardPage: NextPage<LeaderboardPageProps> = ({leaderboard = []}) => (
-    <>
-        <Head>
-            <title>Leaderboard | Are you a Dank Memer?</title>
-        </Head>
+    const {data} = useSWR<{leaderboard: LeaderboardType; rank: UserRank}>(
+        `${api.LEADERBOARD}/${username}`
+    );
 
-        <Leaderboard leaderboard={leaderboard} />
-    </>
-);
+    return (
+        <>
+            <Head>
+                <title>Leaderboard | Are you a Dank Memer?</title>
+            </Head>
 
-export async function getServerSideProps() {
-    let leaderboard: LeaderboardType = [];
-
-    try {
-        const response = await fetch(api.LEADERBOARD);
-        const leaderboard = (await response.json()).leaderboard;
-
-        return {props: {leaderboard}};
-    } catch {
-        return {props: {leaderboard}};
-    }
-}
+            <Leaderboard
+                leaderboard={data?.leaderboard || []}
+                userRank={data?.rank || {rank: 0, score: 0, username}}
+            />
+        </>
+    );
+};
 
 export default LeaderboardPage;
