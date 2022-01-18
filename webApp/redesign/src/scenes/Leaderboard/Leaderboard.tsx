@@ -1,17 +1,25 @@
 import {ValueFormatting} from "services";
+import type {Leaderboard as LeaderboardType} from "types";
 import styles from "./Leaderboard.module.scss";
 
-const Leaderboard = () => (
+interface LeaderboardProps {
+    leaderboard: LeaderboardType;
+}
+
+const Leaderboard = ({leaderboard}: LeaderboardProps) => (
     <div className={styles.Leaderboard}>
         <div className={styles.LeaderboardSection}>
             <h1>Leaderboard</h1>
 
             <div className={styles.LeaderboardList}>
-                <LeaderboardItem rank={1} score={1230000} username="Archangl" />
-                <LeaderboardItem rank={2} score={1230000} username="Archangl" />
-                <LeaderboardItem rank={3} score={1230000} username="Archangl" />
-                <LeaderboardItem rank={4} score={1230000} username="Archangl" />
-                <LeaderboardItem rank={5} score={1230000} username="Archangl" />
+                {leaderboard.map(({score, username}, index) => (
+                    <LeaderboardItem
+                        key={index}
+                        rank={index + 1}
+                        score={score}
+                        username={username}
+                    />
+                ))}
             </div>
         </div>
 

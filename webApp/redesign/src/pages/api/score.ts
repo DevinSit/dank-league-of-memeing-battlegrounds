@@ -4,7 +4,11 @@ import {api} from "values/api";
 
 const badWordsFilter = new BadWordsFilter();
 
-const postScore = async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function scoreHandler(req: NextApiRequest, res: NextApiResponse) {
+    if (req.method !== "POST") {
+        return res.status(405).json({});
+    }
+
     if (!req?.body?.username || !Number.isFinite(req?.body?.score)) {
         return res.status(400).json({message: "Missing data."});
     }
@@ -32,12 +36,4 @@ const postScore = async (req: NextApiRequest, res: NextApiResponse) => {
     } catch {
         return res.status(500).json({});
     }
-};
-
-export default async function scoreHandler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method !== "POST") {
-        return res.status(405).json({});
-    }
-
-    return postScore(req, res);
 }

@@ -10,3 +10,10 @@ export interface Post {
     title: string;
     url: string;
 }
+
+export interface Score {
+    score: number;
+    username: string;
+}
+
+export type Leaderboard = Array<Score>;
