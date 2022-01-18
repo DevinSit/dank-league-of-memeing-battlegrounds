@@ -73,9 +73,13 @@ $meme-width: 400px;
             .ClassifyMeme {
                 @include card-shadow();
 
+                align-items: center;
                 background-color: $color-neutral-400;
                 border-radius: $border-radius-large;
+                display: flex;
+                font-size: $font-size-500;
                 height: 200px;
+                justify-content: center;
                 max-width: $meme-width;
                 width: 100%;
 
@@ -103,9 +107,14 @@ $meme-width: 400px;
                 }
 
                 .ClassifyPrediction {
-                    color: $color-neutral-900;
+                    color: $color-primary-dark;
                     font-size: $font-size-700;
                     font-weight: $font-weight-bold;
+                }
+
+                .ClassifyPredictionNull {
+                    color: $color-text-secondary;
+                    font-size: $font-size-700;
                 }
             }
         }
