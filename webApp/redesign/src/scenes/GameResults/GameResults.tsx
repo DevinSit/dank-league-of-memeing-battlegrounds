@@ -2,9 +2,10 @@ import {useCallback, useState} from "react";
 import BadWordsFilter from "bad-words";
 import {CheckIcon, CloseIcon, EditIcon, ExternalLinkIcon} from "assets/icons";
 import {Button} from "components/";
-import {useGame} from "hooks/";
+import {useGame, useSWR} from "hooks/";
 import {ValueFormatting} from "services/";
-import {Post} from "types";
+import type {Leaderboard as LeaderboardType, Post, UserRank} from "types";
+import {api} from "values/api";
 import {GamePage} from "values/gamePages";
 import styles from "./GameResults.module.scss";
 
@@ -62,6 +63,10 @@ const GameResultsSummary = ({onPlayAgain}: GameResultsSummaryProps) => {
 
     const [isEditing, setIsEditing] = useState(false);
     const [editingUsername, setEditingUsername] = useState(username);
+
+    const {data} = useSWR<{leaderboard: LeaderboardType; rank: UserRank}>(
+        `${api.LEADERBOARD}/${username}`
+    );
 
     const onSubmit = useCallback(async () => {
         let cleanedUsername = badWordsFilter.clean(editingUsername);
@@ -129,7 +134,7 @@ const GameResultsSummary = ({onPlayAgain}: GameResultsSummaryProps) => {
             )}
 
             <p className={styles.GameResultsScore}>{ValueFormatting.formatScore(score)}</p>
-            <p className={styles.GameResultsRank}>Rank #1</p>
+            <p className={styles.GameResultsRank}>Rank #{data?.rank?.rank || 0}</p>
 
             <div className={styles.GameResultsButtonContainer}>
                 <Button onClick={onPlayAgain}>Play Again</Button>
