@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import {useState} from "react";
 import {MobileSpacer} from "components/";
 import type {Post as PostType} from "types";
@@ -19,11 +20,20 @@ const Browse = ({posts = []}: BrowseProps) => {
             <main className={styles.BrowseContent}>
                 <div className={styles.BrowsePosts}>
                     {posts.map((post, index) => (
-                        <Post key={post.id} {...post} onClick={() => setSelectedPostIndex(index)} />
+                        <Post
+                            key={post.id}
+                            {...post}
+                            isSelected={index === selectedPostIndex}
+                            onClick={() => setSelectedPostIndex(index)}
+                        />
                     ))}
                 </div>
 
-                <MobilePosts posts={posts} onClickPost={setSelectedPostIndex} />
+                <MobilePosts
+                    posts={posts}
+                    selectedPostIndex={selectedPostIndex}
+                    onClickPost={setSelectedPostIndex}
+                />
 
                 <PostDetails {...selectedPost} />
             </main>
@@ -38,11 +48,12 @@ export default Browse;
 /* Other Components */
 
 interface PostProps extends Pick<PostType, "author" | "createdUtc" | "title" | "url"> {
+    isSelected: boolean;
     onClick: () => void;
 }
 
-const Post = ({author, createdUtc, title, url, onClick}: PostProps) => (
-    <div className={styles.Post} onClick={onClick}>
+const Post = ({isSelected = false, author, createdUtc, title, url, onClick}: PostProps) => (
+    <div className={classNames(styles.Post, {[styles.PostSelected]: isSelected})} onClick={onClick}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className={styles.PostImage} src={url} alt={title} />
 
@@ -56,25 +67,26 @@ const Post = ({author, createdUtc, title, url, onClick}: PostProps) => (
 
 interface MobilePostsProps {
     posts: Array<PostType>;
+    selectedPostIndex: number;
     onClickPost: (index: number) => void;
 }
 
-const MobilePosts = ({posts = [], onClickPost}: MobilePostsProps) => {
-    return (
-        <div className={styles.MobilePosts}>
-            {posts.map(({title, url}, index) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                    key={index}
-                    className={styles.MobilePost}
-                    src={url}
-                    alt={title}
-                    onClick={() => onClickPost(index)}
-                />
-            ))}
-        </div>
-    );
-};
+const MobilePosts = ({posts = [], selectedPostIndex = 0, onClickPost}: MobilePostsProps) => (
+    <div className={styles.MobilePosts}>
+        {posts.map(({title, url}, index) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+                key={index}
+                className={classNames(styles.MobilePost, {
+                    [styles.MobilePostSelected]: selectedPostIndex === index
+                })}
+                src={url}
+                alt={title}
+                onClick={() => onClickPost(index)}
+            />
+        ))}
+    </div>
+);
 
 interface PostDetailsProps
     extends Pick<
