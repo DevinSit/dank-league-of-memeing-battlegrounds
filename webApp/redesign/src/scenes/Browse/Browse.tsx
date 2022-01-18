@@ -1,3 +1,4 @@
+import {useState} from "react";
 import {MobileSpacer} from "components/";
 import type {Post as PostType} from "types";
 import styles from "./Browse.module.scss";
@@ -6,39 +7,42 @@ interface BrowseProps {
     posts: Array<PostType>;
 }
 
-const Browse = ({posts = []}: BrowseProps) => (
-    <div className={styles.Browse}>
-        <h1 className={styles.BrowseHeader}>Latest from r/dankmemes</h1>
+const Browse = ({posts = []}: BrowseProps) => {
+    const [selectedPostIndex, setSelectedPostIndex] = useState(0);
 
-        <main className={styles.BrowseContent}>
-            <div className={styles.BrowsePosts}>
-                {posts.map((post) => (
-                    <Post key={post.id} {...post} />
-                ))}
-            </div>
+    const selectedPost = posts[selectedPostIndex] || {};
 
-            <MobilePosts posts={posts} />
+    return (
+        <div className={styles.Browse}>
+            <h1 className={styles.BrowseHeader}>Latest from r/dankmemes</h1>
 
-            <PostDetails />
-        </main>
+            <main className={styles.BrowseContent}>
+                <div className={styles.BrowsePosts}>
+                    {posts.map((post, index) => (
+                        <Post key={post.id} {...post} onClick={() => setSelectedPostIndex(index)} />
+                    ))}
+                </div>
 
-        <MobileSpacer />
-    </div>
-);
+                <MobilePosts posts={posts} onClickPost={setSelectedPostIndex} />
+
+                <PostDetails {...selectedPost} />
+            </main>
+
+            <MobileSpacer />
+        </div>
+    );
+};
 
 export default Browse;
 
 /* Other Components */
 
-interface PostProps {
-    author: string;
-    createdUtc: number;
-    title: string;
-    url: string;
+interface PostProps extends Pick<PostType, "author" | "createdUtc" | "title" | "url"> {
+    onClick: () => void;
 }
 
-const Post = ({author, createdUtc, title, url}: PostProps) => (
-    <div className={styles.Post}>
+const Post = ({author, createdUtc, title, url, onClick}: PostProps) => (
+    <div className={styles.Post} onClick={onClick}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className={styles.PostImage} src={url} alt={title} />
 
@@ -52,51 +56,60 @@ const Post = ({author, createdUtc, title, url}: PostProps) => (
 
 interface MobilePostsProps {
     posts: Array<PostType>;
+    onClickPost: (index: number) => void;
 }
 
-const MobilePosts = ({posts = []}: MobilePostsProps) => {
+const MobilePosts = ({posts = [], onClickPost}: MobilePostsProps) => {
     return (
         <div className={styles.MobilePosts}>
             {posts.map(({title, url}, index) => (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img key={index} className={styles.MobilePost} src={url} alt={title} />
+                <img
+                    key={index}
+                    className={styles.MobilePost}
+                    src={url}
+                    alt={title}
+                    onClick={() => onClickPost(index)}
+                />
             ))}
         </div>
     );
 };
 
-interface PostDetailsProps {
-    author?: string;
-    isDank?: boolean;
-    timestamp?: Date;
-    title?: string;
-    url?: string;
-}
+interface PostDetailsProps
+    extends Pick<
+        PostType,
+        "author" | "createdUtc" | "kerasPrediction" | "permalink" | "title" | "url"
+    > {}
 
 const PostDetails = ({
-    author = "me",
-    isDank = true,
-    timestamp = new Date(),
-    title = "Post title",
-    url = ""
+    author,
+    createdUtc,
+    kerasPrediction,
+    permalink,
+    title,
+    url
 }: PostDetailsProps) => (
     <div className={styles.PostDetails}>
-        <div className={styles.PostDetailsImage} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className={styles.PostDetailsImage} src={url} alt={title} />
 
         <div className={styles.PostDetailsContent}>
-            <a href={url} className={styles.PostDetailsTitle}>
+            <a href={`https://www.reddit.com${permalink}`} className={styles.PostDetailsTitle}>
                 {title}
             </a>
 
             <div className={styles.PostDetailsMetadata}>
                 <p className={styles.PostDetailsAuthor}>Posted by {author}</p>
-                <p className={styles.PostDetailsTimestamp}>{timestamp.toLocaleDateString()}</p>
+                <p className={styles.PostDetailsTimestamp}>{getCreatedTimeAgo(createdUtc)}</p>
             </div>
 
             <div className={styles.PostDetailsPredictionContainer}>
                 <h3 className={styles.PostDetailsPredictionHeading}>Prediction</h3>
 
-                <p className={styles.PostDetailsPrediction}>{isDank ? "Dank" : "Not Dank"}</p>
+                <p className={styles.PostDetailsPrediction}>
+                    {kerasPrediction > 0.5 ? "Dank" : "Not Dank"}
+                </p>
             </div>
         </div>
     </div>
