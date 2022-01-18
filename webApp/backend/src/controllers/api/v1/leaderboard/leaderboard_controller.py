@@ -15,11 +15,23 @@ leaderboard_score_service = LeaderboardScore()
 @leaderboard_controller.route("/", methods=["GET"])
 @LoggingUtils.log_execution_time("Top leaderboard scores finished")
 def get_leaderboard() -> Response:
-    scores = leaderboard_score_service.get_top_scores()
+    scores, _ = leaderboard_score_service.get_top_scores()
 
     return jsonify({
         "status": "success",
         "leaderboard": scores
+    })
+
+
+@leaderboard_controller.route("/<username>", methods=["GET"])
+@LoggingUtils.log_execution_time("Top leaderboard scores finished")
+def get_leaderboard_and_user_rank(username: str) -> Response:
+    scores, rank = leaderboard_score_service.get_top_scores(username)
+
+    return jsonify({
+        "status": "success",
+        "leaderboard": scores,
+        "rank": rank
     })
 
 

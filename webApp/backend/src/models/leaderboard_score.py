@@ -68,11 +68,21 @@ class LeaderboardScore:
         key = self._generate_score_key(username)
         self.datastore_client.delete(key)
 
-    def get_top_scores(self, number_of_scores=5) -> List[datastore.Entity]:
+    def get_top_scores(self, username="", number_of_scores=5) -> List[datastore.Entity]:
         query = self.datastore_client.query(kind=LEADERBOARD_SCORE_KIND, order=["-score"])
-        leaderboard_scores = list(query.fetch(limit=number_of_scores))
+        leaderboard_scores = list(query.fetch())
+        top_scores = leaderboard_scores[0:number_of_scores]
 
-        return leaderboard_scores
+        user_score = {"rank": len(leaderboard_scores) + 1, "score": 0, "username": username}
+
+        if username:
+            for index, entry in enumerate(leaderboard_scores):
+                if entry["username"] == username:
+                    user_score["rank"] = index + 1
+                    user_score["score"] = entry["score"]
+                    break
+
+        return top_scores, user_score
 
     def _generate_score_key(self, username: str):
         key = self.datastore_client.key(LEADERBOARD_SCORE_KIND, username)
