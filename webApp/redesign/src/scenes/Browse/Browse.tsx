@@ -1,18 +1,23 @@
 import {MobileSpacer} from "components/";
+import type {Post as PostType} from "types";
 import styles from "./Browse.module.scss";
 
-const Browse = () => (
+interface BrowseProps {
+    posts: Array<PostType>;
+}
+
+const Browse = ({posts = []}: BrowseProps) => (
     <div className={styles.Browse}>
         <h1 className={styles.BrowseHeader}>Latest from r/dankmemes</h1>
 
         <main className={styles.BrowseContent}>
             <div className={styles.BrowsePosts}>
-                <Post />
-                <Post />
-                <Post />
+                {posts.map((post) => (
+                    <Post key={post.id} {...post} />
+                ))}
             </div>
 
-            <MobilePosts />
+            <MobilePosts posts={posts} />
 
             <PostDetails />
         </main>
@@ -26,30 +31,35 @@ export default Browse;
 /* Other Components */
 
 interface PostProps {
-    author?: string;
-    timestamp?: Date;
-    title?: string;
+    author: string;
+    createdUtc: number;
+    title: string;
+    url: string;
 }
 
-const Post = ({author = "me", timestamp = new Date(), title = "Post title"}: PostProps) => (
+const Post = ({author, createdUtc, title, url}: PostProps) => (
     <div className={styles.Post}>
-        <div className={styles.PostImage} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className={styles.PostImage} src={url} alt={title} />
 
         <div className={styles.PostContent}>
             <h2 className={styles.PostTitle}>{title}</h2>
             <p className={styles.PostAuthor}>Posted by {author}</p>
-            <p className={styles.PostTimestamp}>{timestamp.toLocaleDateString()}</p>
+            <p className={styles.PostTimestamp}>{getCreatedTimeAgo(createdUtc)}</p>
         </div>
     </div>
 );
 
-const MobilePosts = () => {
-    const count = 8;
+interface MobilePostsProps {
+    posts: Array<PostType>;
+}
 
+const MobilePosts = ({posts = []}: MobilePostsProps) => {
     return (
         <div className={styles.MobilePosts}>
-            {new Array(count).fill(0).map((_, index) => (
-                <div key={index} className={styles.MobilePost} />
+            {posts.map(({title, url}, index) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img key={index} className={styles.MobilePost} src={url} alt={title} />
             ))}
         </div>
     );
@@ -91,3 +101,18 @@ const PostDetails = ({
         </div>
     </div>
 );
+
+const getCreatedTimeAgo = (createdUtc: number) => {
+    const now = Math.floor(new Date().getTime() / 1000);
+    const diff = now - createdUtc;
+    const minutes = Math.floor(diff / 60);
+
+    if (minutes >= 60) {
+        const hours = Math.floor(minutes / 60);
+        return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+    } else {
+        // Floor to the nearest 5 minutes
+        const floored10Minutes = Math.floor(minutes / 5) * 5;
+        return `${floored10Minutes} minute${floored10Minutes !== 1 ? "s" : ""} ago`;
+    }
+};

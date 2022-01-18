@@ -1,6 +1,7 @@
 @import "styles/_shared.scss";
 
-$col-width: 400px;
+$post-width: 500px;
+$details-width: 400px;
 $post-height: 150px;
 
 .Browse {
@@ -32,7 +33,7 @@ $post-height: 150px;
 
         @include media-query-large {
             gap: $size-900;
-            grid-template-columns: $col-width $col-width;
+            grid-template-columns: minmax(0, $post-width) minmax(0, $details-width);
             margin-top: $size-700;
             padding: 0;
         }
@@ -56,7 +57,7 @@ $post-height: 150px;
     display: grid;
     height: $post-height;
     grid-template-columns: $post-height 1fr;
-    max-width: $col-width;
+    max-width: $post-width;
     width: 100%;
 
     .PostImage {
@@ -64,6 +65,8 @@ $post-height: 150px;
         border-bottom-left-radius: $border-radius-large;
         border-top-left-radius: $border-radius-large;
         height: 100%;
+        max-height: $post-height;
+        max-width: $post-height;
         width: 100%;
     }
 
@@ -113,7 +116,7 @@ $post-height: 150px;
 
 .PostDetails {
     justify-self: center;
-    max-width: $col-width;
+    max-width: $details-width;
     width: 100%;
 
     .PostDetailsImage {

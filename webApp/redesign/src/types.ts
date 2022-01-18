@@ -1,6 +1,6 @@
 export interface Post {
     author: string;
-    createdUTC: number;
+    createdUtc: number;
     id: string;
     imageHash: string;
     kerasPrediction: number;
