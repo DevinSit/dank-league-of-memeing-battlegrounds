@@ -13,7 +13,6 @@ from utils.blockhash import hash_image
 
 logger = logging.getLogger(__name__)
 post_cache = TTLCache(maxsize=10, ttl=1800)
-all_posts_cache = TTLCache(maxsize=10, ttl=1800)
 predictions_cache = TTLCache(maxsize=200, ttl=3600)
 
 POST_KIND = "RedditPost"
@@ -31,6 +30,14 @@ class MemePost:
 
     def get_random_posts(self, number_of_posts=20):
         return self._fetch_random_posts(number_of_posts)
+
+    def mark_404_post(self, post_id: str):
+        key = self.datastore_client.key(POST_KIND, post_id)
+        post_entity = self.datastore_client.get(key)
+
+        if post_entity and not post_entity["notFound"]:
+            post_entity["notFound"] = True
+            self.datastore_client.put(post_entity)
 
     def process_image(self, request_file: BinaryIO):
         destination = os.path.join("/tmp", secure_filename(request_file.filename))
@@ -83,12 +90,11 @@ class MemePost:
         return sorted(posts, key=lambda post: post["createdUtc"], reverse=True)
 
     def _fetch_random_posts(self, number_of_posts=20) -> List[datastore.Entity]:
-        if number_of_posts in all_posts_cache:
-            posts = all_posts_cache[number_of_posts]
-        else:
-            query = self.datastore_client.query(kind=POST_KIND)
-            posts = list(query.fetch())
-            all_posts_cache[number_of_posts] = posts
+        # Don't bother caching this query ourselves since we always want the freshest non-notFound images.
+        # It's only about half as fast as caching it.
+        query = self.datastore_client.query(kind=POST_KIND)
+        query.add_filter("notFound", "=", False)
+        posts = list(query.fetch())
 
         posts = random.sample(posts, min(len(posts), number_of_posts))
         posts = self._enrich_posts_with_scores(posts)

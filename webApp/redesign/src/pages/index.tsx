@@ -16,7 +16,7 @@ interface ParsedData {
 
 const createDefaultParsedData = (): ParsedData => ({images: [], posts: {}});
 
-const usePreloadImages = (urls: Array<string>): Array<string> => {
+const usePreloadImages = (urls: Array<string>, posts: Record<string, Post>): Array<string> => {
     const [images, setImages] = useState<Array<string>>([]);
     const imagesRef = useRef<Array<HTMLImageElement>>([]);
 
@@ -31,20 +31,28 @@ const usePreloadImages = (urls: Array<string>): Array<string> => {
             // https://stackoverflow.com/questions/3646036/preloading-images-with-javascript
             const image = new Image();
 
-            image.onload = () => {
-                if (newImages.length < 10 && !newImages.includes(url)) {
-                    newImages.push(url);
-                    imagesRef.current.push(image);
-                }
+            image.onload = (event) => {
+                // Max tier jank. Because Reddit returns an that 'error' image when an image is 404,
+                // `image.onerror` never fires. But we know the dimensions of that 'error' image are
+                // 130x60, so we can check for that in the returned image to indicate that an image is 404.
+                // @ts-ignore
+                if (event?.path[0]?.naturalHeight === 60 && event?.path[0]?.naturalWidth === 130) {
+                    fetch(`${api.MARK_MISSING_MEME}/${posts[url].id}`);
+                } else {
+                    if (newImages.length < 10 && !newImages.includes(url)) {
+                        newImages.push(url);
+                        imagesRef.current.push(image);
+                    }
 
-                if (newImages.length === 10) {
-                    setImages(newImages);
+                    if (newImages.length === 10) {
+                        setImages(newImages);
+                    }
                 }
             };
 
             image.src = url;
         }
-    }, [urls]);
+    }, [posts, urls]);
 
     return images;
 };
@@ -73,7 +81,7 @@ const useMemeImages = () => {
 
     const fetchNewImages = useCallback(() => mutate(api.RANDOM_MEMES), [mutate]);
 
-    const images = usePreloadImages(parsedData.images);
+    const images = usePreloadImages(parsedData.images, parsedData.posts);
 
     const finalParsedData = useMemo(() => {
         const posts = images.map((image) => parsedData?.posts?.[image] || {});

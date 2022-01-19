@@ -36,14 +36,14 @@ def get_random_posts() -> Response:
     })
 
 
-@memes_controller.route("/<post_id>/score", methods=["POST"])
-@LoggingUtils.log_execution_time("Score update finished")
-def increment_post_score(post_id: str) -> Response:
-    updated_score = meme_post_service.increment_score(post_id)
+@memes_controller.route("/<post_id>", methods=["GET"])
+@LoggingUtils.log_execution_time("Mark 404 finished")
+def mark_404_post(post_id: str) -> Response:
+    meme_post_service.mark_404_post(post_id)
 
     return jsonify({
         "status": "success",
-        "updated_score": updated_score
+        "postId": post_id
     })
 
 

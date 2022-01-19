@@ -22,6 +22,7 @@ class Post {
         this.title = title;
         this.permalink = permalink;
         this.imageHash = imageHash;
+        this.notFound = false;
     }
 
     entity() {
@@ -38,7 +39,8 @@ class Post {
                 subreddit: this.subreddit,
                 title: this.title,
                 permalink: this.permalink,
-                imageHash: this.imageHash
+                imageHash: this.imageHash,
+                notFound: this.notFound
             },
             excludeFromIndexes: ["url", "author", "title", "permalink"]
         };
