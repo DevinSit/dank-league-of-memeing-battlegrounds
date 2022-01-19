@@ -7,18 +7,17 @@ from google.cloud import datastore, storage
 from typing import BinaryIO, List, Tuple
 from werkzeug.utils import secure_filename
 from config import IMAGE_SIZE, IMAGES_STORAGE_BUCKET
+from utils import LoggingUtils
 from utils.blockhash import hash_image
 
 
 logger = logging.getLogger(__name__)
 post_cache = TTLCache(maxsize=10, ttl=1800)
 all_posts_cache = TTLCache(maxsize=10, ttl=1800)
-score_cache = TTLCache(maxsize=100, ttl=1800)
 predictions_cache = TTLCache(maxsize=200, ttl=3600)
 
 POST_KIND = "RedditPost"
 KERAS_PREDICTION_KIND = "DankKerasPrediction"
-POST_SCORE_KIND = "RedditPostScore"
 
 
 class MemePost:
@@ -28,31 +27,10 @@ class MemePost:
         pass
 
     def get_latest_posts(self, number_of_posts=10):
-        posts = self._fetch_latest_posts(number_of_posts)
-
-        for post in posts:
-            score_entity = self._get_score(post["id"])
-            post["score"] = score_entity["score"]
-
-        return posts
+        return self._fetch_latest_posts(number_of_posts)
 
     def get_random_posts(self, number_of_posts=20):
-        posts = self._fetch_random_posts(number_of_posts)
-
-        for post in posts:
-            score_entity = self._get_score(post["id"])
-            post["score"] = score_entity["score"]
-
-        return posts
-
-    def increment_score(self, post_id: str) -> int:
-        score_entity = self._get_score(post_id)
-        score_entity["score"] += 1
-
-        self.datastore_client.put(score_entity)
-        score_cache[post_id] = score_entity
-
-        return score_entity["score"]
+        return self._fetch_random_posts(number_of_posts)
 
     def process_image(self, request_file: BinaryIO):
         destination = os.path.join("/tmp", secure_filename(request_file.filename))
@@ -94,19 +72,6 @@ class MemePost:
             return predictions
         else:
             return None
-
-    @cached(score_cache)
-    def _get_score(self, post_id: str) -> datastore.Entity:
-        key = self.datastore_client.key(POST_SCORE_KIND, post_id)
-        score_entity = self.datastore_client.get(key)
-
-        if not score_entity:
-            score_entity = datastore.Entity(key=key)
-            score_entity["id"] = post_id
-            score_entity["score"] = 0
-            self.datastore_client.put(score_entity)
-
-        return score_entity
 
     @cached(post_cache)
     def _fetch_latest_posts(self, number_of_posts=10) -> List[datastore.Entity]:
