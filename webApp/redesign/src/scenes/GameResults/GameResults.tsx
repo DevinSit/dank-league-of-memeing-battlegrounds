@@ -33,7 +33,7 @@ const GameResults = ({posts, setPage}: GameResultsProps) => {
                         key={id}
                         author={author}
                         image={url}
-                        url={`https://www.reddit.com${permalink}`}
+                        url={ValueFormatting.formatRedditLink(permalink)}
                         wasCorrect={guesses[index]}
                     />
                 ))}

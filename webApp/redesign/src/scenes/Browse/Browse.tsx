@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import {useState} from "react";
 import {MobileSpacer} from "components/";
+import {ValueFormatting} from "services/";
 import type {Post as PostType} from "types";
 import styles from "./Browse.module.scss";
 
@@ -60,7 +61,7 @@ const Post = ({isSelected = false, author, createdUtc, title, url, onClick}: Pos
         <div className={styles.PostContent}>
             <h2 className={styles.PostTitle}>{title}</h2>
             <p className={styles.PostAuthor}>Posted by {author}</p>
-            <p className={styles.PostTimestamp}>{getCreatedTimeAgo(createdUtc)}</p>
+            <p className={styles.PostTimestamp}>{ValueFormatting.formatTimeAgo(createdUtc)}</p>
         </div>
     </div>
 );
@@ -107,13 +108,18 @@ const PostDetails = ({
         <img className={styles.PostDetailsImage} src={url} alt={title} />
 
         <div className={styles.PostDetailsContent}>
-            <a href={`https://www.reddit.com${permalink}`} className={styles.PostDetailsTitle}>
+            <a
+                href={ValueFormatting.formatRedditLink(permalink)}
+                className={styles.PostDetailsTitle}
+            >
                 {title}
             </a>
 
             <div className={styles.PostDetailsMetadata}>
                 <p className={styles.PostDetailsAuthor}>Posted by {author}</p>
-                <p className={styles.PostDetailsTimestamp}>{getCreatedTimeAgo(createdUtc)}</p>
+                <p className={styles.PostDetailsTimestamp}>
+                    {ValueFormatting.formatTimeAgo(createdUtc)}
+                </p>
             </div>
 
             <div className={styles.PostDetailsPredictionContainer}>
@@ -126,18 +132,3 @@ const PostDetails = ({
         </div>
     </div>
 );
-
-const getCreatedTimeAgo = (createdUtc: number) => {
-    const now = Math.floor(new Date().getTime() / 1000);
-    const diff = now - createdUtc;
-    const minutes = Math.floor(diff / 60);
-
-    if (minutes >= 60) {
-        const hours = Math.floor(minutes / 60);
-        return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-    } else {
-        // Floor to the nearest 5 minutes
-        const floored10Minutes = Math.floor(minutes / 5) * 5;
-        return `${floored10Minutes} minute${floored10Minutes !== 1 ? "s" : ""} ago`;
-    }
-};
