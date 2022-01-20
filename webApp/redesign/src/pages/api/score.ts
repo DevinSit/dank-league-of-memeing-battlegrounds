@@ -15,7 +15,7 @@ export default async function scoreHandler(req: NextApiRequest, res: NextApiResp
 
     const {score, username, oldUsername = ""} = req.body;
 
-    if (badWordsFilter.isProfane(username)) {
+    if (badWordsFilter.isProfane(username) || username.length > 20) {
         return res.status(400).json({message: "Invalid username."});
     }
 
