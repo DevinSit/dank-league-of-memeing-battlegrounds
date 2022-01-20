@@ -124,8 +124,9 @@ $meme-card-info-height: 40px;
         height: $meme-card-info-height;
         padding: 0 $size-100;
 
-        .MemeResultCardAuthor {
+        .MemeResultCardPrediction {
             color: $color-white;
+            font-size: $font-size-500;
             font-weight: $font-weight-bold;
         }
 
