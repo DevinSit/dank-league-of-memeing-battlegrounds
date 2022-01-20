@@ -1,9 +1,15 @@
 import {animated} from "@react-spring/web";
-import {useCallback, useEffect, useState} from "react";
-import {useGame} from "hooks/";
+import {useCallback, useState} from "react";
 import {ValueFormatting} from "services/";
 import {GamePage} from "values/gamePages";
-import {useScore, useCardStackAnimation, useScoreAnimation, useTimerAnimation} from "./hooks";
+import {
+    useCardStackAnimation,
+    useCountdown,
+    useGameOver,
+    useScore,
+    useScoreAnimation,
+    useTimerAnimation
+} from "./hooks";
 import styles from "./Game.module.scss";
 
 interface GameProps {
@@ -15,39 +21,26 @@ interface GameProps {
 const Game = ({images, predictions, setPage}: GameProps) => {
     const [resetTimer, setResetTimer] = useState(false);
 
-    const [
-        {
-            state: {guesses, score, username}
-        }
-    ] = useGame();
-
-    // On Game Over
-    useEffect(() => {
-        if (guesses.length === predictions.length && predictions.length !== 0) {
-            fetch("/api/score", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({score, username})
-            }).then(() => {
-                setTimeout(() => {
-                    setPage(GamePage.RESULTS);
-                }, 1000);
-            });
-        }
-    }, [guesses, predictions, score, username, setPage]);
-
     const onResetTimer = useCallback(() => setResetTimer(true), []);
 
+    const {countdown, hideCountdown} = useCountdown();
     const {onGuess, onStartTimer} = useScore(predictions, onResetTimer);
     const {cardSprings, bind, guessTopImage} = useCardStackAnimation(images, predictions, onGuess);
-
     const {timerStyles} = useTimerAnimation(resetTimer, onStartTimer, guessTopImage);
     const {animatedScore} = useScoreAnimation();
 
+    useGameOver(predictions, setPage);
+
     return (
         <div className={styles.Game}>
+            {!hideCountdown && (
+                <div className={styles.CountdownOverlay}>
+                    <animated.div className={styles.CountdownTimer}>
+                        {countdown.to(ValueFormatting.formatScore)}
+                    </animated.div>
+                </div>
+            )}
+
             <div className={styles.GameWrapper}>
                 <button className={styles.GameButtonDank} onClick={() => guessTopImage(true)}>
                     Dank

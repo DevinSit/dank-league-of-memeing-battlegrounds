@@ -1,11 +1,59 @@
-import {useCallback, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {useSpring, useSprings} from "@react-spring/web";
 import {useDrag} from "react-use-gesture";
 import {useGame} from "hooks/";
+import {GamePage} from "values/gamePages";
+
+const COUNTDOWN_DURATION = 3000;
+
+const CARD_DROP_DELAY = 100;
+const CARD_DROP_DURATION = 10 * CARD_DROP_DELAY; // 10 cards drop
 
 const TIMER_SECONDS = 5;
 const TIMER_DURATION = TIMER_SECONDS * 1000;
 const BASE_SCORE = 10000;
+
+export const useGameOver = (predictions: Array<boolean>, setPage: (page: GamePage) => void) => {
+    const [
+        {
+            state: {guesses, score, username}
+        }
+    ] = useGame();
+
+    useEffect(() => {
+        if (guesses.length === predictions.length && predictions.length !== 0) {
+            fetch("/api/score", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({score, username})
+            }).then(() => {
+                setTimeout(() => {
+                    setPage(GamePage.RESULTS);
+                }, 500);
+            });
+        }
+    }, [guesses, predictions, score, username, setPage]);
+};
+
+export const useCountdown = () => {
+    const [hideCountdown, setHideCountdown] = useState(false);
+
+    useEffect(() => {
+        setTimeout(() => {
+            setHideCountdown(true);
+        }, COUNTDOWN_DURATION);
+    }, []);
+
+    const {countdown} = useSpring({
+        from: {countdown: 3},
+        to: {countdown: 1},
+        config: {duration: COUNTDOWN_DURATION}
+    });
+
+    return {countdown, hideCountdown};
+};
 
 export const useScore = (predictions: Array<boolean>, onResetTimer: () => void) => {
     const [{dispatch}, actions] = useGame();
@@ -165,6 +213,8 @@ export const useCardStackAnimation = (
 };
 
 export const useTimerAnimation = (resetTimer: boolean, onStart: () => void, onEnd: () => void) => {
+    const [firstRunDone, setFirstRunDone] = useState(false);
+
     const noParamsOnStart = useCallback(() => onStart(), [onStart]);
     const noParamsOnEnd = useCallback(() => onEnd(), [onEnd]);
 
@@ -172,11 +222,21 @@ export const useTimerAnimation = (resetTimer: boolean, onStart: () => void, onEn
         from: {scaleX: 1},
         to: {scaleX: 0},
         loop: true,
+        delay: firstRunDone ? 0 : COUNTDOWN_DURATION + CARD_DROP_DURATION,
         config: {duration: TIMER_DURATION},
         reset: resetTimer,
         onStart: noParamsOnStart,
         onRest: noParamsOnEnd
     });
+
+    useEffect(() => {
+        setTimeout(() => {
+            setFirstRunDone(true);
+
+            // The last +100 is just to offset the effect a little after the delay.
+            // Why? IDK, feels good.
+        }, COUNTDOWN_DURATION + CARD_DROP_DURATION + 100);
+    }, []);
 
     return {timerStyles};
 };
@@ -194,7 +254,7 @@ const to = (i: number, total: number) => ({
     x: calcShift(i, total),
     y: 0,
     scale: calcScale(i, total),
-    delay: i * 100
+    delay: i * CARD_DROP_DELAY + COUNTDOWN_DURATION
 });
 
 // Note: We're using `vw` for the `x` (shift) values so that they scale responsively.
