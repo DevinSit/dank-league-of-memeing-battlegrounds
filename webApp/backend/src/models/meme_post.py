@@ -83,6 +83,7 @@ class MemePost:
     @cached(post_cache)
     def _fetch_latest_posts(self, number_of_posts=10) -> List[datastore.Entity]:
         query = self.datastore_client.query(kind=POST_KIND, order=["-createdUtc"])
+        query.add_filter("notFound", "=", False)
 
         posts = self._sort_by_image_hash(list(query.fetch(limit=number_of_posts)))
         posts = self._enrich_posts_with_scores(posts)
