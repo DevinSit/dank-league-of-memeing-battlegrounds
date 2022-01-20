@@ -5,6 +5,7 @@ import {useSWRConfig} from "swr";
 import {AppTitle} from "components/";
 import {useGame, useSWR} from "hooks/";
 import {Game, GameResults, Rules} from "scenes/";
+import {ValueFormatting} from "services/";
 import {Post} from "types";
 import {api} from "values/api";
 import {GamePage} from "values/gamePages";
@@ -86,8 +87,8 @@ const useMemeImages = () => {
     const finalParsedData = useMemo(() => {
         const posts = images.map((image) => parsedData?.posts?.[image] || {});
 
-        const predictions = images.map(
-            (image) => parsedData?.posts?.[image]?.kerasPrediction >= 0.5 || false
+        const predictions = images.map((image) =>
+            ValueFormatting.booleanizePrediction(parsedData?.posts?.[image]?.kerasPrediction)
         );
 
         return {images, posts, predictions};

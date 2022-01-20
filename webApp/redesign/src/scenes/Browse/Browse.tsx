@@ -126,7 +126,7 @@ const PostDetails = ({
                 <h3 className={styles.PostDetailsPredictionHeading}>Prediction</h3>
 
                 <p className={styles.PostDetailsPrediction}>
-                    {kerasPrediction > 0.5 ? "Dank" : "Not Dank"}
+                    {ValueFormatting.formatPrediction(kerasPrediction)}
                 </p>
             </div>
         </div>

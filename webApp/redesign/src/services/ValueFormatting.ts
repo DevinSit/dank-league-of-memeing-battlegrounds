@@ -1,4 +1,18 @@
 export default class ValueFormatting {
+    static booleanizePrediction(prediction?: number) {
+        return prediction ? prediction >= 0.5 : false;
+    }
+
+    static formatPrediction(isDank: boolean | number) {
+        if (!isNaN(isDank as number)) {
+            isDank = ValueFormatting.booleanizePrediction(isDank as number);
+        }
+
+        isDank = isDank as boolean;
+
+        return isDank ? "Dank" : "Not Dank";
+    }
+
     static formatScore(score: number) {
         return score.toLocaleString("en", {minimumFractionDigits: 0, maximumFractionDigits: 0});
     }

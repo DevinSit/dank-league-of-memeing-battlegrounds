@@ -4,6 +4,7 @@ import {useCallback, useState} from "react";
 import ReactDropzone from "react-dropzone";
 import Spinner from "assets/images/loading.gif";
 import {MobileSpacer} from "components/";
+import {ValueFormatting} from "services/";
 import {api} from "values/api";
 import styles from "./Classify.module.scss";
 
@@ -77,7 +78,7 @@ const Classify = () => {
 
                                 {prediction ? (
                                     <p className={styles.ClassifyPrediction}>
-                                        {prediction > 0.5 ? "Dank" : "Not Dank"}
+                                        {ValueFormatting.formatPrediction(prediction)}
                                     </p>
                                 ) : (
                                     <p className={styles.ClassifyPredictionNull}>N/A</p>

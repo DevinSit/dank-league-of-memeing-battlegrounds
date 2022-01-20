@@ -28,11 +28,11 @@ const GameResults = ({posts, setPage}: GameResultsProps) => {
             <GameResultsSummary onPlayAgain={() => setPage(GamePage.GAME)} />
 
             <div className={styles.GameResultsMemes}>
-                {posts.map(({id, author, permalink, kerasPrediction, url}, index) => (
+                {posts.map(({id, permalink, kerasPrediction, url}, index) => (
                     <MemeResultCard
                         key={id}
                         image={url}
-                        isDank={kerasPrediction > 0.5}
+                        isDank={ValueFormatting.booleanizePrediction(kerasPrediction)}
                         url={ValueFormatting.formatRedditLink(permalink)}
                         wasCorrect={guesses[index]}
                     />
@@ -165,7 +165,9 @@ const MemeResultCard = ({image, isDank, url, wasCorrect = true}: MemeResultCardP
                 <CloseIcon className={styles.IncorrectIcon} />
             )}
 
-            <p className={styles.MemeResultCardPrediction}>{isDank ? "Dank" : "Not Dank"}</p>
+            <p className={styles.MemeResultCardPrediction}>
+                {ValueFormatting.formatPrediction(isDank)}
+            </p>
 
             <a href={url} target="_blank" rel="noreferrer">
                 <ExternalLinkIcon className={styles.MemeResultCardLinkIcon} />
