@@ -53,47 +53,65 @@
         }
 
         .GameButtonNotDank {
-            margin-top: $size-800;
+            margin-top: $size-700;
+
+            @include media-query-large {
+                margin-top: $size-800;
+            }
         }
 
-        .GameScoreContainer {
+        .GameScoreTimerContainer {
             align-items: center;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            margin-top: $size-800;
+            margin-top: $size-700;
 
-            .GameScore {
-                color: $color-white;
-                font-size: $font-size-800;
-                font-weight: bold;
-            }
-        }
-
-        .GameTimerContainer {
-            align-items: center;
-            display: flex;
-            justify-content: center;
-            margin-bottom: $size-600;
-            position: relative;
-
-            .GameTimerTicker {
-                background-color: $color-white;
-                height: $size-100;
-                position: absolute;
-                transform: scaleX(0.5);
-                width: 200px;
-                z-index: 1;
+            @include media-query-large {
+                margin-top: $size-800;
             }
 
-            .GameTimerBackground {
-                background-color: $color-future-400;
-                height: $size-100;
-                position: absolute;
-                width: 200px;
+            .GameTimerContainer {
+                align-items: center;
+                display: flex;
+                justify-content: center;
+                margin-bottom: $size-600;
+                position: relative;
+
+                .GameTimerTicker {
+                    background-color: $color-white;
+                    height: $size-100;
+                    position: absolute;
+                    transform: scaleX(0.5);
+                    width: 200px;
+                    z-index: 1;
+                }
+
+                .GameTimerBackground {
+                    background-color: $color-future-400;
+                    height: $size-100;
+                    position: absolute;
+                    width: 200px;
+                }
+            }
+
+            .GameScoreContainer {
+                position: relative;
+
+                .GameScore {
+                    color: $color-white;
+                    font-size: $font-size-800;
+                    font-weight: bold;
+                }
             }
         }
     }
+}
+
+.MemeCardsStackDummy {
+    @include card-height();
+
+    width: 100%;
 }
 
 .MemeCardsStack {
@@ -144,18 +162,30 @@
     background-color: rgba(0, 0, 0, 0.5);
     bottom: 0;
     display: flex;
-    height: 100%;
     justify-content: center;
     left: 0;
     right: 0;
-    position: fixed;
+    position: absolute;
     top: 0;
-    width: 100%;
     z-index: 10;
 
     .CountdownTimer {
         color: $color-white;
         font-size: 256px;
         z-index: 10;
+    }
+}
+
+.AnimatedAdjustment {
+    color: $color-positive-400;
+    font-size: $font-size-500;
+    font-weight: $font-weight-bold;
+    position: absolute;
+    text-shadow: 2px 2px 8px $color-positive-900;
+    z-index: 100;
+
+    &.AnimatedAdjustmentNegative {
+        color: $color-negative-300;
+        text-shadow: 2px 2px 8px $color-negative-900;
     }
 }

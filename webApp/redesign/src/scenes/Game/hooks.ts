@@ -4,7 +4,7 @@ import {useDrag} from "react-use-gesture";
 import {useGame} from "hooks/";
 import {GamePage} from "values/gamePages";
 
-const COUNTDOWN_DURATION = 3000;
+const COUNTDOWN_DURATION = 2500;
 
 const CARD_DROP_DELAY = 100;
 const CARD_DROP_DURATION = 10 * CARD_DROP_DELAY; // 10 cards drop
@@ -31,7 +31,7 @@ export const useGameOver = (predictions: Array<boolean>, setPage: (page: GamePag
             }).then(() => {
                 setTimeout(() => {
                     setPage(GamePage.RESULTS);
-                }, 500);
+                }, 1200);
             });
         }
     }, [guesses, predictions, score, username, setPage]);
@@ -57,6 +57,8 @@ export const useCountdown = () => {
 
 export const useScore = (predictions: Array<boolean>, onResetTimer: () => void) => {
     const [{dispatch}, actions] = useGame();
+
+    const [adjustments, setAdjustments] = useState<Array<number>>([]);
     const timerRef = useRef<number>(Date.now());
 
     const onGuess = useCallback(
@@ -86,8 +88,10 @@ export const useScore = (predictions: Array<boolean>, onResetTimer: () => void) 
 
             if (isCorrect) {
                 dispatch(actions.addScore(adjustment));
+                setAdjustments((old) => [...old, adjustment]);
             } else {
                 dispatch(actions.subtractScore(adjustment));
+                setAdjustments((old) => [...old, -adjustment]);
             }
 
             dispatch(actions.addGuess(isCorrect));
@@ -102,7 +106,7 @@ export const useScore = (predictions: Array<boolean>, onResetTimer: () => void) 
         timerRef.current = Date.now();
     }, []);
 
-    return {onGuess, onStartTimer};
+    return {adjustments, onGuess, onStartTimer};
 };
 
 export const useCardStackAnimation = (
