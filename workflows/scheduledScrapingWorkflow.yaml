@@ -1,0 +1,76 @@
+main:
+    steps:
+        - scrapePosts:
+            call: http.get
+            args:
+                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/scrapePosts
+            result: postsResult
+
+        - logPosts:
+            call: sys.log
+            args:
+                text: ${postsResult.body.posts}
+                severity: INFO
+
+        - extractImageUrls:
+            steps:
+            - createEmptyList:
+                assign:
+                    - imageUrls: []
+
+            - loopPosts:
+                for:
+                    value: post
+                    in: ${postsResult.body.posts}
+                    steps:
+                        - extractImageUrl:
+                            assign:
+                            - imageUrls: ${list.concat(imageUrls, post.url)}
+
+        - logImageUrls:
+            call: sys.log
+            args:
+                text: ${imageUrls}
+                severity: INFO
+
+        - ingestImages:
+            call: http.post
+            args:
+                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/ingestImages
+                body:
+                    imageUrls: ${imageUrls}
+            result: imagesResult
+
+        - logUrlsToHashes:
+            call: sys.log
+            args:
+                text: ${imagesResult.body.urlsToHashes}
+                severity: INFO
+
+        - ingestPosts:
+            call: http.post
+            args:
+                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/ingestPosts
+                body:
+                    posts: ${postsResult.body.posts}
+                    urlsToHashes: ${imagesResult.body.urlsToHashes}
+            result: ingestedPostsResult
+
+        - predict:
+            call: http.post
+            args:
+                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/predict
+                body:
+                    imageHashes: ${imagesResult.body.imageHashes}
+            result: predictionsResult
+
+        - logPredictions:
+            call: sys.log
+            args:
+                text: ${predictionsResult.body.predictions}
+                severity: INFO
+
+        - returnResult:
+            return: 
+            - predictions: ${predictionsResult.body.predictions}
+            - posts: ${ingestedPostsResult.body.posts}

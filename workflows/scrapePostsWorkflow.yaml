@@ -1,0 +1,40 @@
+main:
+    steps:
+        - scrapePosts:
+            call: http.get
+            args:
+                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/scrapePosts
+            result: postsResult
+
+        - logPosts:
+            call: sys.log
+            args:
+                text: ${postsResult.body.posts}
+                severity: INFO
+
+        - ingestPartialPosts:
+            call: http.post
+            args:
+                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/ingestPartialPosts
+                body:
+                    posts: ${postsResult.body.posts}
+            result: ingestedPostsResult
+
+        - downloadPostImages:
+            call: http.post
+            args:
+                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/downloadPostImages
+                body:
+                    posts: ${postsResult.body.posts}
+            result: stagingImagesResult
+
+        - logStagingImages:
+            call: sys.log
+            args:
+                text: ${stagingImagesResult.body.images}
+                severity: INFO
+
+        - returnResult:
+            return: 
+                - stagingImages: ${stagingImagesResult.body.images}
+                - posts: ${ingestedPostsResult.body.posts}

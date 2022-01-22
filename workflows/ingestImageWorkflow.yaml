@@ -1,0 +1,75 @@
+main:
+    params: [event]
+    steps:
+        - logEvent:
+            call: sys.log
+            args:
+                text: ${event}
+                severity: INFO
+
+        - extractImagePath:
+            assign:
+            # Each run of the workflow should only have a single image, but we turn it
+            # into a list for the functions to consume.
+            - imagePaths: ['${"gs://" + event.data.bucket + "/" + event.data.name}']
+
+        - filterExplicitImage:
+            call: http.post
+            args:
+                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/filterExplicitImages
+                body:
+                    imagePaths: ${imagePaths}
+            result: explicitResult
+
+        - logExplicit:
+            call: sys.log
+            args:
+                text: '${"Is explicit? " + explicitResult.body.results[0]}'
+                severity: INFO
+
+        - ifExplicit:
+            switch:
+                - condition: ${explicitResult.body.results[0] == true}
+                  next: returnEarly
+                - condition: ${explicitResult.body.results[0] == false}
+                  next: processImage
+
+        - processImage:
+            call: http.post
+            args:
+                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/processImages
+                body:
+                    imagePaths: ${imagePaths}
+            result: processedImageResult
+
+        - logImageHash:
+            call: sys.log
+            args:
+                text: ${processedImageResult.body.imageHashes}
+                severity: INFO
+
+        - predict:
+            call: http.post
+            args:
+                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/predict
+                body:
+                    imageHashes: ${processedImageResult.body.imageHashes}
+            result: predictionsResult
+
+        - updatePostHashes:
+            call: http.post
+            args:
+                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/updatePostHashes
+                body:
+                    postsToHashes: ${processedImageResult.body.postsToHashes}
+
+        - returnFull:
+            return:
+                imagePaths: ${imagePaths}
+                predictions: ${predictionsResult.body.predictions}
+
+        - returnEarly:
+            return:
+                explicit: true
+                imagePaths: ${imagePaths}
+                predictions: []

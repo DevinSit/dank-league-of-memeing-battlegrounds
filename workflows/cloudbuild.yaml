@@ -1,10 +1,30 @@
 steps:
     - id: "Deploy Scheduled Scraping workflow"
       name: "gcr.io/cloud-builders/gcloud"
-      args: 
-        - "workflows"
-        - "deploy"
-        - "scheduled-scraping"
-        - "--source=scheduledScraping.yaml"
-        - "--location=us-central1"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          bash ./scripts/deployWorkflow.sh scheduledScrapingWorkflow
       dir: "workflows"
+      waitFor: ["-"]
+
+    - id: "Deploy scrapePosts workflow"
+      name: "gcr.io/cloud-builders/gcloud"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          bash ./scripts/deployWorkflow.sh scrapePostsWorkflow
+      dir: "workflows"
+      waitFor: ["-"]
+
+    - id: "Deploy ingestImage workflow"
+      name: "gcr.io/cloud-builders/gcloud"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          bash ./scripts/deployWorkflow.sh ingestImageWorkflow
+      dir: "workflows"
+      waitFor: ["-"]
