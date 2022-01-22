@@ -29,3 +29,60 @@ body {
 button {
     font-size: $font-size-300;
 }
+
+/* App Navigation Styles */
+
+// Need these here since we're using IDs and regular class names.
+// And we need _those_ because we need to do .game-mode > #AppNavigation.
+// And we need _that_ because position: fixed acts stupidly with the cards in the Game.
+// When they're off-screen, they cause the height/width of the screen to expand, even ignoring
+// overflow: hidden, causing the position: fixed AppNavigation to shift around. But it
+// doesn't shift around in position: absolute, and since the Game doesn't scroll, that's
+// fine to use.
+// Note that this only seems to happen on mobile.
+
+$icon-size-small: 24px;
+$icon-size-large: 32px;
+
+.game-mode {
+    #AppNavigation {
+        position: absolute;
+    }
+}
+
+#AppNavigation {
+    @include list-item-shadow();
+
+    background-color: $color-white;
+    bottom: $size-600;
+    border-radius: $border-radius-rounded;
+    display: grid;
+    gap: $size-600;
+    grid-template-columns: repeat(4, $icon-size-small);
+    left: 50%;
+    padding: $size-200 $size-500;
+    position: fixed;
+    transform: translateX(-50%);
+
+    @include media-query-medium {
+        gap: $size-700;
+        grid-template-columns: repeat(4, $icon-size-large);
+        padding: $size-300 ($size-500 + $size-100);
+    }
+
+    .AppNavigationIcon {
+        @include svg-icon-color($color-primary-light);
+
+        height: $icon-size-small;
+        width: $icon-size-small;
+
+        @include media-query-medium {
+            height: $icon-size-large;
+            width: $icon-size-large;
+        }
+
+        &.AppNavigationIcon_active {
+            @include svg-icon-color($color-primary);
+        }
+    }
+}

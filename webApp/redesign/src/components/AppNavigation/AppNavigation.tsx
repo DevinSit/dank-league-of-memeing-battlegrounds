@@ -45,7 +45,7 @@ const AppNavigation = () => {
 
     return (
         <animated.nav
-            className={styles.AppNavigation}
+            id="AppNavigation"
             style={{
                 // Need the translateX since the nav uses the absolute positioned
                 // centering trick.
@@ -98,8 +98,8 @@ const IconButton = ({active = false, href, Icon, ...otherProps}: IconButton) => 
     <Link href={href}>
         <a className={styles.IconButton} {...otherProps}>
             <Icon
-                className={classNames(styles.AppNavigationIcon, {
-                    [styles.AppNavigationIcon_active]: active
+                className={classNames("AppNavigationIcon", {
+                    AppNavigationIcon_active: active
                 })}
             />
         </a>
