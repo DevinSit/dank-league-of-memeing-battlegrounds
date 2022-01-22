@@ -1,3 +1,4 @@
+import {animated, useSpring} from "@react-spring/web";
 import {Button} from "components/";
 import {GamePage} from "values/gamePages";
 import styles from "./Rules.module.scss";
@@ -7,9 +8,11 @@ interface RulesProps {
 }
 
 const Rules = ({setPage}: RulesProps) => {
+    const ruleCardSpring = useSpring({from: {y: 500, scale: 0.7}, to: {y: 0, scale: 1}});
+
     return (
         <div className={styles.Rules}>
-            <div className={styles.RulesCard}>
+            <animated.div className={styles.RulesCard} style={ruleCardSpring}>
                 <h2 className={styles.RulesCardHeader}>Rules</h2>
 
                 <ol className={styles.RulesCardList}>
@@ -24,7 +27,7 @@ const Rules = ({setPage}: RulesProps) => {
                 <div className={styles.RulesCardButtonContainer}>
                     <Button onClick={() => setPage(GamePage.GAME)}>Play</Button>
                 </div>
-            </div>
+            </animated.div>
         </div>
     );
 };
