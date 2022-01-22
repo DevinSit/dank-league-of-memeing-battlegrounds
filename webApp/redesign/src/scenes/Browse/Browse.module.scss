@@ -58,10 +58,12 @@ $post-height: 150px;
     height: $post-height;
     grid-template-columns: $post-height 1fr;
     max-width: $post-width;
+    transition: box-shadow 0.2s, transform 0.2s;
     width: 100%;
 
     &.PostSelected {
         box-shadow: 0px 4px 16px 8px rgba(0, 0, 0, 0.5);
+        transform: scale(1.05);
     }
 
     .PostImage {
@@ -114,10 +116,12 @@ $post-height: 150px;
         background-color: $color-neutral-400;
         border-radius: $border-radius-normal;
         height: $post-height;
+        transition: box-shadow 0.2s, transform 0.2s;
         width: $post-height;
 
         &.MobilePostSelected {
             box-shadow: 0px 2px 8px 4px rgba(0, 0, 0, 0.4);
+            transform: scale(1.05);
         }
     }
 }

@@ -22,12 +22,13 @@ const Browse = ({posts = []}: BrowseProps) => {
     });
 
     const animatedPosts = transition((style, post, _, index) => (
-        <AnimatedPost
-            {...post}
-            style={style}
-            isSelected={index === selectedPostIndex}
-            onClick={() => setSelectedPostIndex(index)}
-        />
+        <animated.div style={style}>
+            <Post
+                {...post}
+                isSelected={index === selectedPostIndex}
+                onClick={() => setSelectedPostIndex(index)}
+            />
+        </animated.div>
     ));
 
     const detailsSpring = useSpring({from: {y: 1000, scale: 0.7}, to: {y: 0, scale: 1}});
@@ -87,8 +88,6 @@ const Post = ({
     </div>
 );
 
-const AnimatedPost = animated(Post);
-
 interface MobilePostsProps {
     posts: Array<PostType>;
     selectedPostIndex: number;
@@ -103,15 +102,17 @@ const MobilePosts = ({posts = [], selectedPostIndex = 0, onClickPost}: MobilePos
     });
 
     const animatedPosts = transition((style, {title, url}, _, index) => (
-        <animated.img
-            style={style}
-            className={classNames(styles.MobilePost, {
-                [styles.MobilePostSelected]: selectedPostIndex === index
-            })}
-            src={url}
-            alt={title}
-            onClick={() => onClickPost(index)}
-        />
+        <animated.div style={style}>
+            {/* eslint-disable-next-line */}
+            <img
+                className={classNames(styles.MobilePost, {
+                    [styles.MobilePostSelected]: selectedPostIndex === index
+                })}
+                src={url}
+                alt={title}
+                onClick={() => onClickPost(index)}
+            />
+        </animated.div>
     ));
 
     return <div className={styles.MobilePosts}>{animatedPosts}</div>;
