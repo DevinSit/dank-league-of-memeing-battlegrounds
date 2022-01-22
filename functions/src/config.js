@@ -1,4 +1,5 @@
 const BUCKET = "easy-dank-meme-classifier-images";
+const BUCKET_STAGING = "easy-dank-meme-classifier-staging-images";
 const IMAGE_FORMAT = "jpg";
 const IMAGE_SIZE = 128;
 const PROJECT_ID = "serverless-hackathon-devin";
@@ -14,6 +15,7 @@ const {
 
 module.exports = {
     BUCKET,
+    BUCKET_STAGING,
     IMAGE_FORMAT,
     IMAGE_SIZE,
     PROJECT_ID,

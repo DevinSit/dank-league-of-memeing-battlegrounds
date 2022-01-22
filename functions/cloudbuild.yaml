@@ -16,15 +16,7 @@ steps:
         - -c
         - |
           _ENV_VARS=$(cat /workspace/env_vars)
-
-          gcloud functions deploy scrapePosts \
-              --entry-point scrapePosts \
-              --allow-unauthenticated \
-              --trigger-http \
-              --runtime nodejs14 \
-              --set-env-vars "${_ENV_VARS}" \
-              --timeout 300s \
-              --memory 1024MB
+          ./scripts/deployFunction.sh scrapePosts "${_ENV_VARS}"
       dir: "functions"
       waitFor: ["Store env vars string"]
 
@@ -35,15 +27,7 @@ steps:
         - -c
         - |
           _ENV_VARS=$(cat /workspace/env_vars)
-
-          gcloud functions deploy ingestImages \
-              --entry-point ingestImages \
-              --allow-unauthenticated \
-              --trigger-http \
-              --runtime nodejs14 \
-              --set-env-vars "${_ENV_VARS}" \
-              --timeout 300s \
-              --memory 1024MB
+          ./scripts/deployFunction.sh ingestImages "${_ENV_VARS}"
       dir: "functions"
       waitFor: ["Store env vars string"]
 
@@ -54,15 +38,7 @@ steps:
         - -c
         - |
           _ENV_VARS=$(cat /workspace/env_vars)
-
-          gcloud functions deploy ingestPosts \
-              --entry-point ingestPosts \
-              --allow-unauthenticated \
-              --trigger-http \
-              --runtime nodejs14 \
-              --set-env-vars "${_ENV_VARS}" \
-              --timeout 300s \
-              --memory 1024MB
+          ./scripts/deployFunction.sh ingestPosts "${_ENV_VARS}"
       dir: "functions"
       waitFor: ["Store env vars string"]
 
@@ -73,15 +49,62 @@ steps:
         - -c
         - |
           _ENV_VARS=$(cat /workspace/env_vars)
+          ./scripts/deployFunction.sh predict "${_ENV_VARS}"
+      dir: "functions"
+      waitFor: ["Store env vars string"]
 
-          gcloud functions deploy predict \
-              --entry-point predict \
-              --allow-unauthenticated \
-              --trigger-http \
-              --runtime nodejs14 \
-              --set-env-vars "${_ENV_VARS}" \
-              --timeout 300s \
-              --memory 1024MB
+    - id: "Deploy downloadPostImages function"
+      name: "gcr.io/cloud-builders/gcloud"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          _ENV_VARS=$(cat /workspace/env_vars)
+          ./scripts/deployFunction.sh downloadPostImages "${_ENV_VARS}"
+      dir: "functions"
+      waitFor: ["Store env vars string"]
+
+    - id: "Deploy filterExplicitImages function"
+      name: "gcr.io/cloud-builders/gcloud"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          _ENV_VARS=$(cat /workspace/env_vars)
+          ./scripts/deployFunction.sh filterExplicitImages "${_ENV_VARS}"
+      dir: "functions"
+      waitFor: ["Store env vars string"]
+
+    - id: "Deploy ingestPartialPosts function"
+      name: "gcr.io/cloud-builders/gcloud"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          _ENV_VARS=$(cat /workspace/env_vars)
+          ./scripts/deployFunction.sh ingestPartialPosts "${_ENV_VARS}"
+      dir: "functions"
+      waitFor: ["Store env vars string"]
+
+    - id: "Deploy processImages function"
+      name: "gcr.io/cloud-builders/gcloud"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          _ENV_VARS=$(cat /workspace/env_vars)
+          ./scripts/deployFunction.sh processImages "${_ENV_VARS}"
+      dir: "functions"
+      waitFor: ["Store env vars string"]
+
+    - id: "Deploy updatePostHashes function"
+      name: "gcr.io/cloud-builders/gcloud"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          _ENV_VARS=$(cat /workspace/env_vars)
+          ./scripts/deployFunction.sh updatePostHashes "${_ENV_VARS}"
       dir: "functions"
       waitFor: ["Store env vars string"]
 

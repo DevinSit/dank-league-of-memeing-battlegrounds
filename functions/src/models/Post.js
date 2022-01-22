@@ -1,6 +1,8 @@
 const Datastore = require("@google-cloud/datastore");
 const config = require("../config");
 
+const KIND = "RedditPost";
+
 const datastore = new Datastore({projectId: config.PROJECT_ID});
 
 class Post {
@@ -25,9 +27,28 @@ class Post {
         this.notFound = false;
     }
 
+    static async updateHash(postId, imageHash) {
+        const key = datastore.key([KIND, postId]);
+
+        try {
+            const entities = await datastore.get(key);
+
+            if (!entities || !entities.length) {
+                return null;
+            }
+
+            const post = new Post({...entities[0], imageHash});
+            post.save();
+
+            return post;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    }
+
     entity() {
-        const kind = "RedditPost";
-        const key = datastore.key([kind, this.id]);
+        const key = datastore.key([KIND, this.id]);
 
         return {
             key,

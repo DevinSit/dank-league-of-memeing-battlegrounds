@@ -4,7 +4,17 @@ require("dotenv").config();
 process.env.KERAS_PREDICTION_URL = "http://localhost:5000/api/v1/memes/predictions";
 
 const express = require("express");
-const {ingestImages, ingestPosts, predict, scrapePosts} = require("./index");
+const {
+    downloadPostImages,
+    filterExplicitImages,
+    ingestImages,
+    ingestPosts,
+    ingestPartialPosts,
+    predict,
+    processImages,
+    scrapePosts,
+    updatePostHashes
+} = require("./index");
 
 const PORT = 8080;
 const app = express();
@@ -12,9 +22,14 @@ const app = express();
 app.use(express.json());
 
 app.get("/scrapePosts", scrapePosts);
+app.post("/downloadPostImages", downloadPostImages);
+app.post("/filterExplicitImages", filterExplicitImages);
 app.post("/ingestImages", ingestImages);
 app.post("/ingestPosts", ingestPosts);
+app.post("/ingestPartialPosts", ingestPartialPosts);
+app.post("/processImages", processImages);
 app.post("/predict", predict);
+app.post("/updatePostHashes", updatePostHashes);
 
 app.listen(PORT, () => {
     console.log("App listening on port " + PORT + ".");
