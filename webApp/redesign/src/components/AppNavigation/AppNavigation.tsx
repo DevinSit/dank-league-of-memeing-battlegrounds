@@ -23,7 +23,13 @@ const useGameMode = () => {
     ] = useGame();
 
     useEffect(() => {
-        if (router.pathname === ScreenUrls.GAME && page === GamePage.GAME) {
+        if (
+            (router.pathname === ScreenUrls.GAME && page === GamePage.GAME) ||
+            // Leaderboard page needs position: absolute on AppNavigation just like Game does,
+            // because the Leaderboard animates in from the side. Leaderboard (shouldn't) scroll,
+            // so it shouldn't be a problem.
+            router.pathname === ScreenUrls.LEADERBOARD
+        ) {
             document.body.classList.add("game-mode");
             document.body.classList.remove("browse-mode");
         } else if (router.pathname === ScreenUrls.BROWSE) {
