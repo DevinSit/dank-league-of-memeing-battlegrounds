@@ -29,16 +29,18 @@ const getPosts = async (subreddit = "dankmemes", limit = 5, hot = false) => {
 };
 
 const normalizePostAttributes = (posts) =>
-    posts.map((post) => ({
-        id: post.id,
-        url: post.url,
-        createdUtc: post.created_utc,
-        author: post.author.name,
-        subreddit: post.subreddit.display_name,
-        title: post.title,
-        permalink: post.permalink,
-        score: post.score
-    }));
+    posts
+        .filter((post) => !post.over_18)
+        .map((post) => ({
+            id: post.id,
+            url: post.url,
+            createdUtc: post.created_utc,
+            author: post.author.name,
+            subreddit: post.subreddit.display_name,
+            title: post.title,
+            permalink: post.permalink,
+            score: post.score
+        }));
 
 module.exports = {
     getPosts
