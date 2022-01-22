@@ -75,6 +75,7 @@ const Post = ({
     <div
         className={classNames(styles.Post, {[styles.PostSelected]: isSelected})}
         onClick={onClick}
+        role="button"
         {...otherProps}
     >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -102,7 +103,7 @@ const MobilePosts = ({posts = [], selectedPostIndex = 0, onClickPost}: MobilePos
     });
 
     const animatedPosts = transition((style, {title, url}, _, index) => (
-        <animated.div style={style}>
+        <animated.div style={style} role="button">
             {/* eslint-disable-next-line */}
             <img
                 className={classNames(styles.MobilePost, {

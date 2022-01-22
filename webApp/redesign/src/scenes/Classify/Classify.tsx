@@ -2,11 +2,14 @@ import axios from "axios";
 import Image from "next/image";
 import {useCallback, useState} from "react";
 import ReactDropzone from "react-dropzone";
+import {animated, useSpring} from "@react-spring/web";
 import Spinner from "assets/images/loading.gif";
 import {MobileSpacer} from "components/";
 import {ValueFormatting} from "services/";
 import {api} from "values/api";
 import styles from "./Classify.module.scss";
+
+const AnimatedDropzone = animated(ReactDropzone);
 
 const Classify = () => {
     const [{file, loading, prediction}, setState] = useState({
@@ -48,20 +51,23 @@ const Classify = () => {
         }
     }, []);
 
+    const animateSpring = useSpring({from: {y: 500, scale: 0.7}, to: {y: 0, scale: 1}});
+
     return (
         <div className={styles.Classify}>
             <h1 className={styles.ClassifyHeader}>Classify Your Own</h1>
 
             <div className={styles.ClassifyContent}>
-                <ReactDropzone
+                <AnimatedDropzone
                     className={styles.ClassifyDropzone}
+                    style={animateSpring}
                     accept="image/jpeg, image/png"
                     onDrop={onImageDrop}
                 >
                     <div className={styles.ClassifyDropzoneText}>Upload a meme (jpeg, png)</div>
-                </ReactDropzone>
+                </AnimatedDropzone>
 
-                <div className={styles.ClassifyMemeContainer}>
+                <animated.div className={styles.ClassifyMemeContainer} style={animateSpring}>
                     {file ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img className={styles.ClassifyMeme} src={file} alt="meme" />
@@ -86,7 +92,7 @@ const Classify = () => {
                             </>
                         )}
                     </div>
-                </div>
+                </animated.div>
             </div>
 
             <MobileSpacer />
