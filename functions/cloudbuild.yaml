@@ -5,9 +5,7 @@ steps:
       args:
         - -c
         - |
-          _ENV_VARS="CLIENT_ID=${_CLIENT_ID},CLIENT_SECRET=${_CLIENT_SECRET},USER_AGENT=${_USER_AGENT},REDDIT_USERNAME=${_REDDIT_USERNAME},REDDIT_PASSWORD=${_REDDIT_PASSWORD},KERAS_PREDICTION_URL=${_KERAS_PREDICTION_URL}"
-
-          echo ${_ENV_VARS} > /workspace/env_vars
+          echo "CLIENT_ID=${_CLIENT_ID},CLIENT_SECRET=${_CLIENT_SECRET},USER_AGENT=${_USER_AGENT},REDDIT_USERNAME=${_REDDIT_USERNAME},REDDIT_PASSWORD=${_REDDIT_PASSWORD},KERAS_PREDICTION_URL=${_KERAS_PREDICTION_URL}" > /workspace/env_vars
 
     - id: "Deploy scrapePosts function"
       name: "gcr.io/cloud-builders/gcloud"
@@ -15,8 +13,7 @@ steps:
       args:
         - -c
         - |
-          _ENV_VARS=$(cat /workspace/env_vars)
-          ./scripts/deployFunction.sh scrapePosts "${_ENV_VARS}"
+          bash ./scripts/deployFunction.sh scrapePosts "$(cat /workspace/env_vars)"
       dir: "functions"
       waitFor: ["Store env vars string"]
 
@@ -26,8 +23,7 @@ steps:
       args:
         - -c
         - |
-          _ENV_VARS=$(cat /workspace/env_vars)
-          ./scripts/deployFunction.sh ingestImages "${_ENV_VARS}"
+          bash ./scripts/deployFunction.sh ingestImages "$(cat /workspace/env_vars)"
       dir: "functions"
       waitFor: ["Store env vars string"]
 
@@ -37,8 +33,7 @@ steps:
       args:
         - -c
         - |
-          _ENV_VARS=$(cat /workspace/env_vars)
-          ./scripts/deployFunction.sh ingestPosts "${_ENV_VARS}"
+          bash ./scripts/deployFunction.sh ingestPosts "$(cat /workspace/env_vars)"
       dir: "functions"
       waitFor: ["Store env vars string"]
 
@@ -48,8 +43,7 @@ steps:
       args:
         - -c
         - |
-          _ENV_VARS=$(cat /workspace/env_vars)
-          ./scripts/deployFunction.sh predict "${_ENV_VARS}"
+          bash ./scripts/deployFunction.sh predict "$(cat /workspace/env_vars)"
       dir: "functions"
       waitFor: ["Store env vars string"]
 
@@ -59,8 +53,7 @@ steps:
       args:
         - -c
         - |
-          _ENV_VARS=$(cat /workspace/env_vars)
-          ./scripts/deployFunction.sh downloadPostImages "${_ENV_VARS}"
+          bash ./scripts/deployFunction.sh downloadPostImages "$(cat /workspace/env_vars)"
       dir: "functions"
       waitFor: ["Store env vars string"]
 
@@ -70,8 +63,7 @@ steps:
       args:
         - -c
         - |
-          _ENV_VARS=$(cat /workspace/env_vars)
-          ./scripts/deployFunction.sh filterExplicitImages "${_ENV_VARS}"
+          bash ./scripts/deployFunction.sh filterExplicitImages "$(cat /workspace/env_vars)"
       dir: "functions"
       waitFor: ["Store env vars string"]
 
@@ -81,8 +73,7 @@ steps:
       args:
         - -c
         - |
-          _ENV_VARS=$(cat /workspace/env_vars)
-          ./scripts/deployFunction.sh ingestPartialPosts "${_ENV_VARS}"
+          bash ./scripts/deployFunction.sh ingestPartialPosts "$(cat /workspace/env_vars)"
       dir: "functions"
       waitFor: ["Store env vars string"]
 
@@ -92,8 +83,7 @@ steps:
       args:
         - -c
         - |
-          _ENV_VARS=$(cat /workspace/env_vars)
-          ./scripts/deployFunction.sh processImages "${_ENV_VARS}"
+          bash ./scripts/deployFunction.sh processImages "$(cat /workspace/env_vars)"
       dir: "functions"
       waitFor: ["Store env vars string"]
 
@@ -103,8 +93,7 @@ steps:
       args:
         - -c
         - |
-          _ENV_VARS=$(cat /workspace/env_vars)
-          ./scripts/deployFunction.sh updatePostHashes "${_ENV_VARS}"
+          bash ./scripts/deployFunction.sh updatePostHashes "$(cat /workspace/env_vars)"
       dir: "functions"
       waitFor: ["Store env vars string"]
 
