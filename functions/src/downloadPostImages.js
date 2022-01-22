@@ -18,7 +18,7 @@ const downloadPostImages = async (req, res) => {
         const {id, url} = post;
         console.log(`Processing post "${id}" with image "${url}"...`);
 
-        const fileIdPath = await downloadImage(url);
+        const fileIdPath = await downloadImage(url, id);
 
         if (fileIdPath) {
             // Image exists
