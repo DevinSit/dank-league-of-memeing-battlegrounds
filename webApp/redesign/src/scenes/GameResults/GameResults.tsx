@@ -1,4 +1,5 @@
 import {useCallback, useState} from "react";
+import {animated, useSpring, useTrail} from "@react-spring/web";
 import BadWordsFilter from "bad-words";
 import {CheckIcon, CloseIcon, EditIcon, ExternalLinkIcon} from "assets/icons";
 import {Button} from "components/";
@@ -23,19 +24,32 @@ const GameResults = ({posts, setPage}: GameResultsProps) => {
         }
     ] = useGame();
 
+    const trail = useTrail(posts.length, {
+        from: {opacity: 0.5, x: -200, scale: 0.8},
+        to: {opacity: 1, x: 0, scale: 1}
+    });
+
+    const summarySpring = useSpring({from: {x: -500, scale: 0.7}, to: {x: 0, scale: 1}});
+
     return (
         <div className={styles.GameResults}>
-            <GameResultsSummary onPlayAgain={() => setPage(GamePage.GAME)} />
+            <AnimatedGameResultsSummary
+                style={summarySpring}
+                onPlayAgain={() => setPage(GamePage.GAME)}
+            />
 
             <div className={styles.GameResultsMemes}>
-                {posts.map(({id, permalink, kerasPrediction, url}, index) => (
-                    <MemeResultCard
-                        key={id}
-                        image={url}
-                        isDank={ValueFormatting.booleanizePrediction(kerasPrediction)}
-                        url={ValueFormatting.formatRedditLink(permalink)}
-                        wasCorrect={guesses[index]}
-                    />
+                {trail.map((style, index) => (
+                    <animated.div key={posts[index].id} style={style}>
+                        <MemeResultCard
+                            image={posts[index].url}
+                            isDank={ValueFormatting.booleanizePrediction(
+                                posts[index].kerasPrediction
+                            )}
+                            url={ValueFormatting.formatRedditLink(posts[index].permalink)}
+                            wasCorrect={guesses[index]}
+                        />
+                    </animated.div>
                 ))}
             </div>
 
@@ -52,7 +66,7 @@ interface GameResultsSummaryProps {
     onPlayAgain: () => void;
 }
 
-const GameResultsSummary = ({onPlayAgain}: GameResultsSummaryProps) => {
+const GameResultsSummary = ({onPlayAgain, ...otherProps}: GameResultsSummaryProps) => {
     const [
         {
             state: {score, username},
@@ -89,7 +103,7 @@ const GameResultsSummary = ({onPlayAgain}: GameResultsSummaryProps) => {
     }, [username]);
 
     return (
-        <div className={styles.GameResultsSummary}>
+        <div className={styles.GameResultsSummary} {...otherProps}>
             {isEditing ? (
                 <form
                     className={styles.GameResultsUsernameContainer}
@@ -142,6 +156,8 @@ const GameResultsSummary = ({onPlayAgain}: GameResultsSummaryProps) => {
         </div>
     );
 };
+
+const AnimatedGameResultsSummary = animated(GameResultsSummary);
 
 interface MemeResultCardProps {
     image: string;
