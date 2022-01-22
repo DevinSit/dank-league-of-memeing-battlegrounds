@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import {useState} from "react";
+import {animated, useSpring, useTransition} from "@react-spring/web";
 import {MobileSpacer} from "components/";
 import {ValueFormatting} from "services/";
 import type {Post as PostType} from "types";
@@ -14,21 +15,29 @@ const Browse = ({posts = []}: BrowseProps) => {
 
     const selectedPost = posts[selectedPostIndex] || {};
 
+    const transition = useTransition(posts, {
+        key: (post: PostType) => post.id,
+        from: {opacity: 0, y: 1000, scale: 0.7},
+        enter: {opacity: 1, y: 0, scale: 1}
+    });
+
+    const animatedPosts = transition((style, post, _, index) => (
+        <AnimatedPost
+            {...post}
+            style={style}
+            isSelected={index === selectedPostIndex}
+            onClick={() => setSelectedPostIndex(index)}
+        />
+    ));
+
+    const detailsSpring = useSpring({from: {y: 1000, scale: 0.7}, to: {y: 0, scale: 1}});
+
     return (
         <div className={styles.Browse}>
             <h1 className={styles.BrowseHeader}>Latest from r/dankmemes</h1>
 
             <main className={styles.BrowseContent}>
-                <div className={styles.BrowsePosts}>
-                    {posts.map((post, index) => (
-                        <Post
-                            key={post.id}
-                            {...post}
-                            isSelected={index === selectedPostIndex}
-                            onClick={() => setSelectedPostIndex(index)}
-                        />
-                    ))}
-                </div>
+                <div className={styles.BrowsePosts}>{animatedPosts}</div>
 
                 <MobilePosts
                     posts={posts}
@@ -36,7 +45,7 @@ const Browse = ({posts = []}: BrowseProps) => {
                     onClickPost={setSelectedPostIndex}
                 />
 
-                <PostDetails {...selectedPost} />
+                <AnimatedPostDetails style={detailsSpring} {...selectedPost} />
             </main>
 
             <MobileSpacer />
@@ -53,8 +62,20 @@ interface PostProps extends Pick<PostType, "author" | "createdUtc" | "title" | "
     onClick: () => void;
 }
 
-const Post = ({isSelected = false, author, createdUtc, title, url, onClick}: PostProps) => (
-    <div className={classNames(styles.Post, {[styles.PostSelected]: isSelected})} onClick={onClick}>
+const Post = ({
+    isSelected = false,
+    author,
+    createdUtc,
+    title,
+    url,
+    onClick,
+    ...otherProps
+}: PostProps) => (
+    <div
+        className={classNames(styles.Post, {[styles.PostSelected]: isSelected})}
+        onClick={onClick}
+        {...otherProps}
+    >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className={styles.PostImage} src={url} alt={title} />
 
@@ -66,28 +87,35 @@ const Post = ({isSelected = false, author, createdUtc, title, url, onClick}: Pos
     </div>
 );
 
+const AnimatedPost = animated(Post);
+
 interface MobilePostsProps {
     posts: Array<PostType>;
     selectedPostIndex: number;
     onClickPost: (index: number) => void;
 }
 
-const MobilePosts = ({posts = [], selectedPostIndex = 0, onClickPost}: MobilePostsProps) => (
-    <div className={styles.MobilePosts}>
-        {posts.map(({title, url}, index) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-                key={index}
-                className={classNames(styles.MobilePost, {
-                    [styles.MobilePostSelected]: selectedPostIndex === index
-                })}
-                src={url}
-                alt={title}
-                onClick={() => onClickPost(index)}
-            />
-        ))}
-    </div>
-);
+const MobilePosts = ({posts = [], selectedPostIndex = 0, onClickPost}: MobilePostsProps) => {
+    const transition = useTransition(posts, {
+        key: (post: PostType) => post.id,
+        from: {opacity: 0, x: 1000, scale: 0.7},
+        enter: {opacity: 1, x: 0, scale: 1}
+    });
+
+    const animatedPosts = transition((style, {title, url}, _, index) => (
+        <animated.img
+            style={style}
+            className={classNames(styles.MobilePost, {
+                [styles.MobilePostSelected]: selectedPostIndex === index
+            })}
+            src={url}
+            alt={title}
+            onClick={() => onClickPost(index)}
+        />
+    ));
+
+    return <div className={styles.MobilePosts}>{animatedPosts}</div>;
+};
 
 interface PostDetailsProps
     extends Pick<
@@ -101,9 +129,10 @@ const PostDetails = ({
     kerasPrediction,
     permalink,
     title,
-    url
+    url,
+    ...otherProps
 }: PostDetailsProps) => (
-    <div className={styles.PostDetails}>
+    <div className={styles.PostDetails} {...otherProps}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className={styles.PostDetailsImage} src={url} alt={title} />
 
@@ -132,3 +161,5 @@ const PostDetails = ({
         </div>
     </div>
 );
+
+const AnimatedPostDetails = animated(PostDetails);
