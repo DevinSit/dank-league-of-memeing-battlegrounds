@@ -1,4 +1,4 @@
-.PHONY: start start-backend start-frontend
+.PHONY: start start-backend start-redesign
 
 #################################################################################
 # COMMANDS
@@ -12,9 +12,9 @@ start:
 start-backend:
 	docker-compose up --build backend
 
-## Start the frontend service locally
-start-frontend:
-	docker-compose up --build frontend
+## Start the redesign service locally
+start-redesign:
+	docker-compose up --build redesign
 
 ## Destroy out all docker-compose services, networks, and volumes (to clear out dependencies)
 down:
