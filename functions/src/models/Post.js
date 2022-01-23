@@ -47,6 +47,26 @@ class Post {
         }
     }
 
+    static async setNotFound(postId) {
+        const key = datastore.key([KIND, postId]);
+
+        try {
+            const entities = await datastore.get(key);
+
+            if (!entities || !entities.length) {
+                return null;
+            }
+
+            const post = new Post({...entities[0], notFound: true});
+            post.save();
+
+            return post;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    }
+
     static async deletePost(postId) {
         const key = datastore.key([KIND, postId]);
 
@@ -55,6 +75,15 @@ class Post {
         } catch (e) {
             console.error(e);
         }
+    }
+
+    // Note: "available" = "notFound === false".
+    // That is, all the posts we have yet to find with a 404 image.
+    static async fetchAllAvailable() {
+        const query = datastore.createQuery(KIND).filter("notFound", "=", false);
+        const [posts] = await datastore.runQuery(query);
+
+        return posts;
     }
 
     entity() {

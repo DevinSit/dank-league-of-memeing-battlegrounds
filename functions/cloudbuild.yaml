@@ -87,6 +87,26 @@ steps:
       dir: "functions"
       waitFor: ["Store env vars string"]
 
+    - id: "Deploy fetchAvailablePosts function"
+      name: "gcr.io/cloud-builders/gcloud"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          bash ./scripts/deployFunction.sh fetchAvailablePosts "$(cat /workspace/env_vars)"
+      dir: "functions"
+      waitFor: ["Store env vars string"]
+
+    - id: "Deploy pruneUnavailablePosts function"
+      name: "gcr.io/cloud-builders/gcloud"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          bash ./scripts/deployFunction.sh pruneUnavailablePosts "$(cat /workspace/env_vars)"
+      dir: "functions"
+      waitFor: ["Store env vars string"]
+
 substitutions:
   _CLIENT_ID: ""
   _CLIENT_SECRET: ""

@@ -7,10 +7,12 @@ const express = require("express");
 const {
     deleteStagingImages,
     downloadPostImages,
+    fetchAvailablePosts,
     filterExplicitImages,
     ingestPartialPosts,
     predict,
     processImages,
+    pruneUnavailablePosts,
     scrapePosts,
     updatePostHashes
 } = require("./index");
@@ -28,6 +30,9 @@ app.post("/processImages", processImages);
 app.post("/predict", predict);
 app.post("/updatePostHashes", updatePostHashes);
 app.post("/deleteStagingImages", deleteStagingImages);
+
+app.get("/fetchAvailablePosts", fetchAvailablePosts);
+app.post("/pruneUnavailablePosts", pruneUnavailablePosts);
 
 app.listen(PORT, () => {
     console.log("App listening on port " + PORT + ".");
