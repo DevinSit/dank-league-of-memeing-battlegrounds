@@ -28,7 +28,7 @@ class MemePost:
     def get_latest_posts(self, number_of_posts=10):
         return self._fetch_latest_posts(number_of_posts)
 
-    def get_random_posts(self, number_of_posts=20):
+    def get_random_posts(self, number_of_posts=15):
         return self._fetch_random_posts(number_of_posts)
 
     def mark_404_post(self, post_id: str):
@@ -90,7 +90,7 @@ class MemePost:
 
         return sorted(posts, key=lambda post: post["createdUtc"], reverse=True)
 
-    def _fetch_random_posts(self, number_of_posts=20) -> List[datastore.Entity]:
+    def _fetch_random_posts(self, number_of_posts=15) -> List[datastore.Entity]:
         # Don't bother caching this query ourselves since we always want the freshest non-notFound images.
         # It's only about half as fast as caching it.
         query = self.datastore_client.query(kind=POST_KIND)
