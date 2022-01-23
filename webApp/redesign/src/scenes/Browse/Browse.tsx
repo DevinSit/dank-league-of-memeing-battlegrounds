@@ -21,10 +21,13 @@ const Browse = ({posts = []}: BrowseProps) => {
         enter: {opacity: 1, y: 0, scale: 1}
     });
 
-    const animatedPosts = transition((style, post, _, index) => (
+    const animatedPosts = transition((style, {author, createdUtc, title, url}, _, index) => (
         <animated.div style={style}>
             <Post
-                {...post}
+                author={author}
+                createdUtc={createdUtc}
+                title={title}
+                url={url}
                 isSelected={index === selectedPostIndex}
                 onClick={() => setSelectedPostIndex(index)}
             />
@@ -46,7 +49,15 @@ const Browse = ({posts = []}: BrowseProps) => {
                     onClickPost={setSelectedPostIndex}
                 />
 
-                <AnimatedPostDetails style={detailsSpring} {...selectedPost} />
+                <AnimatedPostDetails
+                    author={selectedPost.author}
+                    createdUtc={selectedPost.createdUtc}
+                    kerasPrediction={selectedPost.kerasPrediction}
+                    permalink={selectedPost.permalink}
+                    title={selectedPost.title}
+                    url={selectedPost.url}
+                    style={detailsSpring}
+                />
             </main>
 
             <MobileSpacer />

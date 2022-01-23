@@ -85,7 +85,7 @@ class MemePost:
         query = self.datastore_client.query(kind=POST_KIND, order=["-createdUtc"])
 
         posts = list(filter(lambda x: x["imageHash"], list(query.fetch(limit=number_of_posts))))
-        posts = self._sort_by_image_hash()
+        posts = self._sort_by_image_hash(posts)
         posts = self._enrich_posts_with_scores(posts)
 
         return sorted(posts, key=lambda post: post["createdUtc"], reverse=True)
@@ -97,7 +97,7 @@ class MemePost:
         query.add_filter("notFound", "=", False)
 
         posts = list(filter(lambda x: x["imageHash"], list(query.fetch())))
-        posts = self._sort_by_image_hash()
+        posts = self._sort_by_image_hash(posts)
         posts = random.sample(posts, min(len(posts), number_of_posts))
         posts = self._enrich_posts_with_scores(posts)
 
