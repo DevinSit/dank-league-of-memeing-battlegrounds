@@ -8,12 +8,12 @@ declare global {
 
 export const configUsername = (username: string) => {
     if (IS_PRODUCTION && GA_TRACKING_ID && typeof window !== "undefined") {
-        window.gtag("config", GA_TRACKING_ID, {user_id: username});
+        window?.gtag("config", GA_TRACKING_ID, {user_id: username});
     }
 };
 
 export const logEvent = (action: string, params: Record<string, any> = {}) => {
     if (IS_PRODUCTION && GA_TRACKING_ID && typeof window !== "undefined") {
-        window.gtag("event", action, params);
+        window?.gtag("event", action, params);
     }
 };
