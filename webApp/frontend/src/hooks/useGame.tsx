@@ -2,7 +2,7 @@ import {AnyAction, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {createContext, Dispatch, useContext, useEffect, useMemo, useReducer} from "react";
 import randomUsernameGenerator from "random-username-generator";
 import {GamePage} from "values/gamePages";
-import {configUsername} from "utils/analytics";
+import {configUsername, logEvent} from "utils/analytics";
 
 const USERNAME_KEY = "username";
 
@@ -69,6 +69,18 @@ export const GameProvider = ({children}: any) => {
 
         configUsername(state.username);
     }, [state.username]);
+
+    useEffect(() => {
+        logEvent("visitGamePage", {page: state.page});
+    }, [state.page]);
+
+    useEffect(() => {
+        const guess = state.guesses?.[state.guesses.length - 1];
+
+        if (guess !== undefined) {
+            logEvent("makeGuess", {guess});
+        }
+    }, [state.guesses]);
 
     return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 };
