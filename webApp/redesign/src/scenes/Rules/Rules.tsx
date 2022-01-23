@@ -19,7 +19,7 @@ const Rules = ({setPage}: RulesProps) => {
                     <li>You are given 10 memes.</li>
                     <li>You must guess if they are dank or not by swiping up or down.</li>
                     <li>Gain points by guessing correctly.</li>
-                    <li>Lose points by guessing wrong.</li>
+                    <li>Lose points by guessing incorrectly.</li>
                     <li>More points are gained/lost for guessing as fast as possible.</li>
                     <li>Have fun!</li>
                 </ol>
