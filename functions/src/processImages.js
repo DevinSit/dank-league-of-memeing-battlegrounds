@@ -34,9 +34,6 @@ const processImages = async (req, res) => {
             // Delete the temp local images.
             await deleteFile(fileIdPath);
             await deleteFile(fileNamePath);
-
-            // Delete the image from the staging bucket.
-            await deleteStagingFile(path);
         } else {
             console.warn(`[WARNING] ${path} does not exist.`);
         }
@@ -127,14 +124,6 @@ const deleteFile = (path) => {
             }
         });
     });
-};
-
-const deleteStagingFile = async (path) => {
-    try {
-        await storage.bucket(BUCKET_STAGING).file(extractBucketFileName(path)).delete();
-    } catch {
-        return null;
-    }
 };
 
 const extractBucketFileName = (imagePath) => {

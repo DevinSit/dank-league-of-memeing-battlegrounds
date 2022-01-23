@@ -5,6 +5,7 @@ process.env.KERAS_PREDICTION_URL = "http://localhost:5000/api/v1/memes/predictio
 
 const express = require("express");
 const {
+    deleteStagingImages,
     downloadPostImages,
     filterExplicitImages,
     ingestImages,
@@ -30,6 +31,7 @@ app.post("/ingestPartialPosts", ingestPartialPosts);
 app.post("/processImages", processImages);
 app.post("/predict", predict);
 app.post("/updatePostHashes", updatePostHashes);
+app.post("/deleteStagingImages", deleteStagingImages);
 
 app.listen(PORT, () => {
     console.log("App listening on port " + PORT + ".");

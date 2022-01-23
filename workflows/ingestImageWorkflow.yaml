@@ -30,7 +30,7 @@ main:
         - ifExplicit:
             switch:
                 - condition: ${explicitResult.body.results[0] == true}
-                  next: returnEarly
+                  next: deleteStagingImage
                 - condition: ${explicitResult.body.results[0] == false}
                   next: processImage
 
@@ -63,13 +63,15 @@ main:
                 body:
                     postsToHashes: ${processedImageResult.body.postsToHashes}
 
-        - returnFull:
-            return:
-                imagePaths: ${imagePaths}
-                predictions: ${predictionsResult.body.predictions}
+        - deleteStagingImage:
+            call: http.post
+            args:
+                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/deleteStagingImages
+                body:
+                    imagePaths: ${imagePaths}
+                    deletePosts: ${explicitResult.body.results}
 
-        - returnEarly:
+        - returnResult:
             return:
-                explicit: true
                 imagePaths: ${imagePaths}
-                predictions: []
+                explicit: explicitResult.body.results[0]

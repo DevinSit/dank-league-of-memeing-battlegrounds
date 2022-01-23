@@ -97,6 +97,16 @@ steps:
       dir: "functions"
       waitFor: ["Store env vars string"]
 
+    - id: "Deploy deleteStagingImages function"
+      name: "gcr.io/cloud-builders/gcloud"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          bash ./scripts/deployFunction.sh deleteStagingImages "$(cat /workspace/env_vars)"
+      dir: "functions"
+      waitFor: ["Store env vars string"]
+
 substitutions:
   _CLIENT_ID: ""
   _CLIENT_SECRET: ""

@@ -1,3 +1,4 @@
+const {deleteStagingImages} = require("./deleteStagingImages");
 const {downloadPostImages} = require("./downloadPostImages");
 const {filterExplicitImages} = require("./filterExplicitImages");
 const {ingestImages} = require("./ingestImages");
@@ -9,6 +10,7 @@ const {scrapePosts} = require("./scrapePosts");
 const {updatePostHashes} = require("./updatePostHashes");
 
 module.exports = {
+    deleteStagingImages,
     downloadPostImages,
     filterExplicitImages,
     ingestImages,

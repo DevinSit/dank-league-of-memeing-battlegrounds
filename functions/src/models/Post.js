@@ -47,6 +47,16 @@ class Post {
         }
     }
 
+    static async deletePost(postId) {
+        const key = datastore.key([KIND, postId]);
+
+        try {
+            await datastore.delete(key);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
     entity() {
         const key = datastore.key([KIND, this.id]);
 
