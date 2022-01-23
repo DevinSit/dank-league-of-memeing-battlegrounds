@@ -74,4 +74,4 @@ main:
         - returnResult:
             return:
                 imagePaths: ${imagePaths}
-                explicit: explicitResult.body.results[0]
+                explicit: ${explicitResult.body.results[0]}
