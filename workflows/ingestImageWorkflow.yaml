@@ -24,7 +24,7 @@ main:
         - logExplicit:
             call: sys.log
             args:
-                text: '${"Is explicit? " + explicitResult.body.results[0]}'
+                text: ${explicitResult.body.results[0]}
                 severity: INFO
 
         - ifExplicit:
