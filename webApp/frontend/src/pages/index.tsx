@@ -32,12 +32,12 @@ const usePreloadImages = (urls: Array<string>, posts: Record<string, Post>): Arr
             // https://stackoverflow.com/questions/3646036/preloading-images-with-javascript
             const image = new Image();
 
-            image.onload = (event) => {
-                // Max tier jank. Because Reddit returns an that 'error' image when an image is 404,
+            image.onload = function () {
+                // Max tier jank. Because Reddit returns that 'error' image when an image is 404,
                 // `image.onerror` never fires. But we know the dimensions of that 'error' image are
                 // 130x60, so we can check for that in the returned image to indicate that an image is 404.
                 // @ts-ignore
-                if (event?.path[0]?.naturalHeight === 60 && event?.path[0]?.naturalWidth === 130) {
+                if (this.height === 60 && this.width === 130) {
                     fetch(`${api.MARK_MISSING_MEME}/${posts[url].id}`);
                 } else {
                     if (newImages.length < 10 && !newImages.includes(url)) {
