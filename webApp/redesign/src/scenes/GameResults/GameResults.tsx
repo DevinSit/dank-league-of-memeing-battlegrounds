@@ -103,7 +103,7 @@ const GameResultsSummary = ({onPlayAgain, ...otherProps}: GameResultsSummaryProp
     const onSubmit = useCallback(async () => {
         let cleanedUsername = badWordsFilter.clean(editingUsername);
 
-        await fetch("/api/score", {
+        await fetch(api.POST_SCORE, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

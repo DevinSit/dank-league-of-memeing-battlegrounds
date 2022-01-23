@@ -2,6 +2,7 @@ import {useCallback, useEffect, useRef, useState} from "react";
 import {useSpring, useSprings} from "@react-spring/web";
 import {useDrag} from "react-use-gesture";
 import {useGame} from "hooks/";
+import {api} from "values/api";
 import {GamePage} from "values/gamePages";
 
 const COUNTDOWN_DURATION = 2500;
@@ -22,7 +23,7 @@ export const useGameOver = (predictions: Array<boolean>, setPage: (page: GamePag
 
     useEffect(() => {
         if (guesses.length === predictions.length && predictions.length !== 0) {
-            fetch("/api/score", {
+            fetch(api.POST_SCORE, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

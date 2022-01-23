@@ -9,5 +9,6 @@ export const api = {
     PREDICT_MEME: url("/memes/predictions/file"),
     RECORD_GUESSES: url("/memes/guess"),
     LEADERBOARD: url("/leaderboard"),
-    SCORE: url("/leaderboard/score")
+    SCORE: url("/leaderboard/score"),
+    POST_SCORE: "/api/score"
 };
