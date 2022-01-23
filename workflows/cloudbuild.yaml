@@ -18,3 +18,23 @@ steps:
           bash ./scripts/deployWorkflow.sh ingestImageWorkflow
       dir: "workflows"
       waitFor: ["-"]
+
+    - id: "Deploy pruneRunnerWorkflow workflow"
+      name: "gcr.io/cloud-builders/gcloud"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          bash ./scripts/deployWorkflow.sh pruneRunnerWorkflow
+      dir: "workflows"
+      waitFor: ["-"]
+
+    - id: "Deploy pruneUnavailablePostsWorkflow workflow"
+      name: "gcr.io/cloud-builders/gcloud"
+      entrypoint: bash
+      args:
+        - -c
+        - |
+          bash ./scripts/deployWorkflow.sh pruneUnavailablePostsWorkflow
+      dir: "workflows"
+      waitFor: ["-"]

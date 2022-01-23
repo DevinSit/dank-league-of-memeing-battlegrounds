@@ -1,0 +1,18 @@
+main:
+    steps:
+        - fetchAvailablePosts:
+            call: http.get
+            args:
+                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/fetchAvailablePosts
+            result: postsResult
+
+        - pruneInParallel:
+            call: experimental.executions.map
+            args:
+                workflow_id: pruneRunnerWorkflow
+                arguments: ${postsResult.body.chunkedPosts}
+            result: unavailablePostsResult
+
+        - returnResult:
+            return: 
+                - unavailablePosts: ${unavailablePostsResult.body.unavailablePosts}

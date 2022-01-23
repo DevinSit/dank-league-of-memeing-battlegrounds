@@ -1,0 +1,14 @@
+main:
+    params: [posts]
+    steps:
+        - pruneUnavailablePosts:
+            call: http.post
+            args:
+                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/pruneUnavailablePosts
+                body:
+                    posts: ${posts}
+            result: unavailablePostsResult
+
+        - returnResult:
+            return: 
+                - unavailablePosts: ${unavailablePostsResult.body.unavailablePosts}
