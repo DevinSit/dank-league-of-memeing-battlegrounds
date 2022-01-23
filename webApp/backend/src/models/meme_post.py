@@ -84,7 +84,8 @@ class MemePost:
     def _fetch_latest_posts(self, number_of_posts=10) -> List[datastore.Entity]:
         query = self.datastore_client.query(kind=POST_KIND, order=["-createdUtc"])
 
-        posts = self._sort_by_image_hash(list(query.fetch(limit=number_of_posts)))
+        posts = list(filter(lambda x: x["imageHash"], list(query.fetch(limit=number_of_posts))))
+        posts = self._sort_by_image_hash()
         posts = self._enrich_posts_with_scores(posts)
 
         return sorted(posts, key=lambda post: post["createdUtc"], reverse=True)
@@ -94,8 +95,9 @@ class MemePost:
         # It's only about half as fast as caching it.
         query = self.datastore_client.query(kind=POST_KIND)
         query.add_filter("notFound", "=", False)
-        posts = list(query.fetch())
 
+        posts = list(filter(lambda x: x["imageHash"], list(query.fetch())))
+        posts = self._sort_by_image_hash()
         posts = random.sample(posts, min(len(posts), number_of_posts))
         posts = self._enrich_posts_with_scores(posts)
 
