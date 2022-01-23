@@ -17,26 +17,6 @@ steps:
       dir: "functions"
       waitFor: ["Store env vars string"]
 
-    - id: "Deploy ingestImages function"
-      name: "gcr.io/cloud-builders/gcloud"
-      entrypoint: bash
-      args:
-        - -c
-        - |
-          bash ./scripts/deployFunction.sh ingestImages "$(cat /workspace/env_vars)"
-      dir: "functions"
-      waitFor: ["Store env vars string"]
-
-    - id: "Deploy ingestPosts function"
-      name: "gcr.io/cloud-builders/gcloud"
-      entrypoint: bash
-      args:
-        - -c
-        - |
-          bash ./scripts/deployFunction.sh ingestPosts "$(cat /workspace/env_vars)"
-      dir: "functions"
-      waitFor: ["Store env vars string"]
-
     - id: "Deploy predict function"
       name: "gcr.io/cloud-builders/gcloud"
       entrypoint: bash

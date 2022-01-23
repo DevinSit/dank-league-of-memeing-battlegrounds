@@ -8,8 +8,6 @@ const {
     deleteStagingImages,
     downloadPostImages,
     filterExplicitImages,
-    ingestImages,
-    ingestPosts,
     ingestPartialPosts,
     predict,
     processImages,
@@ -25,8 +23,6 @@ app.use(express.json());
 app.get("/scrapePosts", scrapePosts);
 app.post("/downloadPostImages", downloadPostImages);
 app.post("/filterExplicitImages", filterExplicitImages);
-app.post("/ingestImages", ingestImages);
-app.post("/ingestPosts", ingestPosts);
 app.post("/ingestPartialPosts", ingestPartialPosts);
 app.post("/processImages", processImages);
 app.post("/predict", predict);

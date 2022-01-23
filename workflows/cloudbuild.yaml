@@ -1,14 +1,4 @@
 steps:
-    - id: "Deploy Scheduled Scraping workflow"
-      name: "gcr.io/cloud-builders/gcloud"
-      entrypoint: bash
-      args:
-        - -c
-        - |
-          bash ./scripts/deployWorkflow.sh scheduledScrapingWorkflow
-      dir: "workflows"
-      waitFor: ["-"]
-
     - id: "Deploy scrapePosts workflow"
       name: "gcr.io/cloud-builders/gcloud"
       entrypoint: bash
