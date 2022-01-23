@@ -7,6 +7,7 @@ export const api = {
     MARK_MISSING_MEME: url("/memes"),
     RANDOM_MEMES: url("/memes/random"),
     PREDICT_MEME: url("/memes/predictions/file"),
+    RECORD_GUESSES: url("/memes/guess"),
     LEADERBOARD: url("/leaderboard"),
     SCORE: url("/leaderboard/score")
 };

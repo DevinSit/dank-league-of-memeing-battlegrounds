@@ -1,4 +1,4 @@
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {animated, useSpring, useTrail} from "@react-spring/web";
 import BadWordsFilter from "bad-words";
 import {CheckIcon, CloseIcon, EditIcon, ExternalLinkIcon} from "assets/icons";
@@ -30,6 +30,24 @@ const GameResults = ({posts, setPage}: GameResultsProps) => {
     });
 
     const summarySpring = useSpring({from: {x: -500, scale: 0.7}, to: {x: 0, scale: 1}});
+
+    useEffect(() => {
+        const guessesByPost = posts.reduce((acc, post, index) => {
+            acc[post.id] = guesses[index];
+            return acc;
+        }, {} as Record<string, boolean>);
+
+        fetch(api.RECORD_GUESSES, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({guesses: guessesByPost})
+        });
+
+        // Only run this once on mount.
+        // eslint-disable-next-line
+    }, []);
 
     return (
         <div className={styles.GameResults}>

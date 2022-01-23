@@ -4,10 +4,9 @@ import logging
 import random
 from cachetools import cached, TTLCache
 from google.cloud import datastore, storage
-from typing import BinaryIO, List, Tuple
+from typing import BinaryIO, Dict, List, Tuple
 from werkzeug.utils import secure_filename
 from config import IMAGE_SIZE, IMAGES_STORAGE_BUCKET
-from utils import LoggingUtils
 from utils.blockhash import hash_image
 
 
@@ -16,6 +15,7 @@ post_cache = TTLCache(maxsize=10, ttl=1800)
 predictions_cache = TTLCache(maxsize=200, ttl=3600)
 
 POST_KIND = "RedditPost"
+POST_GUESS_KIND = "RedditPostGuesses"
 KERAS_PREDICTION_KIND = "DankKerasPrediction"
 
 
@@ -80,6 +80,17 @@ class MemePost:
         else:
             return None
 
+    def record_guesses(self, guesses: Dict[str, bool]):
+        for post_id, guess in guesses.items():
+            guess_entity = self._fetch_guess(post_id)
+
+            if guess:
+                guess_entity["dank"] += 1
+            else:
+                guess_entity["notDank"] += 1
+
+            self.datastore_client.put(guess_entity)
+
     @cached(post_cache)
     def _fetch_latest_posts(self, number_of_posts=10) -> List[datastore.Entity]:
         query = self.datastore_client.query(kind=POST_KIND, order=["-createdUtc"])
@@ -102,6 +113,18 @@ class MemePost:
         posts = self._enrich_posts_with_scores(posts)
 
         return posts
+
+    def _fetch_guess(self, post_id: str) -> datastore.Entity:
+        key = self.datastore_client.key(POST_GUESS_KIND, post_id)
+        guess_entity = self.datastore_client.get(key)
+
+        if not guess_entity:
+            guess_entity = datastore.Entity(key=key)
+            guess_entity["id"] = post_id
+            guess_entity["dank"] = 0
+            guess_entity["notDank"] = 0
+
+        return guess_entity
 
     def _enrich_posts_with_scores(self, posts):
         keras_keys = [self.datastore_client.key(KERAS_PREDICTION_KIND, post["imageHash"]) for post in posts]

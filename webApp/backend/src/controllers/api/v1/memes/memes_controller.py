@@ -1,5 +1,5 @@
 import logging
-from flask import jsonify, request, Response
+from flask import abort, jsonify, request, Response
 from models import MemePost
 from utils import LoggingUtils
 from utils.NestableBlueprint import NestableBlueprint
@@ -45,6 +45,19 @@ def mark_404_post(post_id: str) -> Response:
         "status": "success",
         "postId": post_id
     })
+
+@memes_controller.route("/guess", methods=["POST"])
+@LoggingUtils.log_execution_time("Record guesses finished")
+def record_guesses() -> Response:
+    data = request.get_json()
+
+    if "guesses" not in data:
+        logger.warning("Request payload is invalid")
+        return jsonify(abort(400))
+
+    meme_post_service.record_guesses(data["guesses"])
+
+    return jsonify({"status": "success"})
 
 
 @memes_controller.route("/image", methods=["POST"])
