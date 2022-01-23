@@ -9,9 +9,9 @@ ARG branch
 ENV NODE_ENV $app_env
 ENV BRANCH $branch
 
-RUN mkdir -p /redesign && chown node /redesign
+RUN mkdir -p /frontend && chown node /frontend
 USER node
-WORKDIR /redesign
+WORKDIR /frontend
 
 COPY --chown=node:node package.json package-lock.json ./
 RUN npm ci

@@ -1,17 +1,17 @@
 version: '2'
 
 services:
-    redesign:
+    frontend:
         build:
-            context: ./redesign
+            context: ./frontend
             args:
                 app_env: development
-        image: redesign
+        image: frontend
         ports:
-            - "3001:3000"
+            - "3000:3000"
         volumes:
-            - ./redesign:/redesign
-            - redesign-deps:/redesign/node_modules
+            - ./frontend:/frontend
+            - frontend-deps:/frontend/node_modules
     backend:
         build: ./backend
         image: backend
@@ -27,4 +27,4 @@ services:
             - FLASK_ENV=development
 
 volumes:
-    redesign-deps:
+    frontend-deps:
