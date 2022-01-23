@@ -28,43 +28,25 @@ class Post {
     }
 
     static async updateHash(postId, imageHash) {
-        const key = datastore.key([KIND, postId]);
+        const post = await Post.fetchPost(postId);
 
-        try {
-            const entities = await datastore.get(key);
-
-            if (!entities || !entities.length) {
-                return null;
-            }
-
-            const post = new Post({...entities[0], imageHash});
+        if (post) {
+            post.imageHash = imageHash;
             post.save();
-
-            return post;
-        } catch (e) {
-            console.error(e);
-            return null;
         }
+
+        return post;
     }
 
     static async setNotFound(postId) {
-        const key = datastore.key([KIND, postId]);
+        const post = await Post.fetchPost(postId);
 
-        try {
-            const entities = await datastore.get(key);
-
-            if (!entities || !entities.length) {
-                return null;
-            }
-
-            const post = new Post({...entities[0], notFound: true});
+        if (post) {
+            post.notFound = true;
             post.save();
-
-            return post;
-        } catch (e) {
-            console.error(e);
-            return null;
         }
+
+        return post;
     }
 
     static async deletePost(postId) {
@@ -74,6 +56,28 @@ class Post {
             await datastore.delete(key);
         } catch (e) {
             console.error(e);
+        }
+    }
+
+    static async isPostMissingImageHash(postId) {
+        const post = await Post.fetchPost(postId);
+        return post && !post.imageHash;
+    }
+
+    static async fetchPost(postId) {
+        const key = datastore.key([KIND, postId]);
+
+        try {
+            const entities = await datastore.get(key);
+
+            if (!entities || !entities.length) {
+                return null;
+            }
+
+            return new Post(entities[0]);
+        } catch (e) {
+            console.error(e);
+            return null;
         }
     }
 
