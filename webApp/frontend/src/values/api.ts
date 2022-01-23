@@ -5,9 +5,9 @@ const serverUrl = (route: string) => `${BACKEND_SERVER_URL}/api/v1${route}`;
 
 export const api = {
     serverSide: {
+        LATEST_MEMES: serverUrl("/memes"),
         SCORE: serverUrl("/leaderboard/score")
     },
-    LATEST_MEMES: url("/memes"),
     MARK_MISSING_MEME: url("/memes"),
     RANDOM_MEMES: url("/memes/random"),
     PREDICT_MEME: url("/memes/predictions/file"),
