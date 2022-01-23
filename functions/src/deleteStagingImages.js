@@ -27,7 +27,7 @@ const deleteStagingImages = async (req, res) => {
     }
 
     console.log("Finished deleting staging images.");
-    res.send({imagesPaths, status: "success"});
+    res.send({imagePaths, status: "success"});
 };
 
 const deleteStagingFile = async (path) => {
