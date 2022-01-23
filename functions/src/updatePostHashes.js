@@ -6,11 +6,13 @@ const updatePostHashes = async (req, res) => {
     const posts = [];
 
     for (const postId of Object.keys(postsToHashes)) {
-        const imageHash = postsToHashes[postId];
-        const post = await Post.updateHash(postId, imageHash);
+        if (postId) {
+            const imageHash = postsToHashes[postId];
+            const post = await Post.updateHash(postId, imageHash);
 
-        if (post) {
-            posts.push(post);
+            if (post) {
+                posts.push(post);
+            }
         }
     }
 
