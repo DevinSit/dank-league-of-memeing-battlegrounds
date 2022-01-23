@@ -19,7 +19,7 @@ const LeaderboardPage: NextPage = () => {
     return (
         <>
             <Head>
-                <title>Leaderboard | Are you a Dank Memer?</title>
+                <title>Leaderboard | Dank League of Memeing Battlegrounds</title>
             </Head>
 
             <Leaderboard

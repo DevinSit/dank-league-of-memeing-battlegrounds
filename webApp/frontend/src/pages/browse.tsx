@@ -11,7 +11,7 @@ interface BrowsePageProps {
 const BrowsePage: NextPage<BrowsePageProps> = ({posts = []}) => (
     <>
         <Head>
-            <title>Browse | Are you a Dank Memer?</title>
+            <title>Browse | Dank League of Memeing Battlegrounds</title>
         </Head>
 
         <Browse posts={posts} />

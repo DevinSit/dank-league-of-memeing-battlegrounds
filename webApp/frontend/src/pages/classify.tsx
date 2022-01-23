@@ -6,7 +6,7 @@ const ClassifyPage: NextPage = () => {
     return (
         <>
             <Head>
-                <title>Classify | Are you a Dank Memer?</title>
+                <title>Classify | Dank League of Memeing Battlegrounds</title>
             </Head>
 
             <Classify />

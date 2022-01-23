@@ -9,7 +9,11 @@ import "styles/global.scss";
 const MyApp = ({Component, pageProps}: AppProps) => (
     <>
         <Head>
-            <meta name="description" content="Built by Devin Sit" />
+            <meta
+                name="description"
+                content={`"Are you a dank memer?" That is the question of the Dank League of Memeing Battlegrounds! Compete in this innovative new eSport to see if you are the dankest memer around!`}
+            />
+
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <link rel="icon" href="/favicon.ico" />
         </Head>

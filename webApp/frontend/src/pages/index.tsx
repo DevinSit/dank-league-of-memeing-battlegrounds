@@ -131,7 +131,7 @@ const Home: NextPage = () => {
     return (
         <>
             <Head>
-                <title>Are you a Dank Memer?</title>
+                <title>Dank League of Memeing Battlegrounds</title>
             </Head>
 
             <AppTitle />
