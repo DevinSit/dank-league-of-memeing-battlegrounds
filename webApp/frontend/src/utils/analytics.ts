@@ -7,13 +7,19 @@ declare global {
 }
 
 export const configUsername = (username: string) => {
-    if (IS_PRODUCTION && GA_TRACKING_ID && typeof window !== "undefined") {
-        window?.gtag("config", GA_TRACKING_ID, {user_id: username});
+    if (_canAnalytics()) {
+        window.gtag("config", GA_TRACKING_ID!, {user_id: username});
     }
 };
 
 export const logEvent = (action: string, params: Record<string, any> = {}) => {
-    if (IS_PRODUCTION && GA_TRACKING_ID && typeof window !== "undefined") {
-        window?.gtag("event", action, params);
+    if (_canAnalytics()) {
+        window.gtag("event", action, params);
     }
 };
+
+const _canAnalytics = () =>
+    IS_PRODUCTION &&
+    GA_TRACKING_ID &&
+    typeof window !== "undefined" &&
+    typeof window.gtag !== "undefined";
