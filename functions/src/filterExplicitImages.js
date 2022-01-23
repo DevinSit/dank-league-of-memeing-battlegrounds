@@ -4,8 +4,11 @@ const visionClient = new Vision.ImageAnnotatorClient();
 
 const filterExplicitImages = async (req, res) => {
     const {imagePaths} = req.body;
-
     console.log(imagePaths, "imagePaths");
+
+    if (!imagePaths) {
+        return res.status(400).send({status: "error"});
+    }
 
     const results = [];
 

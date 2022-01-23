@@ -2,6 +2,11 @@ const {Post} = require("./models");
 
 const updatePostHashes = async (req, res) => {
     const {postsToHashes} = req.body;
+    console.log(postsToHashes, "postsToHashes");
+
+    if (!postsToHashes) {
+        return res.status(400).send({status: "error"});
+    }
 
     const posts = [];
 

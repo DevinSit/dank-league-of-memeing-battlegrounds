@@ -7,8 +7,11 @@ const storage = new Storage();
 
 const downloadPostImages = async (req, res) => {
     const {posts} = req.body;
-
     console.log(posts, "posts");
+
+    if (!posts) {
+        return res.status(400).send({status: "error"});
+    }
 
     const stagingImages = [];
 

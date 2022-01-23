@@ -2,6 +2,11 @@ const {Post} = require("./models");
 
 const ingestPartialPosts = async (req, res) => {
     const {posts: postsData} = req.body;
+    console.log(postsData, "postsData");
+
+    if (!postsData) {
+        return res.status(400).send({status: "error"});
+    }
 
     const posts = [];
 

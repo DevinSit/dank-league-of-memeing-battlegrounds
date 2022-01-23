@@ -6,8 +6,11 @@ const storage = new Storage();
 
 const deleteStagingImages = async (req, res) => {
     const {imagePaths, deletePosts} = req.body;
-
     console.log({imagePaths, deletePosts});
+
+    if (!imagePaths || !deletePosts) {
+        return res.status(400).send({status: "error"});
+    }
 
     // Due to race conditions with fetching the images,
     // process the posts using a regular for loop as opposed to Promise.all
