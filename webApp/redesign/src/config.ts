@@ -1,6 +1,6 @@
-const BACKEND_HOST = process.env.BACKEND_HOST || "localhost";
-const BACKEND_PORT = process.env.BACKEND_PORT || "5000";
-const BACKEND_PROTOCOL = process.env.BACKEND_PROTOCOL || "http";
+const BACKEND_HOST = process.env.NEXT_PUBLIC_BACKEND_HOST || "localhost";
+const BACKEND_PORT = process.env.NEXT_PUBLIC_BACKEND_PORT || "5000";
+const BACKEND_PROTOCOL = process.env.NEXT_PUBLIC_BACKEND_PROTOCOL || "http";
 
 let BACKEND_URL = `${BACKEND_PROTOCOL}://${BACKEND_HOST}`;
 

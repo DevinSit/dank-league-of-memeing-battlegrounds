@@ -22,12 +22,7 @@ steps:
         - "--platform"
         - "managed"
         - "--allow-unauthenticated"
-        - "--set-env-vars"
-        - "BACKEND_HOST=${_BACKEND_HOST},BACKEND_PORT=443,BACKEND_PROTOCOL=https"
       dir: "webApp"
-
-substitutions:
-    _BACKEND_HOST: ""
 
 timeout: 1800s
 images: ["gcr.io/$PROJECT_ID/easydankmemeclassifier-redesign:$COMMIT_SHA"]
