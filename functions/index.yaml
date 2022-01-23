@@ -1,7 +1,0 @@
-indexes:
-    - kind: RedditPost
-      properties:
-          - name: imageHash
-            direction: asc
-          - name: createdUtc
-            direction: desc
