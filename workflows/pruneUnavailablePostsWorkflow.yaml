@@ -15,4 +15,4 @@ main:
 
         - returnResult:
             return: 
-                - unavailablePosts: ${unavailablePostsResult.body.unavailablePosts}
+                - unavailablePosts: ${unavailablePostsResult}
