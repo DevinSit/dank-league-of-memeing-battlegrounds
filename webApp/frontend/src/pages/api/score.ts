@@ -24,7 +24,7 @@ export default async function scoreHandler(req: NextApiRequest, res: NextApiResp
     }
 
     try {
-        await fetch(api.SCORE, {
+        await fetch(api.serverSide.SCORE, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -33,7 +33,8 @@ export default async function scoreHandler(req: NextApiRequest, res: NextApiResp
         });
 
         return res.status(200).json({score, username, oldUsername});
-    } catch {
+    } catch (e) {
+        console.error(e);
         return res.status(500).json({});
     }
 }
