@@ -21,12 +21,16 @@ const downloadPostImages = async (req, res) => {
         const fileIdPath = await downloadImage(url, id);
 
         if (fileIdPath) {
-            // Image exists
-            const fileName = await uploadImage(fileIdPath);
-            stagingImages.push(fileName);
+            try {
+                // Image exists
+                const fileName = await uploadImage(fileIdPath);
+                stagingImages.push(fileName);
 
-            // Delete the temp local images
-            await deleteFile(fileIdPath);
+                // Delete the temp local images
+                await deleteFile(fileIdPath);
+            } catch (e) {
+                console.error(e);
+            }
         } else {
             console.warn(`[WARNING] ${url} does not exist.`);
         }
@@ -64,7 +68,7 @@ const uploadImage = async (fileIdPath) => {
     const fileName = fileIdPath.split("/").pop();
 
     return new Promise((resolve, reject) => {
-        bucket.upload(fileIdPath, {destination: `${fileName}`}, (err) => {
+        bucket.upload(fileIdPath, {destination: `${fileName}`, resumable: false}, (err) => {
             if (err) {
                 console.error(err);
                 reject(err);
