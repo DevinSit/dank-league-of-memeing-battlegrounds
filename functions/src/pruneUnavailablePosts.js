@@ -12,7 +12,7 @@ const pruneUnavailablePosts = async (req, res) => {
 
             if (status !== 200 && post.id) {
                 await Post.setNotFound(post.id);
-                unavailable.push(post);
+                unavailablePosts.push(post);
             }
         } catch (e) {
             console.error(e);
