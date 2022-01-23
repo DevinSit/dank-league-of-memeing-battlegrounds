@@ -12,4 +12,6 @@ if (BACKEND_PORT !== "80" && BACKEND_PORT !== "443") {
 // whether or not we're running in production or development
 const IS_PRODUCTION = !BACKEND_URL.includes("localhost");
 
-export {BACKEND_URL, IS_PRODUCTION};
+const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID;
+
+export {BACKEND_URL, GA_TRACKING_ID, IS_PRODUCTION};
