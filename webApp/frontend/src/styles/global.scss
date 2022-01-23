@@ -41,8 +41,7 @@ button {
 // fine to use.
 // Note that this only seems to happen on mobile.
 
-$icon-size-small: 24px;
-$icon-size-large: 32px;
+$icon-size: 32px;
 
 .game-mode {
     #AppNavigation {
@@ -58,7 +57,7 @@ $icon-size-large: 32px;
     border-radius: $border-radius-rounded;
     display: grid;
     gap: $size-600;
-    grid-template-columns: repeat(4, $icon-size-small);
+    grid-template-columns: repeat(4, $icon-size);
     left: 50%;
     padding: $size-200 $size-500;
     position: fixed;
@@ -66,20 +65,14 @@ $icon-size-large: 32px;
 
     @include media-query-medium {
         gap: $size-700;
-        grid-template-columns: repeat(4, $icon-size-large);
         padding: $size-300 ($size-500 + $size-100);
     }
 
     .AppNavigationIcon {
         @include svg-icon-color($color-primary-light);
 
-        height: $icon-size-small;
-        width: $icon-size-small;
-
-        @include media-query-medium {
-            height: $icon-size-large;
-            width: $icon-size-large;
-        }
+        height: $icon-size;
+        width: $icon-size;
 
         &.AppNavigationIcon_active {
             @include svg-icon-color($color-primary);
