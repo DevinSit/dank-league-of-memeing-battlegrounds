@@ -7,14 +7,22 @@ declare global {
 }
 
 export const configUsername = (username: string) => {
-    if (_canAnalytics()) {
-        window.gtag("config", GA_TRACKING_ID!, {user_id: username});
+    try {
+        if (_canAnalytics()) {
+            window.gtag("config", GA_TRACKING_ID!, {user_id: username});
+        }
+    } catch (e) {
+        console.error(e);
     }
 };
 
 export const logEvent = (action: string, params: Record<string, any> = {}) => {
-    if (_canAnalytics()) {
-        window.gtag("event", action, params);
+    try {
+        if (_canAnalytics()) {
+            window.gtag("event", action, params);
+        }
+    } catch (e) {
+        console.error(e);
     }
 };
 

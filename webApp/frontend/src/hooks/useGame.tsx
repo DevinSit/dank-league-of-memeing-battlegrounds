@@ -75,10 +75,14 @@ export const GameProvider = ({children}: any) => {
     }, [state.page]);
 
     useEffect(() => {
-        const guess = state.guesses?.[state.guesses.length - 1];
+        try {
+            const guess = state.guesses?.[state.guesses.length - 1];
 
-        if (guess !== undefined) {
-            logEvent("makeGuess", {guess});
+            if (guess !== undefined) {
+                logEvent("makeGuess", {guess});
+            }
+        } catch (e) {
+            console.error(e);
         }
     }, [state.guesses]);
 
