@@ -4,7 +4,7 @@
     <img src="https://github.com/DevinSit/dank-league-of-memeing-battlegrounds/blob/master/docs/images/DankLeagueOfMemeingBattlegrounds.png?raw=true" />
 </p>
 
-From the creator the Dank Meme Classifier and the award-winning The Buzzword Bingo comes a brand new entry in the Dank Memes saga. Introducing the [Dank League of Memeing Battlegrounds](https://dankleagueofmemeingbattlegrounds.com)! Compete in this high stakes, high intensity thriller that is sure to be the next big eSport!
+From the creator the [Dank Meme Classifier](https://github.com/DevinSit/dank-meme-classifier.git) and the award-winning [The Buzzword Bingo](https://github.com/DevinSit/the-buzzword-bingo.git) comes a brand new entry in the Dank Memes saga. Introducing the [Dank League of Memeing Battlegrounds](https://dankleagueofmemeingbattlegrounds.com)! Compete in this high stakes, high intensity thriller that is sure to be the next big eSport!
 
 Perfect for filling idle time between meetings or — even better — _during_ meetings! Yes, why bother listening to your scrum master drone on when you can compete for the top of the leaderboard to answer the question:
 
