@@ -11,6 +11,6 @@
 gcloud scheduler jobs create http execute-pruneUnavailablePostsWorkflow \
     --schedule="30 */12 * * *" \
     --location="us-east1" \
-    --uri="https://workflowexecutions.googleapis.com/v1/projects/serverless-hackathon-devin/locations/us-central1/workflows/pruneUnavailablePostsWorkflow/executions" \
+    --uri="https://workflowexecutions.googleapis.com/v1/projects/serverless-hackathon-devin/locations/us-east1/workflows/pruneUnavailablePostsWorkflow/executions" \
     --time-zone="America/Toronto" \
     --oauth-service-account-email="workflows-service-account@serverless-hackathon-devin.iam.gserviceaccount.com"

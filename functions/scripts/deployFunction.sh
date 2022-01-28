@@ -5,6 +5,7 @@ ENV_VARS=$2
 
 gcloud functions deploy "$NAME" \
     --entry-point "$NAME" \
+    --region us-east1 \
     --allow-unauthenticated \
     --trigger-http \
     --runtime nodejs14 \

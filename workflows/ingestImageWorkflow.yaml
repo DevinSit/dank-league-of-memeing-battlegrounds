@@ -16,7 +16,7 @@ main:
         - filterExplicitImage:
             call: http.post
             args:
-                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/filterExplicitImages
+                url: https://us-east1-serverless-hackathon-devin.cloudfunctions.net/filterExplicitImages
                 body:
                     imagePaths: ${imagePaths}
             result: explicitResult
@@ -37,7 +37,7 @@ main:
         - processImage:
             call: http.post
             args:
-                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/processImages
+                url: https://us-east1-serverless-hackathon-devin.cloudfunctions.net/processImages
                 body:
                     imagePaths: ${imagePaths}
             result: processedImageResult
@@ -51,7 +51,7 @@ main:
         - predict:
             call: http.post
             args:
-                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/predict
+                url: https://us-east1-serverless-hackathon-devin.cloudfunctions.net/predict
                 body:
                     imageHashes: ${processedImageResult.body.imageHashes}
             result: predictionsResult
@@ -59,14 +59,14 @@ main:
         - updatePostHashes:
             call: http.post
             args:
-                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/updatePostHashes
+                url: https://us-east1-serverless-hackathon-devin.cloudfunctions.net/updatePostHashes
                 body:
                     postsToHashes: ${processedImageResult.body.postsToHashes}
 
         - deleteStagingImage:
             call: http.post
             args:
-                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/deleteStagingImages
+                url: https://us-east1-serverless-hackathon-devin.cloudfunctions.net/deleteStagingImages
                 body:
                     imagePaths: ${imagePaths}
                     deletePosts: ${explicitResult.body.results}

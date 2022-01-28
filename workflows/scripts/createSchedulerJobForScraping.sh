@@ -11,6 +11,6 @@ gcloud projects add-iam-policy-binding serverless-hackathon-devin \
 gcloud scheduler jobs create http execute-scrapePostsWorkflows \
     --schedule="0 * * * *" \
     --location="us-east1" \
-    --uri="https://workflowexecutions.googleapis.com/v1/projects/serverless-hackathon-devin/locations/us-central1/workflows/scrapePostsWorkflow/executions" \
+    --uri="https://workflowexecutions.googleapis.com/v1/projects/serverless-hackathon-devin/locations/us-east1/workflows/scrapePostsWorkflow/executions" \
     --time-zone="America/Toronto" \
     --oauth-service-account-email="workflows-service-account@serverless-hackathon-devin.iam.gserviceaccount.com"

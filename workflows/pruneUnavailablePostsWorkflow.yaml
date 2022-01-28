@@ -3,7 +3,7 @@ main:
         - fetchAvailablePosts:
             call: http.get
             args:
-                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/fetchAvailablePosts
+                url: https://us-east1-serverless-hackathon-devin.cloudfunctions.net/fetchAvailablePosts
             result: postsResult
 
         - pruneInParallel:

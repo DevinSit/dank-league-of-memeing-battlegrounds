@@ -4,7 +4,7 @@ main:
         - pruneUnavailablePosts:
             call: http.post
             args:
-                url: https://us-central1-serverless-hackathon-devin.cloudfunctions.net/pruneUnavailablePosts
+                url: https://us-east1-serverless-hackathon-devin.cloudfunctions.net/pruneUnavailablePosts
                 body:
                     posts: ${posts}
             result: unavailablePostsResult

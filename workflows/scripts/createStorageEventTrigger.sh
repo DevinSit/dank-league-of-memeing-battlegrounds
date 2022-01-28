@@ -17,7 +17,7 @@ gcloud projects add-iam-policy-binding serverless-hackathon-devin \
 gcloud eventarc triggers create storage-trigger-ingest-image-workflow \
     --location=us-east1 \
     --destination-workflow=ingestImageWorkflow \
-    --destination-workflow-location=us-central1 \
+    --destination-workflow-location=us-east1 \
     --event-filters="type=google.cloud.storage.object.v1.finalized" \
     --event-filters="bucket=easy-dank-meme-classifier-staging-images" \
     --service-account=workflows-service-account@serverless-hackathon-devin.iam.gserviceaccount.com
