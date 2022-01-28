@@ -117,6 +117,13 @@ const Home: NextPage = () => {
         [state.page, actions, dispatch, fetchNewImages]
     );
 
+    useEffect(() => {
+        // Fetch new images when coming into the game from clicking the game button in AppNavigation.
+        if (state.page === GamePage.RULES) {
+            fetchNewImages();
+        }
+    }, [state.page, fetchNewImages]);
+
     const currentPage = (() => {
         switch (state.page) {
             case GamePage.RULES:
