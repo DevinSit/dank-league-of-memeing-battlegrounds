@@ -1,7 +1,7 @@
 # Dank League of Memeing Battlegrounds
 
 <p align="center">
-    <img src="https://github.com/DevinSit/easy-dank-meme-classifier/blob/master/docs/images/DankLeagueOfMemeingBattlegrounds.png?raw=true" />
+    <img src="https://github.com/DevinSit/dank-league-of-memeing-battlegrounds/blob/master/docs/images/DankLeagueOfMemeingBattlegrounds.png?raw=true" />
 </p>
 
 From the creator the Dank Meme Classifier and the award-winning The Buzzword Bingo comes a brand new entry in the Dank Memes saga. Introducing the [Dank League of Memeing Battlegrounds](https://dankleagueofmemeingbattlegrounds.com)! Compete in this high stakes, high intensity thriller that is sure to be the next big eSport!

@@ -1,7 +1,7 @@
 {
-    "name": "easy-dank-meme-classifier-functions",
+    "name": "dank-league-of-memeing-battlegrounds-functions",
     "version": "1.0.0",
-    "description": "All of the Cloud Functions for the Easy Dank Meme Classifier.",
+    "description": "All of the Cloud Functions for the Dank League of Memeing Battlegrounds.",
     "main": "src/index.js",
     "scripts": {
         "start": "nodemon src/testServer.js",
