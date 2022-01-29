@@ -12,6 +12,7 @@ from utils.blockhash import hash_image
 
 logger = logging.getLogger(__name__)
 post_cache = TTLCache(maxsize=10, ttl=1800)
+all_posts_cache = TTLCache(maxsize=100, ttl=1800)
 predictions_cache = TTLCache(maxsize=200, ttl=3600)
 
 POST_KIND = "RedditPost"
@@ -102,13 +103,15 @@ class MemePost:
         return sorted(posts, key=lambda post: post["createdUtc"], reverse=True)
 
     def _fetch_random_posts(self, number_of_posts=15) -> List[datastore.Entity]:
-        # Don't bother caching this query ourselves since we always want the freshest non-notFound images.
-        # It's only about half as fast as caching it.
-        query = self.datastore_client.query(kind=POST_KIND)
-        query.add_filter("notFound", "=", False)
+        if number_of_posts in all_posts_cache:
+            posts = all_posts_cache[number_of_posts]
+        else:
+            query = self.datastore_client.query(kind=POST_KIND)
+            query.add_filter("notFound", "=", False)
+            posts = list(filter(lambda x: x["imageHash"], list(query.fetch())))
+            posts = self._sort_by_image_hash(posts)
+            all_posts_cache[number_of_posts] = posts
 
-        posts = list(filter(lambda x: x["imageHash"], list(query.fetch())))
-        posts = self._sort_by_image_hash(posts)
         posts = random.sample(posts, min(len(posts), number_of_posts))
         posts = self._enrich_posts_with_scores(posts)
 
