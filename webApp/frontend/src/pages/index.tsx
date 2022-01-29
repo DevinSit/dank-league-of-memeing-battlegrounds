@@ -98,6 +98,7 @@ const useMemeImages = () => {
 };
 
 const Home: NextPage = () => {
+    const hasRenderedRef = useRef<boolean>(false);
     const [{state, dispatch}, actions] = useGame();
 
     const {
@@ -119,9 +120,11 @@ const Home: NextPage = () => {
 
     useEffect(() => {
         // Fetch new images when coming into the game from clicking the game button in AppNavigation.
-        if (state.page === GamePage.RULES) {
+        if (state.page === GamePage.RULES && hasRenderedRef.current) {
             fetchNewImages();
         }
+
+        hasRenderedRef.current = true;
     }, [state.page, fetchNewImages]);
 
     const currentPage = (() => {
