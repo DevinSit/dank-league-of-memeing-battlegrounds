@@ -51,3 +51,21 @@
         }
     }
 }
+
+.CountdownOverlay {
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    left: 0;
+    right: 0;
+    position: absolute;
+    top: 0;
+    z-index: 10;
+
+    .NagMessage {
+        color: $color-white;
+        font-size: 24px;
+    }
+}

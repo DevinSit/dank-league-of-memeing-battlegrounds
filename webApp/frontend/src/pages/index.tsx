@@ -130,7 +130,7 @@ const Home: NextPage = () => {
     const currentPage = (() => {
         switch (state.page) {
             case GamePage.RULES:
-                return <Rules setPage={setPage} />;
+                return <Rules images={images} setPage={setPage} />;
             case GamePage.GAME:
                 return <Game images={images} predictions={predictions} setPage={setPage} />;
             case GamePage.RESULTS:
