@@ -64,8 +64,19 @@
     top: 0;
     z-index: 10;
 
-    .NagMessage {
-        color: $color-white;
-        font-size: 24px;
+    .NagMessageContainer {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        > * + * {
+            margin-top: $size-400;
+        }
+
+        .NagMessage {
+            color: $color-white;
+            font-size: 24px;
+        }
     }
 }

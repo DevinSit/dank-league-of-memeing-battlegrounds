@@ -13,6 +13,9 @@ const Rules = ({images = [], setPage}: RulesProps) => {
     const [clickedPlay, setClickedPlay] = useState(false);
     const [waitingForImages, setWaitingForImages] = useState(false);
 
+    const [showSecondWaitingMessage, setShowSecondWaitingMessage] = useState(false);
+    const [showThirdWaitingMessage, setShowThirdWaitingMessage] = useState(false);
+
     const ruleCardSpring = useSpring({from: {y: 500, scale: 0.7}, to: {y: 0, scale: 1}});
 
     useEffect(() => {
@@ -28,6 +31,14 @@ const Rules = ({images = [], setPage}: RulesProps) => {
     const finalSetPage = useCallback(() => {
         if (images.length === 0) {
             setWaitingForImages(true);
+
+            setTimeout(() => {
+                setShowSecondWaitingMessage(true);
+            }, 4000);
+
+            setTimeout(() => {
+                setShowThirdWaitingMessage(true);
+            }, 8000);
         } else {
             setPage(GamePage.GAME);
         }
@@ -39,7 +50,19 @@ const Rules = ({images = [], setPage}: RulesProps) => {
         <div className={styles.Rules}>
             {waitingForImages && (
                 <div className={styles.CountdownOverlay}>
-                    <p className={styles.NagMessage}>Waiting for Cloud Run to wake up...</p>
+                    <div className={styles.NagMessageContainer}>
+                        <p className={styles.NagMessage}>Waiting for Cloud Run to wake up...</p>
+
+                        {showSecondWaitingMessage && (
+                            <p className={styles.NagMessage}>Any second now...</p>
+                        )}
+
+                        {showThirdWaitingMessage && (
+                            <p className={styles.NagMessage}>
+                                It&apos;s not my fault the boot times are slow...
+                            </p>
+                        )}
+                    </div>
                 </div>
             )}
 
