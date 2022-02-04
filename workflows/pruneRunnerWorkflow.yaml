@@ -7,6 +7,8 @@ main:
                 url: https://us-east1-serverless-hackathon-devin.cloudfunctions.net/pruneUnavailablePosts
                 body:
                     posts: ${posts}
+                auth:
+                    type: OIDC
             result: unavailablePostsResult
 
         - returnResult:

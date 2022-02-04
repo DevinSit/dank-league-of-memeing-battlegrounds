@@ -19,6 +19,8 @@ main:
                 url: https://us-east1-serverless-hackathon-devin.cloudfunctions.net/filterExplicitImages
                 body:
                     imagePaths: ${imagePaths}
+                auth:
+                    type: OIDC
             result: explicitResult
 
         - logExplicit:
@@ -40,6 +42,8 @@ main:
                 url: https://us-east1-serverless-hackathon-devin.cloudfunctions.net/processImages
                 body:
                     imagePaths: ${imagePaths}
+                auth:
+                    type: OIDC
             result: processedImageResult
 
         - logImageHash:
@@ -54,6 +58,8 @@ main:
                 url: https://us-east1-serverless-hackathon-devin.cloudfunctions.net/predict
                 body:
                     imageHashes: ${processedImageResult.body.imageHashes}
+                auth:
+                    type: OIDC
             result: predictionsResult
 
         - updatePostHashes:
@@ -62,6 +68,8 @@ main:
                 url: https://us-east1-serverless-hackathon-devin.cloudfunctions.net/updatePostHashes
                 body:
                     postsToHashes: ${processedImageResult.body.postsToHashes}
+                auth:
+                    type: OIDC
 
         - deleteStagingImage:
             call: http.post
@@ -70,6 +78,8 @@ main:
                 body:
                     imagePaths: ${imagePaths}
                     deletePosts: ${explicitResult.body.results}
+                auth:
+                    type: OIDC
 
         - returnResult:
             return:

@@ -4,6 +4,8 @@ main:
             call: http.get
             args:
                 url: https://us-east1-serverless-hackathon-devin.cloudfunctions.net/scrapePosts
+                auth:
+                    type: OIDC
             result: postsResult
 
         - logPosts:
@@ -18,6 +20,8 @@ main:
                 url: https://us-east1-serverless-hackathon-devin.cloudfunctions.net/ingestPartialPosts
                 body:
                     posts: ${postsResult.body.posts}
+                auth:
+                    type: OIDC
             result: ingestedPostsResult
 
         - downloadPostImages:
@@ -26,6 +30,8 @@ main:
                 url: https://us-east1-serverless-hackathon-devin.cloudfunctions.net/downloadPostImages
                 body:
                     posts: ${postsResult.body.posts}
+                auth:
+                    type: OIDC
             result: stagingImagesResult
 
         - logStagingImages:

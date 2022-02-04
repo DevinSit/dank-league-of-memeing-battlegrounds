@@ -4,6 +4,8 @@ main:
             call: http.get
             args:
                 url: https://us-east1-serverless-hackathon-devin.cloudfunctions.net/fetchAvailablePosts
+                auth:
+                    type: OIDC
             result: postsResult
 
         - pruneInParallel:
