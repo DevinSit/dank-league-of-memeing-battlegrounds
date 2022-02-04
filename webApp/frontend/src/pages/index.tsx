@@ -38,7 +38,9 @@ const usePreloadImages = (urls: Array<string>, posts: Record<string, Post>): Arr
                 // 130x60, so we can check for that in the returned image to indicate that an image is 404.
                 // @ts-ignore
                 if (this.height === 60 && this.width === 130) {
-                    fetch(`${api.MARK_MISSING_MEME}/${posts[url].id}`);
+                    // Disabled since we have the pruneUnavailablePosts workflow now.
+                    // fetch(`${api.MARK_MISSING_MEME}/${posts[url].id}`);
+                    console.warn(`${posts[url].id} has a missing image`);
                 } else {
                     if (newImages.length < 10 && !newImages.includes(url)) {
                         newImages.push(url);

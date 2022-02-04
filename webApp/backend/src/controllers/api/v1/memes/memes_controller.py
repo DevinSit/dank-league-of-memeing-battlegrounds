@@ -36,15 +36,17 @@ def get_random_posts() -> Response:
     })
 
 
-@memes_controller.route("/<post_id>", methods=["GET"])
-@LoggingUtils.log_execution_time("Mark 404 finished")
-def mark_404_post(post_id: str) -> Response:
-    meme_post_service.mark_404_post(post_id)
+# Disabled since we have the pruneUnavailablePosts workflow now.
+#
+# @memes_controller.route("/<post_id>", methods=["GET"])
+# @LoggingUtils.log_execution_time("Mark 404 finished")
+# def mark_404_post(post_id: str) -> Response:
+#     meme_post_service.mark_404_post(post_id)
 
-    return jsonify({
-        "status": "success",
-        "postId": post_id
-    })
+#     return jsonify({
+#         "status": "success",
+#         "postId": post_id
+#     })
 
 @memes_controller.route("/guess", methods=["POST"])
 @LoggingUtils.log_execution_time("Record guesses finished")
