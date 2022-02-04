@@ -13,6 +13,7 @@ gcloud functions deploy "$NAME" \
     --memory 1024MB
 
 gcloud functions add-iam-policy-binding "$NAME" \
+    --region us-east1 \
     --member="serviceAccount:602308134174-compute@developer.gserviceaccount.com" \
     --role="roles/cloudfunctions.invoker" || true
 
